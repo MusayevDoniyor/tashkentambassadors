@@ -23,13 +23,20 @@ const AIHelper: React.FC = () => {
   const handleSend = async () => {
     if (!message.trim() || isLoading) return;
 
+    // Safety check for API Key
+    const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
+    if (!apiKey) {
+      setChatHistory(prev => [...prev, { role: 'ai', text: "Tizim sozlamalarida xatolik (API Key topilmadi). Iltimos, administrator bilan bog'laning." }]);
+      return;
+    }
+
     const userMsg = message;
     setMessage('');
     setChatHistory(prev => [...prev, { role: 'user', text: userMsg }]);
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      const ai = new GoogleGenAI({ apiKey });
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: userMsg,
@@ -46,8 +53,8 @@ const AIHelper: React.FC = () => {
       const aiResponse = response.text || "Kechirasiz, xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.";
       setChatHistory(prev => [...prev, { role: 'ai', text: aiResponse }]);
     } catch (error) {
-      console.error(error);
-      setChatHistory(prev => [...prev, { role: 'ai', text: "Kechirasiz, ulanishda muammo bo'ldi. Internetni tekshirib ko'ring." }]);
+      console.error('AI Error:', error);
+      setChatHistory(prev => [...prev, { role: 'ai', text: "Kechirasiz, ulanishda muammo bo'ldi. Internetni tekshirib ko'ring yoki birozdan so'ng urinib ko'ring." }]);
     } finally {
       setIsLoading(false);
     }
@@ -59,7 +66,7 @@ const AIHelper: React.FC = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="logo-gradient text-white w-18 h-18 rounded-3xl shadow-2xl flex items-center justify-center hover:brightness-110 transition-all transform hover:scale-110 group relative p-4 btn-3d"
+          className="logo-gradient text-white w-16 h-16 sm:w-18 sm:h-18 rounded-3xl shadow-2xl flex items-center justify-center hover:brightness-110 transition-all transform hover:scale-110 group relative p-4 btn-3d"
         >
           <div className="absolute -top-1 -right-1 bg-white w-5 h-5 rounded-full flex items-center justify-center border-2 border-orange-500">
              <span className="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
@@ -70,16 +77,16 @@ const AIHelper: React.FC = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="bg-white w-[350px] sm:w-[420px] h-[600px] rounded-[2.5rem] shadow-2xl flex flex-col border border-orange-100 overflow-hidden animate-in fade-in zoom-in duration-300">
+        <div className="bg-white w-[320px] sm:w-[420px] h-[550px] sm:h-[600px] rounded-[2.5rem] shadow-2xl flex flex-col border border-orange-100 overflow-hidden animate-in fade-in zoom-in duration-300">
           {/* Header */}
-          <div className="logo-gradient p-8 flex items-center justify-between text-white">
+          <div className="logo-gradient p-6 sm:p-8 flex items-center justify-between text-white">
             <div className="flex items-center space-x-4">
-              <div className="bg-white/20 p-3 rounded-2xl">
-                <Bot size={28} />
+              <div className="bg-white/20 p-2 sm:p-3 rounded-2xl">
+                <Bot size={24} />
               </div>
               <div>
-                <div className="font-black text-lg tracking-tight">AI MENTOR</div>
-                <div className="text-xs opacity-90 font-bold uppercase tracking-widest flex items-center">
+                <div className="font-black text-base sm:text-lg tracking-tight uppercase">AI MENTOR</div>
+                <div className="text-[10px] opacity-90 font-bold uppercase tracking-widest flex items-center">
                   <span className="w-2 h-2 bg-green-400 rounded-full mr-2"></span>
                   Online
                 </div>
@@ -91,10 +98,10 @@ const AIHelper: React.FC = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-6 space-y-6 bg-[#fffcf9]">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-[#fffcf9]">
             {chatHistory.map((chat, i) => (
               <div key={i} className={`flex ${chat.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[85%] p-5 rounded-3xl text-sm font-medium leading-relaxed shadow-sm ${
+                <div className={`max-w-[85%] p-4 sm:p-5 rounded-3xl text-xs sm:text-sm font-medium leading-relaxed shadow-sm ${
                   chat.role === 'user' 
                   ? 'bg-orange-600 text-white rounded-tr-none shadow-orange-100' 
                   : 'bg-white text-gray-800 rounded-tl-none border border-orange-100'
@@ -105,7 +112,7 @@ const AIHelper: React.FC = () => {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-white p-5 rounded-3xl rounded-tl-none border border-orange-100">
+                <div className="bg-white p-4 rounded-3xl rounded-tl-none border border-orange-100">
                   <Loader2 className="w-6 h-6 text-orange-600 animate-spin" />
                 </div>
               </div>
@@ -114,22 +121,22 @@ const AIHelper: React.FC = () => {
           </div>
 
           {/* Input */}
-          <div className="p-6 border-t border-orange-50 bg-white">
+          <div className="p-4 sm:p-6 border-t border-orange-50 bg-white">
             <div className="flex items-center space-x-3 bg-orange-50/50 p-2 rounded-2xl border-2 border-transparent focus-within:border-orange-500 transition-all">
               <input 
                 type="text" 
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-                placeholder="Startup bo'yicha savol bering..."
-                className="flex-1 bg-transparent border-none outline-none text-sm px-4 text-gray-800 font-bold"
+                placeholder="Savol bering..."
+                className="flex-1 bg-transparent border-none outline-none text-xs sm:text-sm px-2 sm:px-4 text-gray-800 font-bold"
               />
               <button 
                 onClick={handleSend}
                 disabled={isLoading}
                 className="logo-gradient text-white p-3 rounded-xl hover:brightness-110 disabled:opacity-50 transition-colors shadow-lg shadow-orange-100"
               >
-                <Send size={20} />
+                <Send size={18} />
               </button>
             </div>
           </div>
