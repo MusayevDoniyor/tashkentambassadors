@@ -11,11 +11,11 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'home', label: 'Bosh sahifa' },
-    { id: 'about', label: 'Biz haqimizda' },
-    { id: 'ambassadors', label: 'Ambassadorlar' },
-    { id: 'network', label: 'Hamkorlar' },
-    { id: 'events', label: 'Tadbirlar' },
+    { id: 'home', label: 'Bosh' },
+    { id: 'about', label: 'Biz' },
+    { id: 'ambassadors', label: 'Jamoa' },
+    { id: 'network', label: 'Fond' },
+    { id: 'events', label: 'Event' },
     { id: 'blog', label: 'Blog' },
   ];
 
@@ -24,7 +24,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     setIsMenuOpen(false);
     const element = document.getElementById(id);
     if (element) {
-      const offset = 80; // Header height offset
+      const offset = 80;
       const bodyRect = document.body.getBoundingClientRect().top;
       const elementRect = element.getBoundingClientRect().top;
       const elementPosition = elementRect - bodyRect;
@@ -40,26 +40,26 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   return (
     <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 md:h-20 items-center">
+        <div className="flex justify-between h-16 md:h-18 lg:h-20 items-center">
           <div className="flex items-center space-x-2 cursor-pointer shrink-0" onClick={() => handleNavClick('home')}>
-            <div className="logo-gradient p-1.5 md:p-2 rounded-lg shadow-md">
-              <Rocket className="text-white w-4 h-4 md:w-6 md:h-6" />
+            <div className="logo-gradient p-1 md:p-1.5 rounded-lg shadow-md">
+              <Rocket className="text-white w-4 h-4 md:w-5 md:h-5" />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="text-sm md:text-xl font-black text-gray-900 tracking-tight">
+              <span className="text-[10px] sm:text-xs md:text-sm lg:text-lg font-black text-gray-900 tracking-tight whitespace-nowrap">
                 STARTUP <span className="text-orange-600">AMBASSADORS</span>
               </span>
-              <span className="text-[7px] md:text-[10px] font-bold tracking-[0.2em] md:tracking-[0.3em] text-gray-400 uppercase">Tashkent</span>
+              <span className="text-[6px] md:text-[8px] font-bold tracking-[0.2em] text-gray-400 uppercase">Tashkent</span>
             </div>
           </div>
 
-          {/* Desktop Nav */}
-          <div className="hidden md:flex items-center space-x-6 lg:space-x-8">
+          {/* Desktop Nav - Optimized Gaps for small/mid screens */}
+          <div className="hidden md:flex items-center md:space-x-2 lg:space-x-6">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`text-sm font-semibold transition-colors ${
+                className={`px-1.5 py-1 text-[9px] md:text-[11px] lg:text-sm font-bold transition-colors whitespace-nowrap ${
                   activeTab === item.id ? 'text-orange-600' : 'text-gray-600 hover:text-orange-600'
                 }`}
               >
@@ -70,9 +70,9 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               href="https://t.me/toshkent_startup_community"
               target="_blank"
               rel="noopener noreferrer"
-              className="logo-gradient text-white px-5 py-2.5 rounded-full text-sm font-bold shadow-lg hover:brightness-110 transition-all transform hover:scale-105 active:scale-95"
+              className="logo-gradient text-white px-3 lg:px-5 py-2 rounded-full text-[9px] lg:text-xs font-black shadow-lg hover:brightness-110 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap uppercase tracking-widest ml-2"
             >
-              Qo'shilish
+              Klub
             </a>
           </div>
 

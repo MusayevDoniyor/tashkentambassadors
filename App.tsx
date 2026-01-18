@@ -31,31 +31,31 @@ const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState('home');
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-white overflow-x-hidden">
       <Header activeTab={activeTab} setActiveTab={setActiveTab} />
       
-      <main>
+      <main className="overflow-x-hidden">
         <section id="home">
           <Hero />
         </section>
 
-        <section id="about" className="py-12 md:py-20">
+        <section id="about" className="py-12 md:py-20 overflow-hidden">
           <About />
         </section>
 
-        <section id="ambassadors" className="py-12 md:py-20 bg-gray-50">
+        <section id="ambassadors" className="py-12 md:py-20 bg-gray-50 overflow-hidden">
           <Ambassadors />
         </section>
 
-        <section id="network" className="py-12 md:py-20">
+        <section id="network" className="py-12 md:py-20 overflow-hidden">
           <Network />
         </section>
 
-        <section id="events" className="py-12 md:py-20 bg-gray-50">
+        <section id="events" className="py-12 md:py-20 bg-gray-50 overflow-hidden">
           <Events />
         </section>
 
-        <section id="blog" className="py-12 md:py-20">
+        <section id="blog" className="py-12 md:py-20 overflow-hidden">
           <Blog />
         </section>
       </main>

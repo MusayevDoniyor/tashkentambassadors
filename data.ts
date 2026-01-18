@@ -4,35 +4,115 @@ import { Ambassador, Event, BlogPost, TrainingProgram, VentureFund, Mentor } fro
 export const AMBASSADORS: Ambassador[] = [
   {
     id: 1,
-    name: "Azizbek Rahmonov",
-    district: "Chilonzor",
-    role: "Lead Ambassador",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@azizbek_dev", linkedin: "#" }
-  },
-  {
-    id: 11,
-    name: "Sardor Ikromov",
-    district: "Chilonzor",
-    role: "Org Team",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@sardor_i" }
+    name: "Boburjon aka",
+    district: "Toshkent",
+    role: "Marketing & Web Support",
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@boburjon_aka" }
   },
   {
     id: 2,
-    name: "Malika Karimova",
-    district: "Yunusobod",
-    role: "Community Manager",
+    name: "Husnida",
+    district: "Toshkent",
+    role: "Deputy Leader",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@malika_k", instagram: "#" }
+    socials: { telegram: "@husnida_d" }
   },
   {
     id: 3,
-    name: "Jasur Islomov",
-    district: "Mirobod",
-    role: "Venture Liaison",
+    name: "Muhammadmin",
+    district: "Toshkent",
+    role: "Media Manager & Event Manager",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@muhammadmin" }
+  },
+  {
+    id: 4,
+    name: "Doniyor",
+    district: "Toshkent",
+    role: "Web Developer & Event Manager",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@doniyor" }
+  },
+  {
+    id: 5,
+    name: "Jahongir",
+    district: "Toshkent",
+    role: "Web & Event Manager",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@jasur_startup" }
+    socials: { telegram: "@jahongir" }
+  },
+  {
+    id: 6,
+    name: "Iroda",
+    district: "Toshkent",
+    role: "Presentation & Event Manager",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@iroda" }
+  },
+  {
+    id: 7,
+    name: "Bexruz",
+    district: "Toshkent",
+    role: "Web Developer",
+    image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@bexruz" }
+  },
+  {
+    id: 8,
+    name: "Ibrat",
+    district: "Toshkent",
+    role: "Event Manager",
+    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@ibrat" }
+  },
+  {
+    id: 9,
+    name: "Yulduz",
+    district: "Toshkent",
+    role: "Event Manager",
+    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@yulduz" }
+  },
+  {
+    id: 10,
+    name: "Feruzbek",
+    district: "Toshkent",
+    role: "Event Manager",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@feruzbek" }
+  },
+  {
+    id: 11,
+    name: "Shaxruza",
+    district: "Toshkent",
+    role: "Media Team",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@shaxruza" }
+  },
+  {
+    id: 12,
+    name: "Munisa",
+    district: "Toshkent",
+    role: "Media Team",
+    image: "https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@munisa" }
+  },
+  {
+    id: 13,
+    name: "Afruza",
+    district: "Toshkent",
+    role: "Media Team",
+    image: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@afruza" }
+  },
+  {
+    id: 14,
+    name: "Sardor aka",
+    district: "Toshkent",
+    role: "Media Team",
+    image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@sardor" }
   }
 ];
 

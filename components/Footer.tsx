@@ -22,11 +22,11 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-gray-950 text-white pt-24 pb-12 relative overflow-hidden">
-      {/* Decorative Blur */}
-      <div className="absolute bottom-0 right-0 w-64 h-64 bg-orange-600/10 blur-[100px] rounded-full"></div>
+      {/* Decorative Blur - Ensure it doesn't cause overflow */}
+      <div className="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-20 border-b border-white/5 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-20 border-b border-white/5 pb-20">
           <div className="space-y-8">
             <div className="flex items-center space-x-3 group cursor-pointer" onClick={scrollToTop}>
               <div className="logo-gradient p-2.5 rounded-2xl group-hover:rotate-12 transition-transform">
@@ -41,13 +41,13 @@ const Footer: React.FC = () => {
               Toshkent shahar yoshlarining startup va innovatsion g'oyalarini rivojlantirish uchun tuzilgan yagona rasmiy platforma.
             </p>
             <div className="flex items-center space-x-4">
-              <a href="https://t.me/toshkent_startup_community" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm">
+              <a href="https://t.me/toshkent_startup_community" target="_blank" rel="noopener noreferrer" className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm">
                 <Send size={20} />
               </a>
-              <a href="#" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm">
+              <a href="#" className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm">
                 <Instagram size={20} />
               </a>
-              <a href="#" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm">
+              <a href="#" className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm">
                 <Linkedin size={20} />
               </a>
             </div>
@@ -130,9 +130,9 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center text-gray-500 text-[10px] font-black uppercase tracking-[0.2em]">
-          <p>© 2024 Startup Ambassadors Tashkent. Yoshlar Ventures hamkorligida.</p>
-          <div className="mt-8 md:mt-0 flex items-center space-x-8">
+        <div className="flex flex-col md:flex-row justify-between items-center text-gray-500 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-center md:text-left space-y-4 md:space-y-0">
+          <p>© 2026 Startup Ambassadors Tashkent. Yoshlar Ventures hamkorligida.</p>
+          <div className="flex items-center space-x-8">
             <button onClick={scrollToTop} className="flex items-center space-x-2 text-orange-500 hover:text-white transition-colors">
               <ArrowUp size={14} />
               <span>Yuqoriga</span>
