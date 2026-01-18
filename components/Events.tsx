@@ -25,7 +25,7 @@ const Events: React.FC = () => {
           </p>
         </div>
         <a 
-          href="https://t.me/tashkent_innovators" 
+          href="https://t.me/toshkent_startup_community" 
           target="_blank"
           className="inline-flex items-center space-x-2 text-orange-600 font-black uppercase tracking-widest hover:translate-x-2 transition-transform"
         >
@@ -34,7 +34,6 @@ const Events: React.FC = () => {
         </a>
       </div>
 
-      {/* Filter Tabs */}
       <div className="flex flex-wrap items-center gap-3 mb-10">
         <div className="flex items-center space-x-2 text-gray-400 mr-2">
           <Filter size={16} />
@@ -87,7 +86,7 @@ const Events: React.FC = () => {
                 <span>{event.location}</span>
               </div>
               <a 
-                href="https://t.me/tashkent_innovators"
+                href="https://t.me/toshkent_startup_community"
                 target="_blank"
                 className="mt-auto block text-center bg-gray-50 text-gray-900 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-orange-600 hover:text-white transition-all shadow-sm group-hover:shadow-orange-100"
               >
@@ -96,13 +95,6 @@ const Events: React.FC = () => {
             </div>
           </div>
         ))}
-
-        {filteredEvents.length === 0 && (
-          <div className="col-span-full py-20 text-center bg-white border border-dashed border-orange-200 rounded-[2.5rem]">
-            <Calendar size={48} className="mx-auto text-orange-100 mb-4" />
-            <p className="text-gray-400 font-bold uppercase tracking-widest">Ushbu turdagi tadbirlar hozircha mavjud emas</p>
-          </div>
-        )}
       </div>
     </div>
   );

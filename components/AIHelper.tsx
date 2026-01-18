@@ -23,26 +23,20 @@ const AIHelper: React.FC = () => {
   const handleSend = async () => {
     if (!message.trim() || isLoading) return;
 
-    // Safety check for API Key
-    const apiKey = typeof process !== 'undefined' ? process.env.API_KEY : '';
-    if (!apiKey) {
-      setChatHistory(prev => [...prev, { role: 'ai', text: "Tizim sozlamalarida xatolik (API Key topilmadi). Iltimos, administrator bilan bog'laning." }]);
-      return;
-    }
-
     const userMsg = message;
     setMessage('');
     setChatHistory(prev => [...prev, { role: 'user', text: userMsg }]);
     setIsLoading(true);
 
     try {
-      const ai = new GoogleGenAI({ apiKey });
+      // API_KEY must be obtained from process.env.API_KEY
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY as string });
+      
       const response = await ai.models.generateContent({
         model: 'gemini-3-flash-preview',
         contents: userMsg,
         config: {
           systemInstruction: `Siz "Startup Ambassadors Tashkent" klubining AI mentorisiz. 
-          Ranglaringiz asosan to'q sariq (orange) va tilla (gold). 
           Sizning vazifangiz yoshlarga startup nima ekanligini tushuntirish, ularning g'oyalarini validatsiya qilishda yordam berish va klub haqida ma'lumot berish.
           Klubimiz Yoshlar ishlari agentligi va Yoshlar Ventures bilan hamkorlikda ishlaydi. 
           O'zbek tilida, do'stona, g'ayratli va professional tilda javob bering.`,
@@ -50,11 +44,15 @@ const AIHelper: React.FC = () => {
         },
       });
 
-      const aiResponse = response.text || "Kechirasiz, xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.";
+      const aiResponse = response.text || "Kechirasiz, javob olishda xatolik yuz berdi.";
       setChatHistory(prev => [...prev, { role: 'ai', text: aiResponse }]);
-    } catch (error) {
+    } catch (error: any) {
       console.error('AI Error:', error);
-      setChatHistory(prev => [...prev, { role: 'ai', text: "Kechirasiz, ulanishda muammo bo'ldi. Internetni tekshirib ko'ring yoki birozdan so'ng urinib ko'ring." }]);
+      let errorMsg = "Kechirasiz, xatolik yuz berdi.";
+      if (error?.message?.includes('API_KEY')) {
+        errorMsg = "Tizimda API kaliti sozlanmagan. Iltimos, Vercel sozlamalarida API_KEY o'zgaruvchisini qo'shing va qayta deploy qiling.";
+      }
+      setChatHistory(prev => [...prev, { role: 'ai', text: errorMsg }]);
     } finally {
       setIsLoading(false);
     }
@@ -62,7 +60,6 @@ const AIHelper: React.FC = () => {
 
   return (
     <div className="fixed bottom-6 right-6 z-[60]">
-      {/* Trigger Button */}
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
@@ -75,10 +72,8 @@ const AIHelper: React.FC = () => {
         </button>
       )}
 
-      {/* Chat Window */}
       {isOpen && (
         <div className="bg-white w-[320px] sm:w-[420px] h-[550px] sm:h-[600px] rounded-[2.5rem] shadow-2xl flex flex-col border border-orange-100 overflow-hidden animate-in fade-in zoom-in duration-300">
-          {/* Header */}
           <div className="logo-gradient p-6 sm:p-8 flex items-center justify-between text-white">
             <div className="flex items-center space-x-4">
               <div className="bg-white/20 p-2 sm:p-3 rounded-2xl">
@@ -97,7 +92,6 @@ const AIHelper: React.FC = () => {
             </button>
           </div>
 
-          {/* Messages */}
           <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-6 bg-[#fffcf9]">
             {chatHistory.map((chat, i) => (
               <div key={i} className={`flex ${chat.role === 'user' ? 'justify-end' : 'justify-start'}`}>
@@ -120,7 +114,6 @@ const AIHelper: React.FC = () => {
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Input */}
           <div className="p-4 sm:p-6 border-t border-orange-50 bg-white">
             <div className="flex items-center space-x-3 bg-orange-50/50 p-2 rounded-2xl border-2 border-transparent focus-within:border-orange-500 transition-all">
               <input 

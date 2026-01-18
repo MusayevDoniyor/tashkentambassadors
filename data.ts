@@ -33,38 +33,6 @@ export const AMBASSADORS: Ambassador[] = [
     role: "Venture Liaison",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
     socials: { telegram: "@jasur_startup" }
-  },
-  {
-    id: 4,
-    name: "Shahlo Mirzaeva",
-    district: "Mirzo Ulug'bek",
-    role: "Education Lead",
-    image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
-    socials: { linkedin: "#" }
-  },
-  {
-    id: 5,
-    name: "Doston Olimov",
-    district: "Shayxontohur",
-    role: "Tech Advisor",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@doston_tech" }
-  },
-  {
-    id: 55,
-    name: "Bekzod Aliev",
-    district: "Shayxontohur",
-    role: "Ambassador",
-    image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@bekzod_a" }
-  },
-  {
-    id: 6,
-    name: "Sitora Ahmedova",
-    district: "Uchtepa",
-    role: "Event Coordinator",
-    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400",
-    socials: { instagram: "#" }
   }
 ];
 
@@ -72,22 +40,22 @@ export const VENTURE_FUNDS: VentureFund[] = [
   {
     id: 1,
     name: "AloqaVentures",
-    logo: "https://raw.githubusercontent.com/aloqaventures/brand-assets/main/logo_dark.png",
-    description: "O'zbekistondagi yetakchi korporativ venchur fondi. Texnologik va innovatsion loyihalarni qo'llab-quvvatlaydi.",
+    logo: "https://aloqaventures.uz/img/logo-dark.svg",
+    description: "O'zbekistondagi eng yirik korporativ venchur fondi. Aloqabank qoshida tashkil etilgan bo'lib, innovatsion startuplarni moliyalashtiradi.",
     website: "https://aloqaventures.uz"
   },
   {
     id: 2,
     name: "Yoshlar Ventures",
     logo: "https://yoshlarventures.uz/images/logo.png",
-    description: "Yoshlar tadbirkorligini va innovatsion g'oyalarini moliyalashtiruvchi davlat investitsiya fondi.",
+    description: "Yoshlar ishlari agentligi qoshidagi investitsiya fondi. Yoshlar tomonidan ilgari surilgan istiqbolli loyihalarni qo'llab-quvvatlaydi.",
     website: "https://yoshlarventures.uz"
   },
   {
     id: 3,
     name: "UzVC",
     logo: "https://uzvc.uz/static/media/logo.6450c059.png",
-    description: "O'zbekiston Milliy venchur fondi. Yuqori texnologiyali startuplarga investitsiya kiritadi.",
+    description: "O'zbekiston Milliy venchur fondi. Global bozorlarga chiqish niyatida bo'lgan yuqori texnologiyali loyihalarga investitsiya kiritadi.",
     website: "https://uzvc.uz"
   }
 ];
@@ -97,93 +65,72 @@ export const MENTORS: Mentor[] = [
     id: 1,
     name: "Farhod Tillaev",
     image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400",
-    role: "Investment Partner",
-    expertise: "Venture Capital & Business Development",
-    socials: { linkedin: "https://linkedin.com/in/farhod-tillaev", telegram: "@farhod_t" }
+    role: "Investment Director",
+    expertise: "Venture Capital & Finance",
+    socials: { linkedin: "https://linkedin.com", telegram: "@farhod_t" }
   },
   {
     id: 2,
-    name: "Alisher Umarov",
+    name: "Dilshod Zufarov",
     image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
-    role: "Product Strategy Advisor",
-    expertise: "FinTech & Product Management",
-    socials: { linkedin: "https://linkedin.com/in/alisher-u", telegram: "@alisher_u" }
+    role: "Venture Builder",
+    expertise: "Business Operations & Strategy",
+    socials: { linkedin: "https://linkedin.com", telegram: "@zufarov" }
   },
   {
     id: 3,
-    name: "Dilshod Zufarov",
+    name: "Sarvar Ruzmatov",
     image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
-    role: "Legal & Operations",
-    expertise: "Startup Law & Operational Excellence",
-    socials: { linkedin: "https://linkedin.com/in/zufarov", telegram: "@dzufarov" }
+    role: "Tech Advisor",
+    expertise: "Software Engineering & Scaling",
+    socials: { linkedin: "https://linkedin.com", telegram: "@sarvar_r" }
   }
 ];
 
 export const EVENTS: Event[] = [
   {
     id: 1,
-    title: "Startup Idea Generation Workshop",
-    date: "15-Mart, 2024",
-    time: "14:00",
-    location: "IT Park, Tashkent",
-    type: "Workshop",
-    image: "https://images.unsplash.com/photo-1515187029135-18ee286d815b?auto=format&fit=crop&q=80&w=800"
+    title: "Startup Pitch Day #1",
+    date: "25-Mart, 2024",
+    time: "15:00",
+    location: "AloqaVentures Hub",
+    type: "Pitch Day",
+    image: "https://images.unsplash.com/photo-1475721027785-f74eccf877e2?auto=format&fit=crop&q=80&w=800"
   },
   {
     id: 2,
-    title: "Venture Capital Networking Night",
-    date: "22-Mart, 2024",
-    time: "18:30",
-    location: "Yoshlar Ventures Hub",
-    type: "Meetup",
-    image: "https://images.unsplash.com/photo-1528605248644-14dd04022da1?auto=format&fit=crop&q=80&w=800"
+    title: "Mentorship Session with Experts",
+    date: "30-Mart, 2024",
+    time: "11:00",
+    location: "Yoshlar Markazi",
+    type: "Workshop",
+    image: "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&q=80&w=800"
   }
 ];
 
 export const BLOG_POSTS: BlogPost[] = [
   {
     id: 1,
-    title: "Startupni qanday boshlash kerak?",
-    excerpt: "G'oyadan tortib birinchi investitsiyagacha bo'lgan bosqichlar haqida to'liq qo'llanma.",
-    date: "1-Mart, 2024",
-    category: "Ta'lim",
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80&w=800",
-    author: "Azizbek Rahmonov"
-  },
-  {
-    id: 2,
-    title: "O'zbekistondagi Venture Fondlar",
-    excerpt: "Loyiha uchun investitsiya qayerdan olish mumkin? Eng faol fondlar sharhi.",
-    date: "5-Mart, 2024",
+    title: "Venchur fond nima va u startuplarga nega kerak?",
+    excerpt: "Investitsiya jalb qilishning asosiy qoidalari va fondlar bilan ishlash sirlari.",
+    date: "12-Mart, 2024",
     category: "Investitsiya",
-    image: "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=800",
-    author: "Jasur Islomov"
+    image: "https://images.unsplash.com/photo-1454165833767-027ffea9e778?auto=format&fit=crop&q=80&w=800",
+    author: "Hamjamiyat Jamoasi"
   }
 ];
 
 export const TRAINING_PROGRAMS: TrainingProgram[] = [
   {
     id: 1,
-    title: "G'oya Validatsiyasi",
-    description: "Sizning g'oyangiz bozorda ishlaydimi? Buni tekshirish usullarini o'rgatamiz.",
+    title: "Ideation & Validation",
+    description: "G'oyangizni real bozor talablariga muvofiqligini tekshirish jarayoni.",
     icon: "Lightbulb"
   },
   {
     id: 2,
-    title: "Pitch Deck Tayyorlash",
-    description: "Investorlar ko'zini quvontiradigan va ishonch uyg'otadigan prezentatsiya sirlari.",
-    icon: "Presentation"
-  },
-  {
-    id: 3,
-    title: "Biznes Modellashtirish",
-    description: "Loyihangiz qanday qilib pul ishlashini aniq hisob-kitoblar bilan ko'rsatish.",
+    title: "Fundraising Strategy",
+    description: "Investorlar bilan uchrashuvga tayyorgarlik va moliyaviy modellarni tuzish.",
     icon: "PieChart"
-  },
-  {
-    id: 4,
-    title: "Network & Connection",
-    description: "Toshkentdagi eng kuchli mentorlar va fondlar bilan to'g'ridan-to'g'ri bog'lanish.",
-    icon: "Users"
   }
 ];

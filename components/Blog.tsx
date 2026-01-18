@@ -46,7 +46,7 @@ const Blog: React.FC = () => {
               
               <div className="mt-auto flex items-center justify-between">
                 <a 
-                  href="https://t.me/tashkent_innovators" 
+                  href="https://t.me/toshkent_startup_community" 
                   target="_blank"
                   className="flex items-center space-x-2 text-gray-900 font-black uppercase tracking-widest text-xs group-hover:text-orange-600 transition-colors"
                 >
@@ -58,7 +58,6 @@ const Blog: React.FC = () => {
           </article>
         ))}
         
-        {/* Newsletter section with improved responsiveness */}
         <div className="flex flex-col h-full logo-gradient rounded-[2.5rem] p-8 sm:p-10 text-white shadow-xl shadow-orange-100 relative overflow-hidden group min-h-[350px]">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
           <div className="relative z-10 flex flex-col h-full">
@@ -67,11 +66,8 @@ const Blog: React.FC = () => {
               Haftalik eng sara maqolalar va tadbirlar ro'yxatini Telegram orqali birinchilardan bo'lib oling!
             </p>
             <div className="mt-auto space-y-4">
-              <div className="bg-white/10 border border-white/20 rounded-2xl p-4 text-[10px] font-black uppercase tracking-widest text-center">
-                Tezkor va qulay usul
-              </div>
               <a 
-                href="https://t.me/tashkent_innovators"
+                href="https://t.me/toshkent_startup_community"
                 target="_blank"
                 className="block bg-white text-orange-600 w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
               >

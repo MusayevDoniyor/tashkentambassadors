@@ -127,16 +127,6 @@ const Footer: React.FC = () => {
                 KLUB QOIDALARI
               </a>
             </div>
-            <ul className="mt-8 space-y-4 text-gray-500 font-bold text-[10px] uppercase tracking-widest">
-              <li className="flex items-center space-x-3">
-                <Phone size={14} className="text-orange-500" />
-                <span>+998 (71) 200-00-00</span>
-              </li>
-              <li className="flex items-center space-x-3">
-                <Mail size={14} className="text-orange-500" />
-                <span>info@sa-tashkent.uz</span>
-              </li>
-            </ul>
           </div>
         </div>
 

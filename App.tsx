@@ -39,23 +39,23 @@ const App: React.FC = () => {
           <Hero />
         </section>
 
-        <section id="about" className="py-20">
+        <section id="about" className="py-12 md:py-20">
           <About />
         </section>
 
-        <section id="ambassadors" className="py-20 bg-gray-50">
+        <section id="ambassadors" className="py-12 md:py-20 bg-gray-50">
           <Ambassadors />
         </section>
 
-        <section id="network" className="py-20">
+        <section id="network" className="py-12 md:py-20">
           <Network />
         </section>
 
-        <section id="events" className="py-20 bg-gray-50">
+        <section id="events" className="py-12 md:py-20 bg-gray-50">
           <Events />
         </section>
 
-        <section id="blog" className="py-20">
+        <section id="blog" className="py-12 md:py-20">
           <Blog />
         </section>
       </main>
