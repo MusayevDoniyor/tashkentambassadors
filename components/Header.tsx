@@ -55,7 +55,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               </button>
             ))}
             <a
-              href="https://t.me/tashkent_innovators"
+              href="https://t.me/toshkent_startup_community"
               target="_blank"
               rel="noopener noreferrer"
               className="logo-gradient text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg hover:brightness-110 transition-all transform hover:scale-105 active:scale-95"
@@ -89,7 +89,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               </button>
             ))}
             <a
-              href="https://t.me/tashkent_innovators"
+              href="https://t.me/toshkent_startup_community"
               className="logo-gradient text-white text-center py-4 rounded-2xl font-black shadow-lg"
             >
               KLUBGA QO'SHILISH

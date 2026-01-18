@@ -30,8 +30,17 @@ const Network: React.FC = () => {
               rel="noopener noreferrer"
               className="group bg-white p-8 rounded-[2.5rem] border border-orange-50 hover:border-orange-500 hover:shadow-2xl transition-all flex flex-col items-center text-center"
             >
-              <div className="h-20 flex items-center justify-center mb-8 grayscale group-hover:grayscale-0 transition-all">
-                <img src={fund.logo} alt={fund.name} className="max-h-full max-w-[150px] object-contain" />
+              <div className="h-24 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+                <img 
+                  src={fund.logo} 
+                  alt={fund.name} 
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    target.parentElement!.innerHTML = `<span class="text-2xl font-black text-orange-600 uppercase tracking-tighter">${fund.name}</span>`;
+                  }}
+                  className="max-h-full max-w-[180px] object-contain" 
+                />
               </div>
               <h3 className="text-xl font-black text-gray-900 mb-3 group-hover:text-orange-600 transition-colors uppercase tracking-tight">{fund.name}</h3>
               <p className="text-gray-500 text-sm font-medium leading-relaxed mb-6 flex-1">

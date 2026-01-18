@@ -71,24 +71,24 @@ export const AMBASSADORS: Ambassador[] = [
 export const VENTURE_FUNDS: VentureFund[] = [
   {
     id: 1,
-    name: "Yoshlar Ventures",
-    logo: "https://yoshlarventures.uz/images/logo.png",
-    description: "O'zbekistondagi eng yirik yoshlar tadbirkorligini qo'llab-quvvatlash fondi.",
-    website: "https://yoshlarventures.uz"
+    name: "AloqaVentures",
+    logo: "https://raw.githubusercontent.com/aloqaventures/brand-assets/main/logo_dark.png",
+    description: "O'zbekistondagi yetakchi korporativ venchur fondi. Texnologik va innovatsion loyihalarni qo'llab-quvvatlaydi.",
+    website: "https://aloqaventures.uz"
   },
   {
     id: 2,
-    name: "UzVC",
-    logo: "https://uzvc.uz/static/media/logo.6450c059.png",
-    description: "O'zbekiston Milliy Venchur Fondi.",
-    website: "https://uzvc.uz"
+    name: "Yoshlar Ventures",
+    logo: "https://yoshlarventures.uz/images/logo.png",
+    description: "Yoshlar tadbirkorligini va innovatsion g'oyalarini moliyalashtiruvchi davlat investitsiya fondi.",
+    website: "https://yoshlarventures.uz"
   },
   {
     id: 3,
-    name: "AloqaVentures",
-    logo: "https://aloqaventures.uz/logo.png",
-    description: "Texnologik loyihalarni moliyalashtiruvchi korporativ fond.",
-    website: "https://aloqaventures.uz"
+    name: "UzVC",
+    logo: "https://uzvc.uz/static/media/logo.6450c059.png",
+    description: "O'zbekiston Milliy venchur fondi. Yuqori texnologiyali startuplarga investitsiya kiritadi.",
+    website: "https://uzvc.uz"
   }
 ];
 
@@ -97,25 +97,25 @@ export const MENTORS: Mentor[] = [
     id: 1,
     name: "Farhod Tillaev",
     image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400",
-    role: "Managing Director",
-    expertise: "Venture Investments & Strategy",
-    socials: { linkedin: "#", telegram: "@farhod_t" }
+    role: "Investment Partner",
+    expertise: "Venture Capital & Business Development",
+    socials: { linkedin: "https://linkedin.com/in/farhod-tillaev", telegram: "@farhod_t" }
   },
   {
     id: 2,
     name: "Alisher Umarov",
-    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
-    role: "CEO at Fintech Hub",
-    expertise: "Product Development & FinTech",
-    socials: { linkedin: "#", telegram: "@alisher_u" }
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
+    role: "Product Strategy Advisor",
+    expertise: "FinTech & Product Management",
+    socials: { linkedin: "https://linkedin.com/in/alisher-u", telegram: "@alisher_u" }
   },
   {
     id: 3,
-    name: "Nigora Karimova",
-    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
-    role: "Strategic Advisor",
-    expertise: "Business Scaling & Marketing",
-    socials: { linkedin: "#", telegram: "@nigora_k" }
+    name: "Dilshod Zufarov",
+    image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
+    role: "Legal & Operations",
+    expertise: "Startup Law & Operational Excellence",
+    socials: { linkedin: "https://linkedin.com/in/zufarov", telegram: "@dzufarov" }
   }
 ];
 

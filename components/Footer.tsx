@@ -41,7 +41,7 @@ const Footer: React.FC = () => {
               Toshkent shahar yoshlarining startup va innovatsion g'oyalarini rivojlantirish uchun tuzilgan yagona rasmiy platforma.
             </p>
             <div className="flex items-center space-x-4">
-              <a href="https://t.me/tashkent_innovators" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm">
+              <a href="https://t.me/toshkent_startup_community" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm">
                 <Send size={20} />
               </a>
               <a href="#" className="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm">
@@ -111,7 +111,7 @@ const Footer: React.FC = () => {
             <h4 className="text-xs font-black mb-8 uppercase tracking-[0.3em] text-orange-500">Tezkor havolalar</h4>
             <div className="grid grid-cols-1 gap-3">
               <a 
-                href="https://t.me/tashkent_innovators"
+                href="https://t.me/toshkent_startup_community"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-white/5 hover:bg-orange-600 p-4 rounded-2xl transition-all border border-white/5 font-black text-[10px] uppercase tracking-widest text-center"
