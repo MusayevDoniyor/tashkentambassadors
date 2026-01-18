@@ -22,8 +22,8 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-gray-950 text-white pt-24 pb-12 relative overflow-hidden">
-      {/* Decorative Blur - Ensure it doesn't cause overflow */}
-      <div className="absolute bottom-[-10%] right-[-10%] w-64 h-64 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none"></div>
+      {/* Decorative Blur - Pointer events none prevents overflow issues */}
+      <div className="absolute bottom-[-5%] right-[-5%] w-64 h-64 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-20 border-b border-white/5 pb-20">

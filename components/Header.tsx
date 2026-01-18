@@ -14,7 +14,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     { id: 'home', label: 'Bosh' },
     { id: 'about', label: 'Biz' },
     { id: 'ambassadors', label: 'Jamoa' },
-    { id: 'network', label: 'Fond' },
+    { id: 'network', label: 'Fondlar' },
     { id: 'events', label: 'Event' },
     { id: 'blog', label: 'Blog' },
   ];
@@ -38,9 +38,9 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   };
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm">
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 md:h-18 lg:h-20 items-center">
+        <div className="flex justify-between h-16 md:h-18 items-center">
           <div className="flex items-center space-x-2 cursor-pointer shrink-0" onClick={() => handleNavClick('home')}>
             <div className="logo-gradient p-1 md:p-1.5 rounded-lg shadow-md">
               <Rocket className="text-white w-4 h-4 md:w-5 md:h-5" />
@@ -53,14 +53,14 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             </div>
           </div>
 
-          {/* Desktop Nav - Optimized Gaps for small/mid screens */}
-          <div className="hidden md:flex items-center md:space-x-2 lg:space-x-6">
+          {/* Desktop Nav - Better spacing for medium screens */}
+          <div className="hidden md:flex items-center md:space-x-1.5 lg:space-x-6">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`px-1.5 py-1 text-[9px] md:text-[11px] lg:text-sm font-bold transition-colors whitespace-nowrap ${
-                  activeTab === item.id ? 'text-orange-600' : 'text-gray-600 hover:text-orange-600'
+                className={`px-1 lg:px-2 py-1 text-[10px] lg:text-sm font-bold transition-colors whitespace-nowrap ${
+                  activeTab === item.id ? 'text-orange-600 border-b-2 border-orange-600' : 'text-gray-600 hover:text-orange-600'
                 }`}
               >
                 {item.label}
@@ -70,7 +70,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               href="https://t.me/toshkent_startup_community"
               target="_blank"
               rel="noopener noreferrer"
-              className="logo-gradient text-white px-3 lg:px-5 py-2 rounded-full text-[9px] lg:text-xs font-black shadow-lg hover:brightness-110 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap uppercase tracking-widest ml-2"
+              className="logo-gradient text-white px-3 lg:px-5 py-2 rounded-full text-[10px] lg:text-xs font-black shadow-lg hover:brightness-110 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap uppercase tracking-widest ml-1 lg:ml-4"
             >
               Klub
             </a>

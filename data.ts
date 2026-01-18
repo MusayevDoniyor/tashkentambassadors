@@ -8,7 +8,7 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Marketing & Web Support",
     image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@boburjon_aka" }
+    socials: { telegram: "@boburjon_m" }
   },
   {
     id: 2,
@@ -16,39 +16,39 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Deputy Leader",
     image: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@husnida_d" }
+    socials: { telegram: "@husnida_a" }
   },
   {
     id: 3,
-    name: "Muhammadmin",
-    district: "Toshkent",
-    role: "Media Manager & Event Manager",
-    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@muhammadmin" }
-  },
-  {
-    id: 4,
-    name: "Doniyor",
-    district: "Toshkent",
-    role: "Web Developer & Event Manager",
-    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@doniyor" }
-  },
-  {
-    id: 5,
-    name: "Jahongir",
-    district: "Toshkent",
-    role: "Web & Event Manager",
-    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@jahongir" }
-  },
-  {
-    id: 6,
     name: "Iroda",
     district: "Toshkent",
     role: "Presentation & Event Manager",
     image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@iroda" }
+    socials: { telegram: "@iroda_p" }
+  },
+  {
+    id: 4,
+    name: "Muhammadmin",
+    district: "Toshkent",
+    role: "Media Manager & Event Team",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@muhammadmin_m" }
+  },
+  {
+    id: 5,
+    name: "Doniyor",
+    district: "Toshkent",
+    role: "Web & Event Manager",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@doniyor_dev" }
+  },
+  {
+    id: 6,
+    name: "Jahongir",
+    district: "Toshkent",
+    role: "Web & Event Manager",
+    image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@jahongir_j" }
   },
   {
     id: 7,
@@ -56,7 +56,7 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Web Developer",
     image: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@bexruz" }
+    socials: { telegram: "@bexruz_dev" }
   },
   {
     id: 8,
@@ -64,7 +64,7 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Event Manager",
     image: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@ibrat" }
+    socials: { telegram: "@ibrat_e" }
   },
   {
     id: 9,
@@ -72,7 +72,7 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Event Manager",
     image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@yulduz" }
+    socials: { telegram: "@yulduz_e" }
   },
   {
     id: 10,
@@ -80,7 +80,7 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Event Manager",
     image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@feruzbek" }
+    socials: { telegram: "@feruzbek_e" }
   },
   {
     id: 11,
@@ -88,7 +88,7 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Media Team",
     image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@shaxruza" }
+    socials: { telegram: "@shaxruza_m" }
   },
   {
     id: 12,
@@ -96,7 +96,7 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Media Team",
     image: "https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@munisa" }
+    socials: { telegram: "@munisa_m" }
   },
   {
     id: 13,
@@ -104,7 +104,7 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Media Team",
     image: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@afruza" }
+    socials: { telegram: "@afruza_m" }
   },
   {
     id: 14,
@@ -112,7 +112,7 @@ export const AMBASSADORS: Ambassador[] = [
     district: "Toshkent",
     role: "Media Team",
     image: "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@sardor" }
+    socials: { telegram: "@sardor_media" }
   }
 ];
 
