@@ -1,4 +1,3 @@
-
 export interface Ambassador {
   id: number;
   name: string;
@@ -38,7 +37,7 @@ export interface Event {
   date: string;
   time: string;
   location: string;
-  type: 'Masterclass' | 'Workshop' | 'Meetup' | 'Pitch Day';
+  type: "Masterclass" | "Workshop" | "Meetup" | "Pitch Day";
   image: string;
 }
 
@@ -57,4 +56,16 @@ export interface TrainingProgram {
   title: string;
   description: string;
   icon: string;
+}
+
+export interface Department {
+  name: string;
+  leader: Ambassador;
+  members: Ambassador[];
+}
+
+export interface TeamStructure {
+  overallLeader: Ambassador;
+  deputyLeaders: Ambassador[];
+  departments: Department[];
 }

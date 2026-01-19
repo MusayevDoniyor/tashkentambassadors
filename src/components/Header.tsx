@@ -1,6 +1,5 @@
-
-import React, { useState } from 'react';
-import { Menu, X, Rocket } from 'lucide-react';
+import React, { useState } from "react";
+import { Menu, X, Rocket } from "lucide-react";
 
 interface HeaderProps {
   activeTab: string;
@@ -11,12 +10,12 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { id: 'home', label: 'Bosh' },
-    { id: 'about', label: 'Biz' },
-    { id: 'ambassadors', label: 'Jamoa' },
-    { id: 'network', label: 'Fondlar' },
-    { id: 'events', label: 'Event' },
-    { id: 'blog', label: 'Blog' },
+    { id: "home", label: "Bosh" },
+    { id: "about", label: "Biz" },
+    { id: "ambassadors", label: "Jamoa" },
+    { id: "network", label: "Fondlar" },
+    { id: "events", label: "Event" },
+    { id: "blog", label: "Blog" },
   ];
 
   const handleNavClick = (id: string) => {
@@ -32,7 +31,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
 
       window.scrollTo({
         top: offsetPosition,
-        behavior: 'smooth'
+        behavior: "smooth",
       });
     }
   };
@@ -41,15 +40,20 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 md:h-18 items-center">
-          <div className="flex items-center space-x-2 cursor-pointer shrink-0" onClick={() => handleNavClick('home')}>
-            <div className="logo-gradient p-1 md:p-1.5 rounded-lg shadow-md">
-              <Rocket className="text-white w-4 h-4 md:w-5 md:h-5" />
+          <div
+            className="flex items-center space-x-2.5 cursor-pointer shrink-0"
+            onClick={() => handleNavClick("home")}
+          >
+            <div className="logo-gradient p-1.5 md:p-1.5 rounded-lg shadow-md">
+              <Rocket className="text-white w-5 h-5 md:w-5 md:h-5" />
             </div>
             <div className="flex flex-col leading-none">
-              <span className="text-[10px] sm:text-xs md:text-sm lg:text-lg font-black text-gray-900 tracking-tight whitespace-nowrap">
+              <span className="text-sm sm:text-base md:text-sm lg:text-lg font-black text-gray-900 tracking-tight whitespace-nowrap">
                 STARTUP <span className="text-orange-600">AMBASSADORS</span>
               </span>
-              <span className="text-[6px] md:text-[8px] font-bold tracking-[0.2em] text-gray-400 uppercase">Tashkent</span>
+              <span className="text-[7px] md:text-[8px] font-bold tracking-[0.2em] text-gray-400 uppercase">
+                Tashkent
+              </span>
             </div>
           </div>
 
@@ -60,7 +64,9 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
                 className={`px-1 lg:px-2 py-1 text-[10px] lg:text-sm font-bold transition-colors whitespace-nowrap ${
-                  activeTab === item.id ? 'text-orange-600 border-b-2 border-orange-600' : 'text-gray-600 hover:text-orange-600'
+                  activeTab === item.id
+                    ? "text-orange-600 border-b-2 border-orange-600"
+                    : "text-gray-600 hover:text-orange-600"
                 }`}
               >
                 {item.label}
@@ -78,8 +84,8 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
 
           {/* Mobile Menu Button */}
           <div className="md:hidden flex items-center">
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)} 
+            <button
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-600 p-2 hover:bg-orange-50 rounded-lg transition-colors"
               aria-label="Menu"
             >
@@ -98,7 +104,9 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
                 className={`text-left py-3 px-4 rounded-xl text-base font-bold transition-colors ${
-                  activeTab === item.id ? 'bg-orange-50 text-orange-600' : 'text-gray-600 hover:bg-gray-50'
+                  activeTab === item.id
+                    ? "bg-orange-50 text-orange-600"
+                    : "text-gray-600 hover:bg-gray-50"
                 }`}
               >
                 {item.label}
