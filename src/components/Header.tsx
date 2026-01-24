@@ -41,20 +41,14 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-16 md:h-18 items-center">
           <div
-            className="flex items-center space-x-2.5 cursor-pointer shrink-0"
+            className="flex items-center cursor-pointer shrink-0"
             onClick={() => handleNavClick("home")}
           >
-            <div className="logo-gradient p-1.5 md:p-1.5 rounded-lg shadow-md">
-              <Rocket className="text-white w-5 h-5 md:w-5 md:h-5" />
-            </div>
-            <div className="flex flex-col leading-none">
-              <span className="text-sm sm:text-base md:text-sm lg:text-lg font-black text-gray-900 tracking-tight whitespace-nowrap">
-                STARTUP <span className="text-orange-600">AMBASSADORS</span>
-              </span>
-              <span className="text-[7px] md:text-[8px] font-bold tracking-[0.2em] text-gray-400 uppercase">
-                Tashkent
-              </span>
-            </div>
+            <img
+              src="/Black.png"
+              alt="Startup Ambassadors Tashkent"
+              className="h-10 md:h-12 object-contain"
+            />
           </div>
 
           {/* Desktop Nav - Better spacing for medium screens */}
