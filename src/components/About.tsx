@@ -30,16 +30,12 @@ const About: React.FC = () => {
             <img
               src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000"
               alt="Modern Office"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
             />
             {/* Overlay for text readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-orange-900/80 via-orange-900/40 to-transparent"></div>
 
             <div className="relative z-10 flex flex-col items-center text-center text-white p-12">
-              <Rocket
-                size={80}
-                className="mb-8 text-orange-400 animate-bounce"
-              />
               <h3 className="text-4xl font-black uppercase tracking-tighter mb-4 leading-none text-white">
                 Hamjamiyatimiz <br />
                 Sizni Kutmoqda
@@ -123,7 +119,7 @@ const About: React.FC = () => {
             key={program.id}
             className="p-10 bg-white border border-orange-50 rounded-[3rem] hover:border-orange-500 hover:shadow-2xl hover:shadow-orange-100 transition-all group relative overflow-hidden flex flex-col"
           >
-            <div className="bg-orange-50 text-orange-600 w-20 h-20 rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:bg-orange-600 group-hover:text-white transition-all duration-500 transform group-hover:rotate-6">
+            <div className="bg-orange-50 text-orange-600 w-20 h-20 rounded-[1.5rem] flex items-center justify-center mb-8 group-hover:bg-orange-600 group-hover:text-white transition-all duration-300">
               {iconMap[program.icon]}
             </div>
             <h4 className="text-2xl font-black text-gray-900 mb-4 tracking-tight leading-none uppercase">
@@ -132,7 +128,7 @@ const About: React.FC = () => {
             <p className="text-gray-500 text-sm leading-relaxed font-medium mb-6">
               {program.description}
             </p>
-            <div className="mt-auto h-1 w-0 group-hover:w-full bg-orange-600 transition-all duration-500 rounded-full"></div>
+            <div className="mt-auto h-1 w-0 group-hover:w-full bg-orange-600 transition-all duration-300 rounded-full"></div>
           </div>
         ))}
       </div>

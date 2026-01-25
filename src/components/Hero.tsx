@@ -3,16 +3,13 @@ import { ArrowRight, Sparkles, Send } from "lucide-react";
 
 const Hero: React.FC = () => {
   return (
-    <div className="relative overflow-hidden bg-white pt-10 pb-16 md:pt-16 md:pb-32">
-      {/* Background Decor - Safe Positioning */}
-      <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none overflow-hidden z-0">
-        <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[40%] bg-orange-100 rounded-full blur-[100px] opacity-30"></div>
-        <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[30%] bg-amber-100 rounded-full blur-[100px] opacity-30"></div>
-      </div>
+    <div className="relative overflow-hidden bg-transparent pt-10 pb-16 md:pt-16 md:pb-32">
+      {/* Background Decor - Removed local glows to show global grid */}
+      <div className="absolute top-0 left-0 right-0 bottom-0 pointer-events-none overflow-hidden z-0"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-1.5 md:px-5 md:py-2 rounded-full text-[10px] md:text-sm font-bold mb-6 md:mb-10 border border-orange-100 animate-pulse">
+          <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-1.5 md:px-5 md:py-2 rounded-full text-[10px] md:text-sm font-bold mb-6 md:mb-10 border border-orange-100">
             <Sparkles size={14} className="md:w-4 md:h-4" />
             <span className="uppercase tracking-wide">
               Toshkent Startup Ambassadors

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Menu, X, Rocket } from "lucide-react";
+import { Menu, X, ArrowRight } from "lucide-react";
 
 interface HeaderProps {
   activeTab: string;
@@ -10,11 +10,11 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const navItems = [
-    { id: "home", label: "Bosh" },
-    { id: "about", label: "Biz" },
-    { id: "ambassadors", label: "Jamoa" },
-    { id: "network", label: "Fondlar" },
-    { id: "events", label: "Event" },
+    { id: "home", label: "Asosiy" },
+    { id: "about", label: "Biz haqimizda" },
+    { id: "ambassadors", label: "Mentorlar" },
+    { id: "network", label: "Hamkorlar" },
+    { id: "events", label: "Tadbirlar" },
     { id: "blog", label: "Blog" },
   ];
 
@@ -37,87 +37,93 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   };
 
   return (
-    <nav className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-orange-100 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 md:h-18 items-center">
+    <div className="fixed top-4 left-0 right-0 z-[100] px-4 sm:px-6 lg:px-8">
+      <nav className="max-w-7xl mx-auto bg-white border border-gray-100 h-20 md:h-22 flex items-center shadow-xl rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-[0.5rem] rounded-bl-[0.5rem] relative overflow-hidden">
+        <div className="w-full px-6 md:px-10 flex justify-between items-center relative z-10">
+          {/* Logo */}
           <div
-            className="flex items-center cursor-pointer shrink-0"
+            className="flex items-center cursor-pointer group"
             onClick={() => handleNavClick("home")}
           >
             <img
               src="/Black.png"
-              alt="Startup Ambassadors Tashkent"
-              className="h-10 md:h-12 object-contain"
+              alt="Logo"
+              className="h-10 md:h-12 object-contain transition-transform group-hover:scale-105"
             />
           </div>
 
-          {/* Desktop Nav - Better spacing for medium screens */}
-          <div className="hidden md:flex items-center md:space-x-1.5 lg:space-x-6">
+          {/* Desktop Nav - Centered & Simple */}
+          <div className="hidden md:flex items-center space-x-8 lg:space-x-12">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
-                className={`px-1 lg:px-2 py-1 text-[10px] lg:text-sm font-bold transition-colors whitespace-nowrap ${
-                  activeTab === item.id
-                    ? "text-orange-600 border-b-2 border-orange-600"
-                    : "text-gray-600 hover:text-orange-600"
+                className={`text-sm font-bold transition-all hover:text-orange-600 relative py-2 ${
+                  activeTab === item.id ? "text-orange-600" : "text-gray-600"
                 }`}
               >
                 {item.label}
+                {activeTab === item.id && (
+                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-600 rounded-full animate-in fade-in zoom-in duration-300"></span>
+                )}
               </button>
             ))}
+          </div>
+
+          {/* Action Button */}
+          <div className="hidden md:block">
             <a
               href="https://t.me/toshkent_startup_community"
               target="_blank"
               rel="noopener noreferrer"
-              className="logo-gradient text-white px-3 lg:px-5 py-2 rounded-full text-[10px] lg:text-xs font-black shadow-lg hover:brightness-110 transition-all transform hover:scale-105 active:scale-95 whitespace-nowrap uppercase tracking-widest ml-1 lg:ml-4"
+              className="flex items-center space-x-2 text-gray-900 font-bold hover:text-orange-600 transition-colors group"
             >
-              Klub
+              <span className="text-sm">Bog'lanish</span>
+              <div className="w-10 h-10 rounded-tl-xl rounded-br-xl rounded-tr-sm rounded-bl-sm bg-orange-50 flex items-center justify-center text-orange-600 group-hover:bg-orange-600 group-hover:text-white transition-all shadow-sm group-hover:translate-x-1">
+                <ArrowRight size={18} />
+              </div>
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
+          {/* Mobile Toggle */}
+          <button
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="md:hidden p-2 text-gray-600"
+          >
+            {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu */}
+      <div
+        className={`fixed inset-x-4 top-28 bg-white z-[90] md:hidden transition-all duration-300 rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-[1rem] rounded-bl-[1rem] border border-gray-100 shadow-2xl overflow-hidden ${
+          isMenuOpen
+            ? "opacity-100 translate-y-0"
+            : "opacity-0 -translate-y-4 pointer-events-none"
+        }`}
+      >
+        <div className="flex flex-col p-8 space-y-6">
+          {navItems.map((item) => (
             <button
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-gray-600 p-2 hover:bg-orange-50 rounded-lg transition-colors"
-              aria-label="Menu"
+              key={item.id}
+              onClick={() => handleNavClick(item.id)}
+              className={`text-md font-black uppercase tracking-tighter text-left ${
+                activeTab === item.id ? "text-orange-600" : "text-gray-900"
+              }`}
             >
-              {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
+              {item.label}
             </button>
-          </div>
+          ))}
+          <a
+            href="https://t.me/toshkent_startup_community"
+            className="mt-4 bg-orange-600 text-white p-5 rounded-tl-2xl rounded-br-2xl text-center font-black uppercase tracking-widest text-xs"
+          >
+            Klubga qo'shilish
+          </a>
         </div>
       </div>
-
-      {/* Mobile Nav Overlay */}
-      {isMenuOpen && (
-        <div className="md:hidden bg-white border-b border-orange-100 overflow-hidden animate-in slide-in-from-top duration-300">
-          <div className="flex flex-col space-y-1 px-4 py-6">
-            {navItems.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`text-left py-3 px-4 rounded-xl text-base font-bold transition-colors ${
-                  activeTab === item.id
-                    ? "bg-orange-50 text-orange-600"
-                    : "text-gray-600 hover:bg-gray-50"
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-            <div className="pt-4">
-              <a
-                href="https://t.me/toshkent_startup_community"
-                className="logo-gradient text-white text-center block py-4 rounded-2xl font-black shadow-lg text-sm uppercase tracking-widest"
-              >
-                KLUBGA QO'SHILISH
-              </a>
-            </div>
-          </div>
-        </div>
-      )}
-    </nav>
+    </div>
   );
 };
 

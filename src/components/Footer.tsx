@@ -64,16 +64,12 @@ const Footer: React.FC = () => {
                 <Send size={20} />
               </a>
               <a
-                href="#"
+                href="https://www.instagram.com/startup.tashkent/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm"
               >
                 <Instagram size={20} />
-              </a>
-              <a
-                href="#"
-                className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm"
-              >
-                <Linkedin size={20} />
               </a>
             </div>
           </div>
