@@ -23,7 +23,7 @@ export const TEAM_STRUCTURE: TeamStructure = {
       members: [
         getMember("Ruxshona"),
         getMember("Ibrat"),
-        getMember("Muhammadmin"),
+        getMember("Muhammadamin"),
       ],
     },
     {
@@ -53,7 +53,7 @@ export const TEAM_STRUCTURE: TeamStructure = {
     },
     {
       name: "Media Team",
-      leader: getMember("Muhammadamin Abdolimov"),
+      leader: getMember("Muhammadamin"),
       members: [
         getMember("Shaxruza"),
         getMember("Munisa"),

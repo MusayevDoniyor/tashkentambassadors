@@ -25,9 +25,21 @@ const About: React.FC = () => {
       <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-32">
         <div className="relative order-2 lg:order-1 px-4 lg:px-0">
           <div className="absolute -inset-4 bg-orange-100 rounded-[3rem] blur-3xl opacity-20 -rotate-3"></div>
-          <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white group aspect-[4/5] lg:aspect-auto lg:h-[550px] bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center p-12">
-            <div className="relative z-10 flex flex-col items-center text-center text-white">
-              <Rocket size={80} className="mb-8 opacity-20 animate-bounce" />
+          <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white group aspect-[4/5] lg:aspect-auto lg:h-[550px] flex items-center justify-center">
+            {/* Real Image Integration */}
+            <img
+              src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000"
+              alt="Modern Office"
+              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            {/* Overlay for text readability */}
+            <div className="absolute inset-0 bg-gradient-to-t from-orange-900/80 via-orange-900/40 to-transparent"></div>
+
+            <div className="relative z-10 flex flex-col items-center text-center text-white p-12">
+              <Rocket
+                size={80}
+                className="mb-8 text-orange-400 animate-bounce"
+              />
               <h3 className="text-4xl font-black uppercase tracking-tighter mb-4 leading-none text-white">
                 Hamjamiyatimiz <br />
                 Sizni Kutmoqda
@@ -38,15 +50,11 @@ const About: React.FC = () => {
               </p>
 
               <div className="bg-white/10 backdrop-blur-md p-6 rounded-3xl border border-white/20">
-                <p className="font-black italic text-lg leading-tight">
+                <p className="font-black italic text-lg leading-tight text-white">
                   "Start up haqida bilmasangiz biz sizga buni o'rgatamiz!" ✨
                 </p>
               </div>
             </div>
-
-            {/* Background elements */}
-            <div className="absolute inset-0 opacity-10 mix-blend-overlay bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent"></div>
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-20 -mt-20 blur-3xl"></div>
           </div>
         </div>
 

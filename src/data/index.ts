@@ -36,7 +36,7 @@ export const AMBASSADORS: Ambassador[] = [
     role: "Team Leader",
     image:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@oloviddin_tl" },
+    socials: { telegram: "https://t.me/oloviddin_blog" },
   },
   {
     id: 2,
@@ -46,7 +46,7 @@ export const AMBASSADORS: Ambassador[] = [
     role: "Web Team Leader",
     image:
       "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@boburjon_m" },
+    socials: { telegram: "https://t.me/senpaisenpai" },
   },
   {
     id: 3,
@@ -56,7 +56,7 @@ export const AMBASSADORS: Ambassador[] = [
     role: "Media Team Leader",
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@m_abdolimov" },
+    socials: { telegram: "https://t.me/abdolimoff" },
   },
   {
     id: 4,
@@ -66,7 +66,7 @@ export const AMBASSADORS: Ambassador[] = [
     role: "Event Team Leader",
     image:
       "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@ibrat_e" },
+    socials: { telegram: "https://t.me/Ibrat_z1yodullayev" },
   },
 ];
 
