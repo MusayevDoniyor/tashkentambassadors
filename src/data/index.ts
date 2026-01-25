@@ -7,222 +7,66 @@ import {
   Mentor,
 } from "../types";
 
+// Helper to get coordinates for districts
+const getDistrictCoords = (district: string): [number, number] => {
+  const districts: Record<string, [number, number]> = {
+    Yunusobod: [41.3646, 69.2878],
+    Yashnobod: [41.2934, 69.34],
+    Yakkasaroy: [41.282, 69.2559],
+    Uchtepa: [41.2933, 69.1764],
+    Shayxontohur: [41.3214, 69.223],
+    Olmazor: [41.3533, 69.2155],
+    "Mirzo Ulugbek": [41.3346, 69.3468],
+    "Mirzo Ulug'bek": [41.3346, 69.3468],
+    Mirobod: [41.2882, 69.2889],
+    Chilonzor: [41.2721, 69.2045],
+    Sergeli: [41.2263, 69.2198],
+    Bektemir: [41.2368, 69.3664],
+    Yangihayot: [41.202, 69.202],
+  };
+  return districts[district] || [41.2995, 69.2401];
+};
+
 export const AMBASSADORS: Ambassador[] = [
   {
     id: 1,
-    name: "Bobur",
-    district: "Toshkent",
-    role: "Marketing & Web Support",
-    image:
-      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@boburjon_m" },
-  },
-  {
-    id: 2,
-    name: "Husnida",
-    district: "Toshkent",
-    role: "Deputy Leader",
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@husnida_a" },
-  },
-  {
-    id: 3,
-    name: "Iroda",
-    district: "Toshkent",
-    role: "Presentation & Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@iroda_p" },
-  },
-  {
-    id: 4,
-    name: "Muhammadmin",
-    district: "Toshkent",
-    role: "Media Manager & Event Team",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@muhammadmin_m" },
-  },
-  {
-    id: 5,
-    name: "Doniyor",
-    district: "Toshkent",
-    role: "Web & Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@doniyor_dev" },
-  },
-  {
-    id: 6,
-    name: "Jahongir",
-    district: "Toshkent",
-    role: "Web & Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@jahongir_j" },
-  },
-  {
-    id: 7,
-    name: "Bexruz",
-    district: "Toshkent",
-    role: "Web Developer",
-    image:
-      "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@bexruz_dev" },
-  },
-  {
-    id: 8,
-    name: "Ibrat",
-    district: "Toshkent",
-    role: "Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@ibrat_e" },
-  },
-  {
-    id: 9,
-    name: "Yulduz",
-    district: "Toshkent",
-    role: "Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@yulduz_e" },
-  },
-  {
-    id: 10,
-    name: "Feruzbek",
-    district: "Toshkent",
-    role: "Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@feruzbek_e" },
-  },
-  {
-    id: 11,
-    name: "Shaxruza",
-    district: "Toshkent",
-    role: "Media Team",
-    image:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@shaxruza_m" },
-  },
-  {
-    id: 12,
-    name: "Munisa",
-    district: "Toshkent",
-    role: "Media Team & Deputy",
-    image:
-      "https://images.unsplash.com/photo-1554151228-14d9def656e4?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@munisa_m" },
-  },
-  {
-    id: 13,
-    name: "Afruza",
-    district: "Toshkent",
-    role: "Media Team",
-    image:
-      "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@afruza_m" },
-  },
-  {
-    id: 14,
-    name: "Sardor",
-    district: "Toshkent",
-    role: "Media Team",
-    image:
-      "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@sardor_media" },
-  },
-  {
-    id: 15,
     name: "Oloviddin",
-    district: "Toshkent",
+    district: "Uchtepa",
+    coordinates: getDistrictCoords("Uchtepa"),
     role: "Team Leader",
     image:
       "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=400",
     socials: { telegram: "@oloviddin_tl" },
   },
   {
-    id: 16,
-    name: "Ruxshona",
-    district: "Toshkent",
-    role: "Marketing Specialist",
+    id: 2,
+    name: "Bobur",
+    district: "Shayxontohur",
+    coordinates: getDistrictCoords("Shayxontohur"),
+    role: "Web Team Leader",
     image:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@ruxshona_m" },
+      "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@boburjon_m" },
   },
   {
-    id: 17,
-    name: "S. Muhammadmin",
-    district: "Toshkent",
-    role: "Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@muhammadmin_s" },
-  },
-  {
-    id: 18,
-    name: "Rasul",
-    district: "Toshkent",
-    role: "Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@rasul_e" },
-  },
-  {
-    id: 19,
-    name: "Zeboxon",
-    district: "Toshkent",
-    role: "Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@zeboxon_e" },
-  },
-  {
-    id: 20,
-    name: "Gulzoda",
-    district: "Toshkent",
-    role: "Deputy & Event Manager",
-    image:
-      "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@gulzoda_e" },
-  },
-  {
-    id: 21,
-    name: "Mavluda",
-    district: "Toshkent",
-    role: "Media Team",
-    image:
-      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@mavluda_m" },
-  },
-  {
-    id: 22,
-    name: "Xanifa",
-    district: "Toshkent",
-    role: "Operations Manager",
-    image:
-      "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@xanifa_o" },
-  },
-  {
-    id: 23,
-    name: "Sardorbek",
-    district: "Toshkent",
-    role: "Operations Specialist",
-    image:
-      "https://images.unsplash.com/photo-1519345182560-3f2917c472ef?auto=format&fit=crop&q=80&w=400",
-    socials: { telegram: "@sardorbek_o" },
-  },
-  {
-    id: 24,
-    name: "Muhammadamin Abdolimov",
-    district: "Toshkent",
-    role: "Media Manager",
+    id: 3,
+    name: "Muhammadamin",
+    district: "Mirzo Ulugbek",
+    coordinates: getDistrictCoords("Mirzo Ulugbek"),
+    role: "Media Team Leader",
     image:
       "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400",
     socials: { telegram: "@m_abdolimov" },
+  },
+  {
+    id: 4,
+    name: "Ibratilla",
+    district: "Yunusobod",
+    coordinates: getDistrictCoords("Yunusobod"),
+    role: "Event Team Leader",
+    image:
+      "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=400",
+    socials: { telegram: "@ibrat_e" },
   },
 ];
 

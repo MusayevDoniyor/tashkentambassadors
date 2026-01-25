@@ -207,13 +207,7 @@ const Footer: React.FC = () => {
             © 2026 Startup Ambassadors Tashkent. Yoshlar Ventures hamkorligida.
           </p>
           <div className="flex items-center space-x-8">
-            <button
-              onClick={scrollToTop}
-              className="flex items-center space-x-2 text-orange-500 hover:text-white transition-colors"
-            >
-              <ArrowUp size={14} />
-              <span>Yuqoriga</span>
-            </button>
+            {/* Link removed - replaced by floating button */}
           </div>
         </div>
       </div>

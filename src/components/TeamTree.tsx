@@ -58,13 +58,14 @@ const MemberCard: React.FC<{
         relative overflow-hidden rounded-[2.5rem] border-4 
         ${isOverallLeader ? "w-48 h-48 border-orange-500 shadow-2xl" : isLeader ? "w-40 h-40 border-white shadow-xl" : "w-28 h-28 border-white shadow-md"}
         bg-white transition-all duration-700 ${shadowColor[accentColor]}
+        flex items-center justify-center
       `}
       >
-        <img
-          src={member.image}
-          alt={member.name}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000 grayscale-[20%] group-hover:grayscale-0"
-        />
+        <div
+          className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${colorMap[accentColor]} font-black text-white uppercase tracking-tighter ${isOverallLeader ? "text-6xl" : isLeader ? "text-5xl" : "text-3xl"}`}
+        >
+          {member.name.charAt(0)}
+        </div>
 
         {/* Hover Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-4">

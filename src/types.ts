@@ -2,6 +2,7 @@ export interface Ambassador {
   id: number;
   name: string;
   district: string;
+  coordinates: [number, number];
   role: string;
   image: string;
   socials: {

@@ -61,45 +61,64 @@ const Ambassadors: React.FC = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 justify-center">
         {filteredAmbassadors.map((amb) => (
           <div
             key={amb.id}
-            className="bg-white rounded-[2rem] overflow-hidden border border-orange-50 hover:shadow-xl transition-all group flex flex-col h-full animate-in fade-in slide-in-from-bottom-4 duration-500"
+            className="group flex flex-col items-center text-center animate-in fade-in slide-in-from-bottom-4 duration-500"
           >
-            <div className="aspect-square relative overflow-hidden">
-              <img
-                src={amb.image}
-                alt={amb.name}
-                className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-500"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-orange-950/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative mb-8">
+              {/* Outer Glow/Ring */}
+              <div className="absolute -inset-4 bg-orange-100 rounded-full opacity-0 group-hover:opacity-100 group-hover:scale-110 transition-all duration-500 blur-xl"></div>
+
+              {/* Initials Avatar Replacement */}
+              <div className="relative w-48 h-48 rounded-full border-8 border-white shadow-2xl flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 z-10 transition-transform duration-500 group-hover:scale-105 group-hover:rotate-3 font-black text-white text-6xl uppercase tracking-tighter">
+                {amb.name.charAt(0)}
+                {/* Subtle pattern overlay */}
+                <div className="absolute inset-0 opacity-10 mix-blend-overlay bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-white to-transparent"></div>
+              </div>
+
+              {/* Floating Badge */}
+              <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-white rounded-2xl shadow-lg flex items-center justify-center z-20 group-hover:bg-gray-900 group-hover:text-white transition-colors duration-300">
+                <Users
+                  size={20}
+                  className="text-orange-600 group-hover:text-white"
+                />
+              </div>
             </div>
-            <div className="p-6 flex flex-col flex-1">
-              <h3 className="text-lg font-black text-gray-900 mb-1 tracking-tight leading-none group-hover:text-orange-600 transition-colors uppercase">
+
+            <div className="relative z-10 space-y-2">
+              <h3 className="text-2xl font-black text-gray-900 tracking-tighter uppercase group-hover:text-orange-600 transition-colors">
                 {amb.name}
               </h3>
-              <p className="text-orange-600 text-[9px] font-black uppercase tracking-[0.15em] mb-4 min-h-[1.5rem]">
-                {amb.role}
-              </p>
+              <div className="flex flex-col items-center space-y-3">
+                <p className="bg-orange-50 text-orange-600 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-orange-100">
+                  {amb.role}
+                </p>
+                <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">
+                  {amb.district} District
+                </p>
+              </div>
 
-              <div className="flex items-center space-x-3 mt-auto">
+              <div className="flex items-center justify-center space-x-3 pt-4">
                 {amb.socials.telegram && (
                   <a
                     href={`https://t.me/${amb.socials.telegram.replace("@", "")}`}
                     target="_blank"
-                    className="w-9 h-9 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600 hover:bg-orange-600 hover:text-white transition-all"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-orange-600 hover:text-white transition-all duration-300"
                   >
-                    <Send size={16} />
+                    <Send size={18} />
                   </a>
                 )}
                 {amb.socials.linkedin && (
                   <a
                     href={amb.socials.linkedin}
                     target="_blank"
-                    className="w-9 h-9 rounded-lg bg-orange-50 flex items-center justify-center text-orange-600 hover:bg-orange-600 hover:text-white transition-all"
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all duration-300"
                   >
-                    <Linkedin size={16} />
+                    <Linkedin size={18} />
                   </a>
                 )}
               </div>
