@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, ArrowRight } from "lucide-react";
 
 interface HeaderProps {
@@ -8,6 +9,8 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const navItems = [
     { id: "home", label: "Asosiy" },
@@ -21,20 +24,40 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   const handleNavClick = (id: string) => {
     setActiveTab(id);
     setIsMenuOpen(false);
-    const element = document.getElementById(id);
-    if (element) {
-      const offset = 80;
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elementRect = element.getBoundingClientRect().top;
-      const elementPosition = elementRect - bodyRect;
-      const offsetPosition = elementPosition - offset;
 
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: "smooth",
-      });
+    // If we're on a different page, navigate home first then scroll
+    if (location.pathname !== "/") {
+      navigate("/");
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          const offset = 80;
+          const bodyRect = document.body.getBoundingClientRect().top;
+          const elementRect = element.getBoundingClientRect().top;
+          const elementPosition = elementRect - bodyRect;
+          const offsetPosition = elementPosition - offset;
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+      }, 100);
+    } else {
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 80;
+        const bodyRect = document.body.getBoundingClientRect().top;
+        const elementRect = element.getBoundingClientRect().top;
+        const elementPosition = elementRect - bodyRect;
+        const offsetPosition = elementPosition - offset;
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      }
     }
   };
+
+  const handleRequestClick = () => {
+    setIsMenuOpen(false);
+    navigate("/request");
+  };
+
+  const isOnRequestPage = location.pathname === "/request";
 
   return (
     <div className="fixed top-4 left-0 right-0 z-[100] px-4 sm:px-6 lg:px-8">
@@ -53,21 +76,34 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
           </div>
 
           {/* Desktop Nav - Centered & Simple */}
-          <div className="hidden md:flex items-center space-x-8 lg:space-x-12">
+          <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
             {navItems.map((item) => (
               <button
                 key={item.id}
                 onClick={() => handleNavClick(item.id)}
                 className={`text-sm font-bold transition-all hover:text-orange-600 relative py-2 ${
-                  activeTab === item.id ? "text-orange-600" : "text-gray-600"
+                  activeTab === item.id && !isOnRequestPage
+                    ? "text-orange-600"
+                    : "text-gray-600"
                 }`}
               >
                 {item.label}
-                {activeTab === item.id && (
+                {activeTab === item.id && !isOnRequestPage && (
                   <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-600 rounded-full animate-in fade-in zoom-in duration-300"></span>
                 )}
               </button>
             ))}
+            {/* Jamoa kerak - special link */}
+            <button
+              onClick={handleRequestClick}
+              className={`text-sm font-bold transition-all relative py-2 px-3 rounded-xl ${
+                isOnRequestPage
+                  ? "text-white bg-orange-600"
+                  : "text-orange-600 bg-orange-50 hover:bg-orange-100"
+              }`}
+            >
+              Jamoa kerak
+            </button>
           </div>
 
           {/* Action Button */}
@@ -103,21 +139,33 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             : "opacity-0 -translate-y-4 pointer-events-none"
         }`}
       >
-        <div className="flex flex-col p-8 space-y-6">
+        <div className="flex flex-col p-6 space-y-3">
           {navItems.map((item) => (
             <button
               key={item.id}
               onClick={() => handleNavClick(item.id)}
-              className={`text-md font-black uppercase tracking-tighter text-left ${
-                activeTab === item.id ? "text-orange-600" : "text-gray-900"
+              className={`text-sm font-black uppercase tracking-widest text-left py-2.5 px-4 rounded-xl transition-colors ${
+                activeTab === item.id && !isOnRequestPage
+                  ? "text-orange-600 bg-orange-50"
+                  : "text-gray-700 hover:bg-gray-50"
               }`}
             >
               {item.label}
             </button>
           ))}
+          <button
+            onClick={handleRequestClick}
+            className={`text-sm font-black uppercase tracking-widest text-left py-2.5 px-4 rounded-xl transition-colors ${
+              isOnRequestPage
+                ? "text-white bg-orange-600"
+                : "text-orange-600 bg-orange-50"
+            }`}
+          >
+            Jamoa kerak
+          </button>
           <a
             href="https://t.me/toshkent_startup_community"
-            className="mt-4 bg-orange-600 text-white p-5 rounded-tl-2xl rounded-br-2xl text-center font-black uppercase tracking-widest text-xs"
+            className="mt-2 bg-orange-600 text-white py-3 px-4 rounded-tl-2xl rounded-br-2xl text-center font-black uppercase tracking-widest text-xs"
           >
             Klubga qo'shilish
           </a>
