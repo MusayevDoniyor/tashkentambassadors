@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
       <div className="absolute bottom-[-5%] right-[-5%] w-64 h-64 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-16 mb-20 border-b border-white/5 pb-20">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 mb-20 border-b border-white/5 pb-20">
           <div className="space-y-8">
             <div
               className="flex items-center group cursor-pointer"
@@ -171,30 +171,6 @@ const Footer: React.FC = () => {
                 <Send size={14} />
               </button>
             </form>
-          </div>
-
-          <div>
-            <h4 className="text-xs font-black mb-8 uppercase tracking-[0.3em] text-orange-500">
-              Tezkor havolalar
-            </h4>
-            <div className="grid grid-cols-1 gap-3">
-              <a
-                href="https://t.me/toshkent_startup_community"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white/5 hover:bg-orange-600 p-4 rounded-2xl transition-all border border-white/5 font-black text-[10px] uppercase tracking-widest text-center"
-              >
-                KANALIMIZGA QO'SHILISH
-              </a>
-              <a
-                href="https://t.me/startup_community_rules"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-white/5 hover:bg-orange-600 p-4 rounded-2xl transition-all border border-white/5 font-black text-[10px] uppercase tracking-widest text-center"
-              >
-                KLUB QOIDALARI
-              </a>
-            </div>
           </div>
         </div>
 

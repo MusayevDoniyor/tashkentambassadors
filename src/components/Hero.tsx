@@ -1,7 +1,45 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { ArrowRight, Sparkles, Send } from "lucide-react";
+import { supabase } from "../lib/supabase";
 
 const Hero: React.FC = () => {
+  const [stats, setStats] = useState({
+    districts: 12,
+    ambassadors: 0,
+    startups: 0,
+    partners: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const [ambCount, teamReqCount, partnerCount] = await Promise.all([
+          supabase
+            .from("ambassadors")
+            .select("*", { count: "exact", head: true }),
+          supabase
+            .from("team_requests")
+            .select("*", { count: "exact", head: true }),
+          supabase.from("partners").select("*", { count: "exact", head: true }),
+        ]);
+
+        setStats({
+          districts: 12,
+          ambassadors: ambCount.count || 0,
+          startups: teamReqCount.count || 0,
+          partners: partnerCount.count || 0,
+        });
+      } catch (err) {
+        console.error("Error fetching hero stats:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchStats();
+  }, []);
+
   return (
     <div className="relative overflow-hidden bg-transparent pt-10 pb-16 md:pt-16 md:pb-32">
       {/* Background Decor - Removed local glows to show global grid */}
@@ -61,17 +99,26 @@ const Hero: React.FC = () => {
         {/* Stats Section */}
         <div className="mt-16 md:mt-28 grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
           {[
-            { label: "Tumanlar", val: "12" },
-            { label: "Ambassadorlar", val: "24+" },
-            { label: "Startuplar", val: "150+" },
-            { label: "Hamkorlar", val: "10+" },
+            { label: "Tumanlar", val: stats.districts },
+            {
+              label: "Ambassadorlar",
+              val: `${stats.ambassadors}${stats.ambassadors >= 24 ? "+" : ""}`,
+            },
+            {
+              label: "Startuplar",
+              val: `${stats.startups}${stats.startups >= 150 ? "+" : ""}`,
+            },
+            {
+              label: "Hamkorlar",
+              val: `${stats.partners}${stats.partners >= 10 ? "+" : ""}`,
+            },
           ].map((stat, i) => (
             <div
               key={i}
               className="text-center p-5 md:p-8 rounded-[1.5rem] md:rounded-[2rem] bg-white border-2 border-orange-50 hover:border-orange-200 transition-all shadow-sm"
             >
               <div className="text-2xl md:text-4xl font-black text-gray-900 mb-1 md:mb-2">
-                {stat.val}
+                {loading ? "..." : stat.val}
               </div>
               <div className="text-[8px] md:text-[10px] text-orange-600 font-black uppercase tracking-widest">
                 {stat.label}

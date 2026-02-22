@@ -15,8 +15,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   const navItems = [
     { id: "home", label: "Asosiy" },
     { id: "about", label: "Biz haqimizda" },
-    { id: "ambassadors", label: "Mentorlar" },
-    { id: "network", label: "Hamkorlar" },
+    { id: "ambassadors", label: "Ambassadorlar" },
     { id: "events", label: "Tadbirlar" },
     { id: "blog", label: "Blog" },
   ];

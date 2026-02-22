@@ -5,7 +5,6 @@ import Hero from "./components/Hero";
 import About from "./components/About";
 import TashkentMap from "./components/TashkentMap";
 import Ambassadors from "./components/Ambassadors";
-import Network from "./components/Network";
 import Events from "./components/Events";
 import Blog from "./components/Blog";
 import TeamRequest from "./components/TeamRequest";
@@ -61,13 +60,6 @@ const HomePage: React.FC = () => (
       className="py-16 md:py-28 relative border-t border-gray-100/50"
     >
       <TashkentMap />
-    </section>
-
-    <section
-      id="network"
-      className="py-16 md:py-28 relative border-t border-gray-100/50 bg-white/30 backdrop-blur-[1px]"
-    >
-      <Network />
     </section>
 
     <section
