@@ -50,15 +50,29 @@ const Events: React.FC = () => {
     "idle" | "submitting" | "success" | "error"
   >("idle");
 
+  const isEventPast = (dateStr: string) => {
+    if (!dateStr) return false;
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const eventDate = new Date(dateStr);
+    eventDate.setHours(0, 0, 0, 0);
+    return eventDate < today;
+  };
+
   useEffect(() => {
     const fetchEvents = async () => {
       try {
         const { data, error } = await supabase
           .from("events")
           .select("*")
-          .order("created_at", { ascending: false });
+          .order("date", { ascending: true }); // Order by date ascending for upcoming
         if (error) throw error;
-        setEvents(data || []);
+
+        // Filter out past events
+        const upcomingEvents = (data || []).filter(
+          (event) => !isEventPast(event.date),
+        );
+        setEvents(upcomingEvents);
       } catch (err) {
         console.error("Error fetching events:", err);
       } finally {

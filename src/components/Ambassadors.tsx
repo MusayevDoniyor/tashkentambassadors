@@ -1,5 +1,14 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { MapPin, Send, Linkedin, Search, X, Users, Star } from "lucide-react";
+import {
+  MapPin,
+  Send,
+  Linkedin,
+  Search,
+  X,
+  Users,
+  Star,
+  Crown,
+} from "lucide-react";
 import { supabase } from "../lib/supabase";
 
 interface Ambassador {
@@ -167,14 +176,19 @@ const Ambassadors: React.FC = () => {
                 {amb.name}
               </h3>
               <div className="flex flex-col items-center space-y-3">
-                <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest">
-                  {amb.team || "Ambassador"}
+                <span
+                  className={`text-[10px] font-black uppercase tracking-widest flex items-center ${amb.is_leader ? "text-orange-600" : "text-gray-400"}`}
+                >
+                  {amb.is_leader && <Crown size={12} className="mr-1" />}
+                  {amb.team && amb.team !== "Jamoasiz (Asosiy tarkib)"
+                    ? amb.team
+                    : "Ambassador"}
                 </span>
                 <p className="bg-orange-50 text-gray-600 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-orange-100">
                   {amb.role}
                 </p>
                 <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">
-                  {amb.district} District
+                  {amb.district} tumani
                 </p>
               </div>
 
