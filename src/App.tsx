@@ -57,7 +57,7 @@ const HomePage: React.FC = () => (
 
     <section
       id="ambassadors"
-      className="py-16 md:py-28 relative border-t border-gray-100/50"
+      className="py-16 md:py-20 relative border-t border-gray-100/50"
     >
       <TashkentMap />
     </section>

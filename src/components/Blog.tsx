@@ -71,55 +71,70 @@ const Blog: React.FC = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-        {posts.map((post) => (
-          <article
-            key={post.id}
-            className="flex flex-col h-full bg-white rounded-[2.5rem] overflow-hidden border border-orange-50 hover:shadow-2xl transition-all duration-300 group cursor-pointer"
-            onClick={() => setSelectedPost(post)}
-          >
-            <div className="relative aspect-[16/10] overflow-hidden flex items-center justify-center bg-gray-50">
-              {post.image ? (
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
-                />
-              ) : (
-                <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 opacity-90"></div>
-              )}
-              {/* <div className="relative z-10 text-white flex flex-col items-center">
+        {posts.length > 0 ? (
+          posts.map((post) => (
+            <article
+              key={post.id}
+              className="flex flex-col h-full bg-white rounded-[2.5rem] overflow-hidden border border-orange-50 hover:shadow-2xl transition-all duration-300 group cursor-pointer"
+              onClick={() => setSelectedPost(post)}
+            >
+              <div className="relative aspect-[16/10] overflow-hidden flex items-center justify-center bg-gray-50">
+                {post.image ? (
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 opacity-90"></div>
+                )}
+                {/* <div className="relative z-10 text-white flex flex-col items-center">
                 <BookOpen size={40} className="mb-2 opacity-50" />
                 <span className="text-[10px] font-black uppercase tracking-[0.2em]">
                   {post.category}
                 </span>
               </div> */}
-              <div className="absolute top-6 left-6">
-                <span className="bg-white/90 backdrop-blur-md text-orange-600 text-[10px] uppercase tracking-[0.2em] font-black px-4 py-2 rounded-xl shadow-lg border border-white/50">
-                  {post.category}
-                </span>
+                <div className="absolute top-6 left-6">
+                  <span className="bg-white/90 backdrop-blur-md text-orange-600 text-[10px] uppercase tracking-[0.2em] font-black px-4 py-2 rounded-xl shadow-lg border border-white/50">
+                    {post.category}
+                  </span>
+                </div>
               </div>
-            </div>
 
-            <div className="p-8 sm:p-10 flex flex-col flex-1">
-              <div className="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest">
-                {post.date}
-              </div>
-              <h3 className="text-xl sm:text-2xl font-black text-gray-900 mb-4 leading-tight group-hover:text-orange-600 transition-colors">
-                {post.title}
-              </h3>
-              <p className="text-gray-500 text-sm mb-8 line-clamp-3 font-medium leading-relaxed">
-                {post.excerpt}
-              </p>
+              <div className="p-8 sm:p-10 flex flex-col flex-1">
+                <div className="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest">
+                  {post.date}
+                </div>
+                <h3 className="text-xl sm:text-2xl font-black text-gray-900 mb-4 leading-tight group-hover:text-orange-600 transition-colors">
+                  {post.title}
+                </h3>
+                <p className="text-gray-500 text-sm mb-8 line-clamp-3 font-medium leading-relaxed">
+                  {post.excerpt}
+                </p>
 
-              <div className="mt-auto flex items-center justify-between">
-                <button className="flex items-center space-x-2 text-gray-900 font-black uppercase tracking-widest text-xs group-hover:text-orange-600 transition-colors">
-                  <span>Batafsil o'qish</span>
-                  <ArrowUpRight size={18} />
-                </button>
+                <div className="mt-auto flex items-center justify-between">
+                  <button className="flex items-center space-x-2 text-gray-900 font-black uppercase tracking-widest text-xs group-hover:text-orange-600 transition-colors">
+                    <span>Batafsil o'qish</span>
+                    <ArrowUpRight size={18} />
+                  </button>
+                </div>
               </div>
+            </article>
+          ))
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-orange-100 lg:col-span-2">
+            <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center text-orange-200 mb-6 animate-pulse">
+              <BookOpen size={40} />
             </div>
-          </article>
-        ))}
+            <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">
+              Maqolalar topilmadi
+            </h3>
+            <p className="text-gray-400 font-medium text-sm text-center max-w-sm px-6">
+              Hozircha foydali maqolalar yuklanmagan. Tezy orada yangi
+              materiallarni kutib qoling!
+            </p>
+          </div>
+        )}
 
         <div className="flex flex-col h-full logo-gradient rounded-[2.5rem] p-8 sm:p-10 text-white shadow-xl shadow-orange-100 relative overflow-hidden group min-h-[350px]">
           <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
@@ -133,7 +148,7 @@ const Blog: React.FC = () => {
             </p>
             <div className="mt-auto space-y-4">
               <a
-                href="https://t.me/toshkent_startup_community"
+                href="https://t.me/tashkent_ambassadors"
                 target="_blank"
                 className="block bg-white text-orange-600 w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
               >

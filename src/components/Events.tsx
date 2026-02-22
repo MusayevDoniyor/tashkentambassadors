@@ -219,94 +219,118 @@ const Events: React.FC = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
-        {filteredEvents.map((event) => {
-          const isFull =
-            event.capacity !== null && event.registered_count >= event.capacity;
+      <div
+        className={
+          filteredEvents.length > 0
+            ? "grid grid-cols-1 lg:grid-cols-2 gap-10"
+            : ""
+        }
+      >
+        {filteredEvents.length > 0 ? (
+          filteredEvents.map((event) => {
+            const isFull =
+              event.capacity !== null &&
+              event.registered_count >= event.capacity;
 
-          return (
-            <div
-              key={event.id}
-              className="group bg-white rounded-[2.5rem] border border-orange-50 overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row"
-            >
-              <div className="relative md:w-2/5 overflow-hidden flex items-center justify-center bg-gray-100 min-h-[200px]">
-                {event.image ? (
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 opacity-90"></div>
-                )}
-                <div className="relative z-10 flex flex-col items-center text-white">
-                  <Calendar size={48} className="mb-2 opacity-50" />
-                  <span className="text-[10px] font-black uppercase tracking-[0.2em]">
-                    {event.type}
-                  </span>
-                </div>
-                {isFull && (
-                  <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] z-20 flex items-center justify-center">
-                    <span className="bg-red-500 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest">
-                      Joy qolmadi
+            return (
+              <div
+                key={event.id}
+                className="group bg-white rounded-[2.5rem] border border-orange-50 overflow-hidden hover:shadow-2xl transition-all duration-300 flex flex-col md:flex-row"
+              >
+                <div className="relative md:w-2/5 overflow-hidden flex items-center justify-center bg-gray-100 min-h-[200px]">
+                  {event.image ? (
+                    <img
+                      src={event.image}
+                      alt={event.title}
+                      className="absolute inset-0 w-full h-full object-cover transition-all duration-300"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 opacity-90"></div>
+                  )}
+                  <div className="relative z-10 flex flex-col items-center text-white">
+                    <Calendar size={48} className="mb-2 opacity-50" />
+                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                      {event.type}
                     </span>
                   </div>
-                )}
-              </div>
-              <div className="p-8 md:w-3/5 flex flex-col">
-                <div className="flex items-center space-x-4 text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">
-                  <div className="flex items-center space-x-1.5">
-                    <Calendar size={14} className="text-orange-500" />
-                    <span>{event.date}</span>
-                  </div>
-                  <div className="flex items-center space-x-1.5">
-                    <Clock size={14} className="text-orange-500" />
-                    <span>{event.time}</span>
-                  </div>
+                  {isFull && (
+                    <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] z-20 flex items-center justify-center">
+                      <span className="bg-red-500 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest">
+                        Joy qolmadi
+                      </span>
+                    </div>
+                  )}
                 </div>
-                <h3 className="text-2xl font-black text-gray-900 mb-4 leading-tight group-hover:text-orange-600 transition-colors">
-                  {event.title}
-                </h3>
-                <div className="flex items-center space-x-2 text-gray-500 text-sm mb-4 font-medium">
-                  <MapPin size={16} className="text-orange-300" />
-                  <span>{event.location}</span>
-                </div>
-
-                {event.capacity && (
-                  <div className="flex items-center space-x-2 mb-6 text-gray-400">
-                    <Users size={14} />
-                    <span className="text-[10px] font-black uppercase tracking-widest">
-                      {event.registered_count} / {event.capacity} band
-                    </span>
+                <div className="p-8 md:w-3/5 flex flex-col">
+                  <div className="flex items-center space-x-4 text-xs font-bold text-gray-400 mb-4 uppercase tracking-widest">
+                    <div className="flex items-center space-x-1.5">
+                      <Calendar size={14} className="text-orange-500" />
+                      <span>{event.date}</span>
+                    </div>
+                    <div className="flex items-center space-x-1.5">
+                      <Clock size={14} className="text-orange-500" />
+                      <span>{event.time}</span>
+                    </div>
                   </div>
-                )}
+                  <h3 className="text-2xl font-black text-gray-900 mb-4 leading-tight group-hover:text-orange-600 transition-colors">
+                    {event.title}
+                  </h3>
+                  <div className="flex items-center space-x-2 text-gray-500 text-sm mb-4 font-medium">
+                    <MapPin size={16} className="text-orange-300" />
+                    <span>{event.location}</span>
+                  </div>
 
-                {event.registration_link ? (
-                  <a
-                    href={event.registration_link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`mt-auto flex items-center justify-center space-x-2 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-sm ${
-                      isFull
-                        ? "bg-gray-100 text-gray-400 pointer-events-none"
-                        : "bg-gray-50 text-gray-900 hover:bg-orange-600 hover:text-white group-hover:shadow-orange-100"
-                    }`}
-                  >
-                    <span>{isFull ? "Joy qolmadi" : "Ro'yxatdan o'tish"}</span>
-                    <ArrowRight size={14} />
-                  </a>
-                ) : (
-                  <button
-                    disabled
-                    className="mt-auto block text-center py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-sm bg-gray-100 text-gray-400 cursor-not-allowed"
-                  >
-                    Ro'yxat ochilmagan
-                  </button>
-                )}
+                  {event.capacity && (
+                    <div className="flex items-center space-x-2 mb-6 text-gray-400">
+                      <Users size={14} />
+                      <span className="text-[10px] font-black uppercase tracking-widest">
+                        {event.registered_count} / {event.capacity} band
+                      </span>
+                    </div>
+                  )}
+
+                  {event.registration_link ? (
+                    <a
+                      href={event.registration_link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`mt-auto flex items-center justify-center space-x-2 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-sm ${
+                        isFull
+                          ? "bg-gray-100 text-gray-400 pointer-events-none"
+                          : "bg-gray-50 text-gray-900 hover:bg-orange-600 hover:text-white group-hover:shadow-orange-100"
+                      }`}
+                    >
+                      <span>
+                        {isFull ? "Joy qolmadi" : "Ro'yxatdan o'tish"}
+                      </span>
+                      <ArrowRight size={14} />
+                    </a>
+                  ) : (
+                    <button
+                      disabled
+                      className="mt-auto block text-center py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-sm bg-gray-100 text-gray-400 cursor-not-allowed"
+                    >
+                      Ro'yxat ochilmagan
+                    </button>
+                  )}
+                </div>
               </div>
+            );
+          })
+        ) : (
+          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-orange-100 w-full col-span-2">
+            <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center text-orange-200 mb-6 animate-pulse">
+              <Calendar size={40} />
             </div>
-          );
-        })}
+            <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">
+              Tadbirlar topilmadi
+            </h3>
+            <p className="text-gray-400 font-medium text-sm text-center max-w-sm px-6">
+              Hozircha ushbu turdagi kelgusi tadbirlar rejalashtirilmagan.
+              Yangiliklarni kuzatib boring!
+            </p>
+          </div>
+        )}
       </div>
 
       {/* Registration Modal */}
