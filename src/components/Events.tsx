@@ -188,7 +188,7 @@ const Events: React.FC = () => {
           </p>
         </div>
         <a
-          href="https://t.me/toshkent_startup_community"
+          href="https://t.me/tashkent_ambassadors"
           target="_blank"
           className="inline-flex items-center space-x-2 text-orange-600 font-black uppercase tracking-widest hover:translate-x-2 transition-transform"
         >

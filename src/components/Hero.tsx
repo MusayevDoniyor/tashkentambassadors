@@ -71,7 +71,7 @@ const Hero: React.FC = () => {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4 md:gap-6 px-4">
             <a
-              href="https://t.me/toshkent_startup_community"
+              href="https://t.me/tashkent_ambassadors"
               target="_blank"
               className="w-full sm:w-auto flex items-center justify-center space-x-2 logo-gradient text-white px-8 py-4 md:px-10 md:py-5 rounded-2xl font-black text-base md:text-lg hover:brightness-110 transition-all shadow-xl shadow-orange-200 btn-3d border border-orange-600"
             >

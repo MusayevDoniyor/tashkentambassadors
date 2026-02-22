@@ -213,7 +213,7 @@ const Blog: React.FC = () => {
                   boring!
                 </p>
                 <a
-                  href="https://t.me/toshkent_startup_community"
+                  href="https://t.me/tashkent_ambassadors"
                   target="_blank"
                   className="inline-flex items-center space-x-3 px-10 py-5 bg-orange-600 text-white rounded-2xl font-black text-sm uppercase tracking-widest hover:bg-orange-700 transition-all shadow-xl shadow-orange-200"
                 >

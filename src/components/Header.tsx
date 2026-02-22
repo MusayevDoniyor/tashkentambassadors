@@ -108,7 +108,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
           {/* Action Button */}
           <div className="hidden md:block">
             <a
-              href="https://t.me/toshkent_startup_community"
+              href="https://t.me/tashkent_ambassadors"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center space-x-2 text-gray-900 font-bold hover:text-orange-600 transition-colors group"
