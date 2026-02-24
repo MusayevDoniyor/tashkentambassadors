@@ -9,6 +9,7 @@ import Events from "./components/Events";
 import Blog from "./components/Blog";
 import TeamRequest from "./components/TeamRequest";
 import Footer from "./components/Footer";
+import BlogDetail from "./components/BlogDetail";
 import { ArrowUp } from "lucide-react";
 
 const gridStyle = {
@@ -107,10 +108,11 @@ const App: React.FC = () => {
       <div className="relative z-10">
         <Header activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <main className="overflow-x-hidden pt-20">
+        <main className="overflow-x-hidden pt-32">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/request" element={<RequestPage />} />
+            <Route path="/blog/:id" element={<BlogDetail />} />
           </Routes>
         </main>
 
