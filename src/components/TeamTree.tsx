@@ -13,6 +13,7 @@ import {
   Camera,
   Megaphone,
 } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 
 const MemberCard: React.FC<{
   member: Ambassador;
@@ -190,11 +191,37 @@ const TeamTree: React.FC = () => {
     return "orange";
   };
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.12,
+        delayChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
   return (
     <div className="py-20 px-4 w-full bg-gray-50/10 min-h-screen">
       <div className="max-w-[1400px] mx-auto flex flex-col items-center">
         {/* TOP LEVEL: Overall Leader */}
-        <div className="relative mb-32 flex flex-col items-center">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.7 }}
+          className="relative mb-32 flex flex-col items-center"
+        >
           <div className="absolute -top-24 text-[80px] md:text-[140px] font-black text-gray-200/30 select-none tracking-tighter uppercase whitespace-nowrap">
             PREMIUM TEAM
           </div>
@@ -208,31 +235,43 @@ const TeamTree: React.FC = () => {
           <div className="absolute top-[200px] w-1 h-20 md:h-32 bg-gradient-to-b from-orange-400 via-orange-200 to-transparent">
             <div className="absolute inset-0 bg-orange-400 blur-md opacity-20 animate-pulse" />
           </div>
-        </div>
+        </motion.div>
 
         {/* SECOND LEVEL: Deputies */}
-        <div className="relative mb-40 w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-16 md:gap-40">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="relative mb-40 w-full max-w-5xl mx-auto flex flex-col md:flex-row items-center justify-center gap-16 md:gap-40"
+        >
           {TEAM_STRUCTURE.deputyLeaders.map((deputy, idx) => (
             <div key={idx} className="relative group">
-              {/* Curved connection line logic simplified for better visuals */}
               <div
                 className={`hidden md:block absolute -top-12 ${idx === 0 ? "-right-[80%]" : "-left-[80%]"} w-[100%] h-12 border-t-2 border-orange-200/50 rounded-t-[4rem]`}
               />
               <MemberCard member={deputy} isLeader accentColor="orange" />
             </div>
           ))}
-        </div>
+        </motion.div>
 
         {/* THIRD LEVEL: Departments Grid - Dynamic Layout */}
-        <div className="flex flex-wrap justify-center gap-x-12 gap-y-24 w-full">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="flex flex-wrap justify-center gap-x-12 gap-y-24 w-full"
+        >
           {TEAM_STRUCTURE.departments.map((dept, idx) => {
             const colorKey = getDeptColor(dept.name);
             const classes = accentClasses[colorKey];
             const hasMembers = dept.members.length > 0;
 
             return (
-              <div
+              <motion.div
                 key={idx}
+                variants={itemVariants}
                 className={`flex flex-col items-center relative transition-all duration-500 ${hasMembers ? "w-full md:w-[400px] xl:w-[450px]" : "w-full md:w-[280px]"}`}
               >
                 {/* Department Header */}
@@ -286,10 +325,10 @@ const TeamTree: React.FC = () => {
                     </div>
                   </>
                 )}
-              </div>
+              </motion.div>
             );
           })}
-        </div>
+        </motion.div>
       </div>
 
       <style>{`

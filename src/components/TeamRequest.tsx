@@ -10,6 +10,7 @@ import {
   Phone,
   MessageSquare,
 } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 
 const ROLES_NEEDED = [
   "Frontend Developer",
@@ -85,20 +86,56 @@ const TeamRequest: React.FC = () => {
     }
   };
 
+  const sectionVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+      },
+    },
+  };
+
   if (isSubmitted) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl mx-auto text-center py-20">
-          <div className="w-24 h-24 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-8">
+        <motion.div
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+          className="max-w-2xl mx-auto text-center py-20"
+        >
+          <motion.div
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            transition={{
+              duration: 0.5,
+              delay: 0.2,
+              type: "spring",
+              stiffness: 200,
+            }}
+            className="w-24 h-24 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-8"
+          >
             <CheckCircle size={48} className="text-green-500" />
-          </div>
+          </motion.div>
           <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 uppercase tracking-tighter">
             SO'ROV <span className="text-green-500">YUBORILDI!</span>
           </h2>
           <p className="text-gray-600 font-medium text-lg mb-8">
             Sizning so'rovingiz qabul qilindi. Tez orada siz bilan bog'lanamiz!
           </p>
-          <button
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
             onClick={() => {
               setIsSubmitted(false);
               setFormData({
@@ -116,15 +153,21 @@ const TeamRequest: React.FC = () => {
             className="bg-orange-600 text-white px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-orange-700 transition-colors"
           >
             Yana so'rov yuborish
-          </button>
-        </div>
+          </motion.button>
+        </motion.div>
       </div>
     );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-12">
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.6 }}
+        className="text-center mb-12"
+      >
         <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
           <Rocket size={14} />
           <span>Jamoa Toping</span>
@@ -136,11 +179,21 @@ const TeamRequest: React.FC = () => {
           Startupingiz uchun kerakli mutaxassis va jamoani biz topib beramiz.
           Formani to'ldiring va biz siz bilan bog'lanamiz!
         </p>
-      </div>
+      </motion.div>
 
-      <form onSubmit={handleSubmit} className="max-w-3xl mx-auto space-y-8">
+      <motion.form
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        onSubmit={handleSubmit}
+        className="max-w-3xl mx-auto space-y-8"
+      >
         {/* Startup Info */}
-        <div className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6">
+        <motion.div
+          variants={sectionVariants}
+          className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6"
+        >
           <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter flex items-center space-x-2">
             <Briefcase size={20} className="text-orange-600" />
             <span>Startup haqida</span>
@@ -194,10 +247,13 @@ const TeamRequest: React.FC = () => {
               className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all resize-none"
             />
           </div>
-        </div>
+        </motion.div>
 
         {/* Contact Info */}
-        <div className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6">
+        <motion.div
+          variants={sectionVariants}
+          className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6"
+        >
           <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter flex items-center space-x-2">
             <Mail size={20} className="text-orange-600" />
             <span>Aloqa ma'lumotlari</span>
@@ -248,10 +304,13 @@ const TeamRequest: React.FC = () => {
               />
             </div>
           </div>
-        </div>
+        </motion.div>
 
         {/* Roles Needed */}
-        <div className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6">
+        <motion.div
+          variants={sectionVariants}
+          className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6"
+        >
           <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter flex items-center space-x-2">
             <Users size={20} className="text-orange-600" />
             <span>Qanday mutaxassis kerak? *</span>
@@ -262,9 +321,11 @@ const TeamRequest: React.FC = () => {
 
           <div className="flex flex-wrap gap-3">
             {ROLES_NEEDED.map((role) => (
-              <button
+              <motion.button
                 key={role}
                 type="button"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
                 onClick={() => handleRoleToggle(role)}
                 className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
                   formData.roles_needed.includes(role)
@@ -273,12 +334,18 @@ const TeamRequest: React.FC = () => {
                 }`}
               >
                 {role}
-              </button>
+              </motion.button>
             ))}
           </div>
 
           {formData.roles_needed.includes("Boshqa") && (
-            <div className="mt-6 animate-in slide-in-from-top-2 duration-300">
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}
+              className="mt-6"
+            >
               <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
                 Qanday mutaxassis kerakligini yozing *
               </label>
@@ -292,12 +359,15 @@ const TeamRequest: React.FC = () => {
                 placeholder="Masalan: AI Engineer, Blockchain Expert"
                 className="w-full bg-gray-50 border-2 border-orange-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-inner"
               />
-            </div>
+            </motion.div>
           )}
-        </div>
+        </motion.div>
 
         {/* Additional Message */}
-        <div className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6">
+        <motion.div
+          variants={sectionVariants}
+          className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6"
+        >
           <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter flex items-center space-x-2">
             <MessageSquare size={20} className="text-orange-600" />
             <span>Qo'shimcha xabar</span>
@@ -311,27 +381,32 @@ const TeamRequest: React.FC = () => {
             rows={4}
             className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all resize-none"
           />
-        </div>
+        </motion.div>
 
         {/* Submit */}
-        <div className="text-center">
-          <button
+        <motion.div variants={sectionVariants} className="text-center">
+          <motion.button
             type="submit"
             disabled={isSubmitting || formData.roles_needed.length === 0}
-            className={`inline-flex items-center space-x-3 bg-orange-600 text-white px-12 py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all hover:bg-orange-700 hover:-translate-y-1 hover:shadow-xl active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed ${
+            whileHover={{
+              y: -2,
+              boxShadow: "0 20px 40px rgba(234, 88, 12, 0.2)",
+            }}
+            whileTap={{ scale: 0.95 }}
+            className={`inline-flex items-center space-x-3 bg-orange-600 text-white px-12 py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed ${
               isSubmitting ? "animate-pulse" : ""
             }`}
           >
             <span>{isSubmitting ? "Yuborilmoqda..." : "So'rov Yuborish"}</span>
             <Send size={18} />
-          </button>
+          </motion.button>
           {formData.roles_needed.length === 0 && (
             <p className="mt-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
               Kamida bitta mutaxassis turini tanlang
             </p>
           )}
-        </div>
-      </form>
+        </motion.div>
+      </motion.form>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { TRAINING_PROGRAMS } from "../data";
-// Added ArrowRight to imports
+import { motion, Variants } from "framer-motion";
 import {
   Lightbulb,
   Presentation,
@@ -9,7 +9,6 @@ import {
   CheckCircle,
   Sparkles,
   ArrowRight,
-  Rocket,
 } from "lucide-react";
 
 const iconMap: Record<string, any> = {
@@ -20,19 +19,45 @@ const iconMap: Record<string, any> = {
 };
 
 const About: React.FC = () => {
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants: Variants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-center mb-16 md:mb-32">
-        <div className="relative order-2 lg:order-1 px-4 lg:px-0">
+        <motion.div
+          initial={{ x: -50, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: "circOut" }}
+          className="relative order-2 lg:order-1 px-4 lg:px-0"
+        >
           <div className="absolute -inset-4 bg-orange-100 rounded-[3rem] blur-3xl opacity-20 -rotate-3"></div>
           <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white group aspect-square sm:aspect-[4/5] lg:aspect-auto lg:h-[550px] flex items-center justify-center">
-            {/* Real Image Integration */}
             <img
               src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000"
               alt="Modern Office"
-              className="absolute inset-0 w-full h-full object-cover transition-all duration-500"
+              className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
             />
-            {/* Overlay for text readability */}
             <div className="absolute inset-0 bg-gradient-to-t from-orange-900/80 via-orange-900/40 to-transparent"></div>
 
             <div className="relative z-10 flex flex-col items-center text-center text-white p-6 sm:p-12">
@@ -52,9 +77,15 @@ const About: React.FC = () => {
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
 
-        <div className="order-1 lg:order-2">
+        <motion.div
+          initial={{ x: 50, opacity: 0 }}
+          whileInView={{ x: 0, opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1, ease: "circOut" }}
+          className="order-1 lg:order-2"
+        >
           <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
             <Sparkles size={14} />
             <span>Bizning Missiya</span>
@@ -77,8 +108,12 @@ const About: React.FC = () => {
               "Bilim oshirish",
               "Org jamoa ko'magi",
             ].map((item, i) => (
-              <div
+              <motion.div
                 key={i}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
                 className="flex items-center space-x-3 bg-white p-5 rounded-[2rem] border border-orange-50 shadow-sm hover:border-orange-200 transition-colors"
               >
                 <div className="bg-orange-600 rounded-full p-1">
@@ -87,7 +122,7 @@ const About: React.FC = () => {
                 <span className="text-gray-900 font-black text-xs uppercase tracking-tight">
                   {item}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
 
@@ -97,13 +132,18 @@ const About: React.FC = () => {
             className="mt-12 inline-flex items-center justify-center space-x-3 logo-gradient text-white px-10 py-5 rounded-2xl font-black text-sm uppercase tracking-widest shadow-xl shadow-orange-100 hover:brightness-110 active:scale-95 transition-all w-full sm:w-auto"
           >
             <span>Klub qoidalari</span>
-            {/* ArrowRight is now available from the imports */}
             <ArrowRight size={18} />
           </a>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="text-center mb-20">
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 1 }}
+        className="text-center mb-20"
+      >
         <h3 className="text-3xl md:text-5xl font-black text-gray-900 mb-6 uppercase tracking-tighter italic">
           NIMALARNI <span className="text-orange-600">O'RGATAMIZ?</span>
         </h3>
@@ -111,12 +151,19 @@ const About: React.FC = () => {
           Startup ekotizimida o'sish uchun kerak bo'lgan asosiy bilim va
           tajribalarni taqdim etamiz
         </p>
-      </div>
+      </motion.div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true }}
+        className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
+      >
         {TRAINING_PROGRAMS.map((program) => (
-          <div
+          <motion.div
             key={program.id}
+            variants={itemVariants}
             className="p-6 md:p-10 bg-white border border-orange-50 rounded-[2.5rem] md:rounded-[3rem] hover:border-orange-500 hover:shadow-2xl hover:shadow-orange-100 transition-all group relative overflow-hidden flex flex-col"
           >
             <div className="bg-orange-50 text-orange-600 w-16 h-16 md:w-20 md:h-20 rounded-[1.2rem] md:rounded-[1.5rem] flex items-center justify-center mb-6 md:mb-8 group-hover:bg-orange-600 group-hover:text-white transition-all duration-300">
@@ -129,9 +176,9 @@ const About: React.FC = () => {
               {program.description}
             </p>
             <div className="mt-auto h-1 w-0 group-hover:w-full bg-orange-600 transition-all duration-300 rounded-full"></div>
-          </div>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 };

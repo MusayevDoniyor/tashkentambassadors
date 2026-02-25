@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { User, MapPin, Mail, Phone, Send, Linkedin } from "lucide-react";
+import { motion, AnimatePresence, Variants } from "framer-motion";
+import { MapPin } from "lucide-react";
 
 interface Ambassador {
   id: string;
@@ -83,7 +84,6 @@ const DISTRICTS_DATA: DistrictPath[] = [
   },
 ];
 
-// Map aliases for matching DB district names to SVG district names
 const DISTRICT_ALIASES: Record<string, string[]> = {
   Olmazor: ["Olmazor"],
   Yunusobod: ["Yunusobod"],
@@ -112,10 +112,8 @@ const TashkentMap: React.FC = () => {
   const [hoveredDistrict, setHoveredDistrict] = useState<string | null>(null);
   const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
   const [tooltipPos, setTooltipPos] = useState({ x: 0, y: 0 });
-  const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
-    setIsMounted(true);
     const fetchAmbassadors = async () => {
       const { data } = await supabase.from("ambassadors").select("*");
       if (data) setAmbassadors(data);
@@ -127,26 +125,48 @@ const TashkentMap: React.FC = () => {
     setTooltipPos({ x: e.clientX, y: e.clientY });
   };
 
-  const getDistrictAmbassadors = (districtName: string | null) => {
-    if (!districtName) return [];
-    return ambassadors.filter((a) => matchesDistrict(a.district, districtName));
+  const districtAmbassadors = hoveredDistrict
+    ? ambassadors.filter((a) => matchesDistrict(a.district, hoveredDistrict))
+    : [];
+
+  const containerVariants: Variants = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        staggerChildren: 0.05,
+      },
+    },
   };
 
-  const districtAmbassadors = getDistrictAmbassadors(hoveredDistrict);
-  const currentAmbassador =
-    districtAmbassadors.find((a) => a.is_leader) ||
-    districtAmbassadors[0] ||
-    null;
+  const pathVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.9 },
+    visible: {
+      opacity: 1,
+      scale: 1,
+      transition: { duration: 0.5 },
+    },
+  };
 
   return (
-    <div
-      className={`relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 transition-all duration-1000 ${isMounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
+    <motion.div
+      initial="hidden"
+      whileInView="visible"
+      viewport={{ once: true }}
+      variants={containerVariants}
+      className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
     >
       <div className="text-center mb-8">
-        <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
+        >
           <MapPin size={14} />
           <span>Interaktiv Xarita</span>
-        </div>
+        </motion.div>
         <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-4 uppercase tracking-tighter">
           TOSHKENT <span className="text-orange-600">HUDUDLARI</span>
         </h2>
@@ -157,8 +177,12 @@ const TashkentMap: React.FC = () => {
       </div>
 
       <div className="relative group/map max-w-lg mx-auto">
-        <div className="relative bg-white/60 backdrop-blur-xl rounded-[2rem] p-6 md:p-8 border-2 border-orange-100/50 shadow-lg overflow-hidden">
-          {/* Decorative Grid background inside map container */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 1 }}
+          className="relative bg-white/60 backdrop-blur-xl rounded-[2rem] p-6 md:p-8 border-2 border-orange-100/50 shadow-lg overflow-hidden"
+        >
           <div
             className="absolute inset-0 opacity-[0.03] pointer-events-none"
             style={{
@@ -172,17 +196,18 @@ const TashkentMap: React.FC = () => {
             className="w-full h-auto relative z-10 drop-shadow-[0_20px_40px_rgba(0,0,0,0.08)]"
             onMouseMove={handleMouseMove}
           >
-            {DISTRICTS_DATA.map((district, index) => {
+            {DISTRICTS_DATA.map((district) => {
               const isHovered = hoveredDistrict === district.name;
               const hasAmbassador = ambassadors.some((a) =>
                 matchesDistrict(a.district, district.name),
               );
 
               return (
-                <path
+                <motion.path
                   key={district.id}
+                  variants={pathVariants}
                   d={district.path}
-                  className={`transition-all duration-500 cursor-pointer stroke-white stroke-[2.5px] ${
+                  className={`transition-all duration-300 cursor-pointer stroke-white stroke-[2.5px] ${
                     isHovered
                       ? "fill-orange-600 scale-[1.02] drop-shadow-xl"
                       : hasAmbassador
@@ -192,7 +217,6 @@ const TashkentMap: React.FC = () => {
                   style={{
                     transformOrigin: "center",
                     transformBox: "fill-box",
-                    transitionDelay: `${index * 50}ms`,
                   }}
                   onMouseEnter={() => setHoveredDistrict(district.name)}
                   onMouseLeave={() => setHoveredDistrict(null)}
@@ -200,80 +224,90 @@ const TashkentMap: React.FC = () => {
               );
             })}
           </svg>
-        </div>
+        </motion.div>
 
-        {/* Floating Tooltip */}
-        {hoveredDistrict && (
-          <div
-            className="fixed z-[100] pointer-events-none animate-in fade-in zoom-in duration-200"
-            style={{
-              left: tooltipPos.x + 20,
-              top: tooltipPos.y + 20,
-            }}
-          >
-            <div className="bg-white rounded-[2rem] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-orange-100/50 min-w-[280px] max-w-[340px] backdrop-blur-md">
-              <div className="flex items-center space-x-3 mb-4">
-                <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
-                  <MapPin size={20} />
-                </div>
-                <div>
-                  <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">
-                    {hoveredDistrict}
-                  </h3>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                    {districtAmbassadors.length} ta a'zo
-                  </p>
-                </div>
-              </div>
-
-              {districtAmbassadors.length > 0 ? (
-                <div className="space-y-3 max-h-[200px] overflow-y-auto">
-                  {districtAmbassadors.slice(0, 4).map((amb) => (
-                    <div
-                      key={amb.id}
-                      className="flex items-center space-x-3 p-2 rounded-xl bg-gray-50/80"
-                    >
-                      {amb.image ? (
-                        <img
-                          src={amb.image}
-                          alt={amb.name}
-                          className="w-10 h-10 rounded-xl object-cover border-2 border-white shadow-sm"
-                        />
-                      ) : (
-                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-black text-sm uppercase shadow-sm">
-                          {amb.name.charAt(0)}
-                        </div>
-                      )}
-                      <div className="min-w-0">
-                        <h4 className="font-black text-gray-900 text-sm uppercase tracking-tight truncate">
-                          {amb.name}
-                        </h4>
-                        <p className="text-[9px] font-bold text-orange-600 uppercase tracking-widest truncate">
-                          {amb.role}
-                        </p>
-                      </div>
-                    </div>
-                  ))}
-                  {districtAmbassadors.length > 4 && (
-                    <p className="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest pt-1">
-                      +{districtAmbassadors.length - 4} yana
+        <AnimatePresence>
+          {hoveredDistrict && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 10 }}
+              className="fixed z-[100] pointer-events-none"
+              style={{
+                left: tooltipPos.x + 20,
+                top: tooltipPos.y + 20,
+              }}
+            >
+              <div className="bg-white rounded-[2rem] p-6 shadow-[0_20px_50px_rgba(0,0,0,0.15)] border border-orange-100/50 min-w-[280px] max-w-[340px] backdrop-blur-md">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600">
+                    <MapPin size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">
+                      {hoveredDistrict}
+                    </h3>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                      {districtAmbassadors.length} ta a'zo
                     </p>
-                  )}
+                  </div>
                 </div>
-              ) : (
-                <div className="py-4 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
-                  <p className="text-gray-400 font-bold uppercase tracking-widest text-[9px]">
-                    Hozircha a'zo biriktirilmagan
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
+
+                {districtAmbassadors.length > 0 ? (
+                  <div className="space-y-3 max-h-[200px] overflow-y-auto pr-1 custom-scrollbar">
+                    {districtAmbassadors.slice(0, 4).map((amb) => (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        key={amb.id}
+                        className="flex items-center space-x-3 p-2 rounded-xl bg-gray-50/80"
+                      >
+                        {amb.image ? (
+                          <img
+                            src={amb.image}
+                            alt={amb.name}
+                            className="w-10 h-10 rounded-xl object-cover border-2 border-white shadow-sm"
+                          />
+                        ) : (
+                          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-black text-sm uppercase shadow-sm">
+                            {amb.name.charAt(0)}
+                          </div>
+                        )}
+                        <div className="min-w-0">
+                          <h4 className="font-black text-gray-900 text-sm uppercase tracking-tight truncate">
+                            {amb.name}
+                          </h4>
+                          <p className="text-[9px] font-bold text-orange-600 uppercase tracking-widest truncate">
+                            {amb.role}
+                          </p>
+                        </div>
+                      </motion.div>
+                    ))}
+                    {districtAmbassadors.length > 4 && (
+                      <p className="text-[10px] text-center text-gray-400 font-bold uppercase tracking-widest pt-1">
+                        +{districtAmbassadors.length - 4} yana
+                      </p>
+                    )}
+                  </div>
+                ) : (
+                  <div className="py-4 text-center bg-gray-50 rounded-2xl border border-dashed border-gray-200">
+                    <p className="text-gray-400 font-bold uppercase tracking-widest text-[9px]">
+                      Hozircha a'zo biriktirilmagan
+                    </p>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* District quick selection chips */}
-      <div className="mt-8 flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1 }}
+        transition={{ delay: 0.5 }}
+        className="mt-8 flex flex-wrap justify-center gap-2 max-w-2xl mx-auto"
+      >
         {DISTRICTS_DATA.map((d) => {
           const hasAmbassador = ambassadors.some((a) =>
             matchesDistrict(a.district, d.name),
@@ -283,7 +317,7 @@ const TashkentMap: React.FC = () => {
               key={d.id}
               onMouseEnter={() => setHoveredDistrict(d.name)}
               onMouseLeave={() => setHoveredDistrict(null)}
-              className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${
+              className={`px-3 py-1.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 ${
                 hoveredDistrict === d.name
                   ? "bg-orange-600 text-white shadow-lg -translate-y-0.5"
                   : hasAmbassador
@@ -295,8 +329,8 @@ const TashkentMap: React.FC = () => {
             </button>
           );
         })}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 };
 

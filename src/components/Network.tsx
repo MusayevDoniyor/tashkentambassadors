@@ -8,6 +8,7 @@ import {
   ArrowLeft,
   ArrowRight,
 } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 import { supabase } from "../lib/supabase";
 
 interface Partner {
@@ -45,6 +46,25 @@ const Network: React.FC = () => {
   const ventureFunds = partners.filter((p) => p.type === "VENTURE_FUND");
   const mentors = partners.filter((p) => p.type === "MENTOR");
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const cardVariants: Variants = {
+    hidden: { y: 30, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: { duration: 0.5, ease: "easeOut" },
+    },
+  };
+
   if (loading)
     return (
       <div className="py-20 text-center font-black text-orange-600 animate-pulse">
@@ -56,7 +76,13 @@ const Network: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Venture Funds Section */}
       <div className="mb-24">
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
             <Award size={14} />
             <span>Hamkor Fondlar</span>
@@ -68,9 +94,15 @@ const Network: React.FC = () => {
             Loyihangizni moliyalashtirishga tayyor bo'lgan yetakchi venchur
             fondlar
           </p>
-        </div>
+        </motion.div>
 
-        <div className="relative group/carousel">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative group/carousel"
+        >
           <div
             className="flex overflow-x-auto space-x-6 pb-12 transition-all scroll-smooth no-scrollbar snap-x snap-mandatory"
             id="fund-carousel"
@@ -84,7 +116,6 @@ const Network: React.FC = () => {
                   backgroundSize: "30px 30px",
                 }}
               >
-                {/* Logo Area - Compact and Clean */}
                 <div className="h-44 sm:h-48 flex items-center justify-center w-full mb-4">
                   {fund.logo ? (
                     <div className="w-40 h-40 flex items-center justify-center p-2 relative">
@@ -104,7 +135,6 @@ const Network: React.FC = () => {
                   )}
                 </div>
 
-                {/* Content */}
                 <div className="w-full flex flex-col items-center">
                   <h3 className="text-xs font-black text-gray-900 mb-6 px-4 h-10 flex items-center justify-center leading-tight uppercase tracking-tight">
                     {fund.name}
@@ -150,12 +180,18 @@ const Network: React.FC = () => {
               Fondlar topilmadi
             </p>
           )}
-        </div>
+        </motion.div>
       </div>
 
       {/* Mentors Section */}
       <div>
-        <div className="text-center mb-16">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
+        >
           <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
             <Award size={14} />
             <span>Ekspert Mentorlar</span>
@@ -167,16 +203,24 @@ const Network: React.FC = () => {
             Startupingizni keyingi bosqichga olib chiqishda yordam beradigan
             tajribali mutaxassislar
           </p>
-        </div>
+        </motion.div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10"
+        >
           {mentors.map((mentor) => (
-            <div
+            <motion.div
               key={mentor.id}
+              variants={cardVariants}
+              whileHover={{ y: -5 }}
               className="bg-white rounded-[2.5rem] overflow-hidden border border-orange-50 hover:shadow-2xl transition-all group flex flex-col p-4"
             >
               <div className="aspect-square relative rounded-[2rem] overflow-hidden mb-6 flex items-center justify-center bg-gradient-to-br from-orange-400 to-orange-600 shadow-xl">
-                {mentor.logo ? ( // Using logo field as image for mentors
+                {mentor.logo ? (
                   <img
                     src={mentor.logo}
                     alt={mentor.name}
@@ -234,14 +278,14 @@ const Network: React.FC = () => {
                   )}
                 </div>
               </div>
-            </div>
+            </motion.div>
           ))}
           {mentors.length === 0 && (
             <p className="col-span-3 text-center text-gray-400">
               Mentorlar topilmadi
             </p>
           )}
-        </div>
+        </motion.div>
       </div>
     </div>
   );

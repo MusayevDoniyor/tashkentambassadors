@@ -10,6 +10,7 @@ import {
   User,
   CheckCircle,
 } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 
@@ -68,14 +69,40 @@ const Footer: React.FC = () => {
     }
   };
 
+  const containerVariants: Variants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.15,
+        delayChildren: 0.1,
+      },
+    },
+  };
+
+  const columnVariants: Variants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
+  };
+
   return (
     <footer className="bg-gray-950 text-white pt-24 pb-12 relative overflow-hidden">
-      {/* Decorative Blur - Pointer events none prevents overflow issues */}
+      {/* Decorative Blur */}
       <div className="absolute bottom-[-5%] right-[-5%] w-64 h-64 bg-orange-600/10 blur-[100px] rounded-full pointer-events-none"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 mb-20 border-b border-white/5 pb-20">
-          <div className="space-y-8">
+        <motion.div
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 mb-20 border-b border-white/5 pb-20"
+        >
+          <motion.div variants={columnVariants} className="space-y-8">
             <div
               className="flex items-center group cursor-pointer"
               onClick={scrollToTop}
@@ -91,26 +118,30 @@ const Footer: React.FC = () => {
               rivojlantirish uchun tuzilgan yagona rasmiy platforma.
             </p>
             <div className="flex items-center space-x-4">
-              <a
+              <motion.a
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 href="https://t.me/tashkent_ambassadors"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm"
               >
                 <Send size={20} />
-              </a>
-              <a
+              </motion.a>
+              <motion.a
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
                 href="https://www.instagram.com/startup.tashkent/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="w-10 h-10 lg:w-12 lg:h-12 rounded-2xl bg-white/5 flex items-center justify-center hover:bg-orange-600 transition-all shadow-sm"
               >
                 <Instagram size={20} />
-              </a>
+              </motion.a>
             </div>
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div variants={columnVariants}>
             <h4 className="text-[10px] font-black mb-8 uppercase tracking-[0.3em] text-orange-500">
               Bo'limlar
             </h4>
@@ -156,14 +187,19 @@ const Footer: React.FC = () => {
                 </button>
               </li>
             </ul>
-          </div>
+          </motion.div>
 
-          <div>
+          <motion.div variants={columnVariants}>
             <h4 className="text-[10px] font-black mb-8 uppercase tracking-[0.3em] text-orange-500">
               Bog'lanish
             </h4>
             {isSubmitted ? (
-              <div className="bg-green-500/10 border border-green-500/20 rounded-[2rem] p-8 text-center animate-in zoom-in duration-300">
+              <motion.div
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="bg-green-500/10 border border-green-500/20 rounded-[2rem] p-8 text-center"
+              >
                 <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-4">
                   <CheckCircle size={24} className="text-white" />
                 </div>
@@ -173,7 +209,7 @@ const Footer: React.FC = () => {
                 <p className="text-gray-400 text-xs mt-2 font-medium">
                   Tez orada javob beramiz.
                 </p>
-              </div>
+              </motion.div>
             ) : (
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="relative">
@@ -212,32 +248,32 @@ const Footer: React.FC = () => {
                   }
                   className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-orange-500 transition-colors resize-none font-bold"
                 ></textarea>
-                <button
+                <motion.button
                   type="submit"
                   disabled={isSubmitting}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.95 }}
                   className="w-full logo-gradient py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:brightness-110 active:scale-95 transition-all flex items-center justify-center space-x-3 shadow-xl shadow-orange-950/20 disabled:opacity-50"
                 >
                   <span>{isSubmitting ? "Yuborilmoqda..." : "Yuborish"}</span>
                   <Send size={16} />
-                </button>
+                </motion.button>
               </form>
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] text-center md:text-left space-y-4 md:space-y-0">
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.3 }}
+          className="flex flex-col md:flex-row justify-between items-center text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] text-center md:text-left space-y-4 md:space-y-0"
+        >
           <p>
             © 2026 Startup Ambassadors Tashkent. Yoshlar Ventures hamkorligida.
           </p>
-          <div className="flex items-center space-x-8">
-            <button
-              onClick={scrollToTop}
-              className="hover:text-white transition-colors"
-            >
-              YUGORIGA QAYTISH
-            </button>
-          </div>
-        </div>
+        </motion.div>
       </div>
     </footer>
   );
