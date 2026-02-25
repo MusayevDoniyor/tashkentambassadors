@@ -8,7 +8,10 @@ import {
   Phone,
   ArrowUp,
   User,
+  CheckCircle,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
 
 const Footer: React.FC = () => {
   const [formData, setFormData] = useState({
@@ -16,20 +19,53 @@ const Footer: React.FC = () => {
     email: "",
     message: "",
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const navigate = useNavigate();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const scrollToSection = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+  const handleNavClick = (id: string, path: string) => {
+    if (window.location.pathname === "/") {
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = 80;
+        const elementPosition =
+          element.getBoundingClientRect().top + window.pageYOffset;
+        const offsetPosition = elementPosition - offset;
+        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+      }
+      navigate(path);
+    } else {
+      navigate(path);
+    }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Contact Form Submission:", formData);
-    alert("Xabaringiz yuborildi! Tez orada siz bilan bog'lanamiz.");
-    setFormData({ name: "", email: "", message: "" });
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.from("contact_submissions").insert([
+        {
+          name: formData.name,
+          email: formData.email,
+          message: formData.message,
+          status: "PENDING",
+        },
+      ]);
+
+      if (error) throw error;
+      setIsSubmitted(true);
+      setFormData({ name: "", email: "", message: "" });
+      setTimeout(() => setIsSubmitted(false), 5000);
+    } catch (err) {
+      console.error("Error submitting contact form:", err);
+      alert("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -47,7 +83,7 @@ const Footer: React.FC = () => {
               <img
                 src="/White.png"
                 alt="Startup Ambassadors Tashkent"
-                className="h-12 object-contain group-hover:opacity-90 transition-opacity"
+                className="h-10 md:h-12 object-contain group-hover:scale-105 transition-transform"
               />
             </div>
             <p className="text-gray-400 leading-relaxed font-medium text-sm">
@@ -75,111 +111,131 @@ const Footer: React.FC = () => {
           </div>
 
           <div>
-            <h4 className="text-xs font-black mb-8 uppercase tracking-[0.3em] text-orange-500">
+            <h4 className="text-[10px] font-black mb-8 uppercase tracking-[0.3em] text-orange-500">
               Bo'limlar
             </h4>
-            <ul className="space-y-4 text-gray-400 font-bold text-sm">
+            <ul className="space-y-2 text-gray-400 font-bold text-sm">
               <li>
                 <button
-                  onClick={() => scrollToSection("about")}
-                  className="hover:text-orange-500 transition-colors"
+                  onClick={() => handleNavClick("about", "/#about")}
+                  className="px-4 py-2 -ml-4 rounded-xl hover:bg-white/5 hover:text-white transition-all w-fit flex items-center"
                 >
                   Biz haqimizda
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection("ambassadors")}
-                  className="hover:text-orange-500 transition-colors"
+                  onClick={() => handleNavClick("ambassadors", "/#ambassadors")}
+                  className="px-4 py-2 -ml-4 rounded-xl hover:bg-white/5 hover:text-white transition-all w-fit flex items-center"
                 >
                   Ambassadorlar
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection("network")}
-                  className="hover:text-orange-500 transition-colors"
-                >
-                  Hamkor Fondlar
-                </button>
-              </li>
-              <li>
-                <button
-                  onClick={() => scrollToSection("events")}
-                  className="hover:text-orange-500 transition-colors"
+                  onClick={() => handleNavClick("events", "/#events")}
+                  className="px-4 py-2 -ml-4 rounded-xl hover:bg-white/5 hover:text-white transition-all w-fit flex items-center"
                 >
                   Tadbirlar
                 </button>
               </li>
               <li>
                 <button
-                  onClick={() => scrollToSection("blog")}
-                  className="hover:text-orange-500 transition-colors"
+                  onClick={() => navigate("/blog")}
+                  className="px-4 py-2 -ml-4 rounded-xl hover:bg-white/5 hover:text-white transition-all w-fit flex items-center"
                 >
-                  Bilimlar bazasi
+                  Blog
+                </button>
+              </li>
+              <li>
+                <button
+                  onClick={() => navigate("/request")}
+                  className="px-4 py-2 -ml-4 rounded-xl hover:bg-white/5 hover:text-white transition-all w-fit flex items-center"
+                >
+                  Jamoa kerak
                 </button>
               </li>
             </ul>
           </div>
 
           <div>
-            <h4 className="text-xs font-black mb-8 uppercase tracking-[0.3em] text-orange-500">
+            <h4 className="text-[10px] font-black mb-8 uppercase tracking-[0.3em] text-orange-500">
               Bog'lanish
             </h4>
-            <form onSubmit={handleSubmit} className="space-y-3">
-              <div className="relative">
-                <User className="absolute left-3 top-3 text-gray-500 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="Ismingiz"
-                  required
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData({ ...formData, name: e.target.value })
-                  }
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-orange-500 transition-colors"
-                />
+            {isSubmitted ? (
+              <div className="bg-green-500/10 border border-green-500/20 rounded-[2rem] p-8 text-center animate-in zoom-in duration-300">
+                <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-4">
+                  <CheckCircle size={24} className="text-white" />
+                </div>
+                <p className="text-green-500 font-black uppercase tracking-tighter text-lg leading-tight">
+                  Xabaringiz yuborildi!
+                </p>
+                <p className="text-gray-400 text-xs mt-2 font-medium">
+                  Tez orada javob beramiz.
+                </p>
               </div>
-              <div className="relative">
-                <Mail className="absolute left-3 top-3 text-gray-500 w-4 h-4" />
-                <input
-                  type="email"
-                  placeholder="Email"
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="relative">
+                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
+                  <input
+                    type="text"
+                    placeholder="Ismingiz"
+                    required
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-orange-500 transition-colors font-bold"
+                  />
+                </div>
+                <div className="relative">
+                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
+                  <input
+                    type="email"
+                    placeholder="Email"
+                    required
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-orange-500 transition-colors font-bold"
+                  />
+                </div>
+                <textarea
+                  placeholder="Xabaringiz"
                   required
-                  value={formData.email}
+                  rows={3}
+                  value={formData.message}
                   onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
+                    setFormData({ ...formData, message: e.target.value })
                   }
-                  className="w-full bg-white/5 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-sm focus:outline-none focus:border-orange-500 transition-colors"
-                />
-              </div>
-              <textarea
-                placeholder="Xabaringiz"
-                required
-                rows={3}
-                value={formData.message}
-                onChange={(e) =>
-                  setFormData({ ...formData, message: e.target.value })
-                }
-                className="w-full bg-white/5 border border-white/10 rounded-xl py-2 px-4 text-sm focus:outline-none focus:border-orange-500 transition-colors resize-none"
-              ></textarea>
-              <button
-                type="submit"
-                className="w-full logo-gradient py-3 rounded-xl font-black text-xs uppercase tracking-widest hover:brightness-110 transition-all flex items-center justify-center space-x-2"
-              >
-                <span>Yuborish</span>
-                <Send size={14} />
-              </button>
-            </form>
+                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-orange-500 transition-colors resize-none font-bold"
+                ></textarea>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full logo-gradient py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:brightness-110 active:scale-95 transition-all flex items-center justify-center space-x-3 shadow-xl shadow-orange-950/20 disabled:opacity-50"
+                >
+                  <span>{isSubmitting ? "Yuborilmoqda..." : "Yuborish"}</span>
+                  <Send size={16} />
+                </button>
+              </form>
+            )}
           </div>
         </div>
 
-        <div className="flex flex-col md:flex-row justify-between items-center text-gray-500 text-[9px] md:text-[10px] font-black uppercase tracking-[0.2em] text-center md:text-left space-y-4 md:space-y-0">
+        <div className="flex flex-col md:flex-row justify-between items-center text-gray-500 text-[10px] font-black uppercase tracking-[0.2em] text-center md:text-left space-y-4 md:space-y-0">
           <p>
             © 2026 Startup Ambassadors Tashkent. Yoshlar Ventures hamkorligida.
           </p>
           <div className="flex items-center space-x-8">
-            {/* Link removed - replaced by floating button */}
+            <button
+              onClick={scrollToTop}
+              className="hover:text-white transition-colors"
+            >
+              YUGORIGA QAYTISH
+            </button>
           </div>
         </div>
       </div>
