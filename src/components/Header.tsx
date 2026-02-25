@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, ArrowRight } from "lucide-react";
 
@@ -13,41 +13,43 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   const location = useLocation();
 
   const navItems = [
-    { id: "home", label: "Asosiy" },
-    { id: "about", label: "Biz haqimizda" },
-    { id: "ambassadors", label: "Ambassadorlar" },
-    { id: "events", label: "Tadbirlar" },
-    { id: "blog", label: "Blog" },
+    { id: "home", label: "Asosiy", path: "/" },
+    { id: "about", label: "Biz haqimizda", path: "/#about" },
+    { id: "ambassadors", label: "Ambassadorlar", path: "/#ambassadors" },
+    { id: "events", label: "Tadbirlar", path: "/#events" },
+    { id: "blog", label: "Blog", path: "/blog" },
   ];
 
-  const handleNavClick = (id: string) => {
+  const handleNavClick = (id: string, path: string) => {
     setActiveTab(id);
     setIsMenuOpen(false);
 
-    // If we're on a different page, navigate home first then scroll
-    if (location.pathname !== "/") {
+    if (id === "blog") {
+      navigate("/blog");
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+    if (id === "home" && location.pathname === "/") {
+      window.scrollTo({ top: 0, behavior: "smooth" });
       navigate("/");
-      setTimeout(() => {
-        const element = document.getElementById(id);
-        if (element) {
-          const offset = 80;
-          const bodyRect = document.body.getBoundingClientRect().top;
-          const elementRect = element.getBoundingClientRect().top;
-          const elementPosition = elementRect - bodyRect;
-          const offsetPosition = elementPosition - offset;
-          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-        }
-      }, 100);
-    } else {
+      return;
+    }
+
+    // If we're already on the home page and clicking a section
+    if (location.pathname === "/") {
       const element = document.getElementById(id);
       if (element) {
         const offset = 80;
-        const bodyRect = document.body.getBoundingClientRect().top;
-        const elementRect = element.getBoundingClientRect().top;
-        const elementPosition = elementRect - bodyRect;
+        const elementPosition =
+          element.getBoundingClientRect().top + window.pageYOffset;
         const offsetPosition = elementPosition - offset;
         window.scrollTo({ top: offsetPosition, behavior: "smooth" });
       }
+      navigate(path);
+    } else {
+      // If we're on a different page, navigation to home with hash will be handled by App.tsx useEffect
+      navigate(path);
     }
   };
 
@@ -55,6 +57,27 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     setIsMenuOpen(false);
     navigate("/request");
   };
+
+  // Sync active tab with URL
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const currentHash = location.hash;
+
+    if (currentPath === "/blog") {
+      setActiveTab("blog");
+    } else if (currentPath === "/request") {
+      setActiveTab("");
+    } else if (currentPath === "/") {
+      if (!currentHash) {
+        setActiveTab("home");
+      } else {
+        const matchedItem = navItems.find(
+          (item) => item.path === `/#${currentHash.substring(1)}`,
+        );
+        if (matchedItem) setActiveTab(matchedItem.id);
+      }
+    }
+  }, [location, setActiveTab, navItems]);
 
   const isOnRequestPage = location.pathname === "/request";
 
@@ -65,12 +88,12 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
           {/* Logo */}
           <div
             className="flex items-center cursor-pointer group"
-            onClick={() => handleNavClick("home")}
+            onClick={() => handleNavClick("home", "/")}
           >
             <img
               src="/Black.png"
               alt="Logo"
-              className="h-10 md:h-12 object-contain transition-transform group-hover:scale-105"
+              className="h-8 md:h-10 object-contain transition-transform group-hover:scale-105"
             />
           </div>
 
@@ -79,16 +102,16 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             {navItems.map((item) => (
               <button
                 key={item.id}
-                onClick={() => handleNavClick(item.id)}
-                className={`text-sm font-bold transition-all hover:text-orange-600 relative py-2 ${
+                onClick={() => handleNavClick(item.id, item.path)}
+                className={`text-sm font-bold transition-all px-4 py-2 rounded-xl relative group ${
                   activeTab === item.id && !isOnRequestPage
-                    ? "text-orange-600"
-                    : "text-gray-600"
+                    ? "text-orange-600 bg-orange-50/50"
+                    : "text-gray-600 hover:text-orange-600 hover:bg-gray-50"
                 }`}
               >
                 {item.label}
                 {activeTab === item.id && !isOnRequestPage && (
-                  <span className="absolute bottom-0 left-0 right-0 h-0.5 bg-orange-600 rounded-full animate-in fade-in zoom-in duration-300"></span>
+                  <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-orange-600 rounded-full animate-in fade-in zoom-in duration-300"></span>
                 )}
               </button>
             ))}
@@ -142,7 +165,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
           {navItems.map((item) => (
             <button
               key={item.id}
-              onClick={() => handleNavClick(item.id)}
+              onClick={() => handleNavClick(item.id, item.path)}
               className={`text-sm font-black uppercase tracking-widest text-left py-2.5 px-4 rounded-xl transition-colors ${
                 activeTab === item.id && !isOnRequestPage
                   ? "text-orange-600 bg-orange-50"

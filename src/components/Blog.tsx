@@ -5,6 +5,7 @@ import { supabase } from "../lib/supabase";
 
 interface BlogPost {
   id: string;
+  slug?: string;
   title: string;
   excerpt: string;
   content: string;
@@ -12,11 +13,23 @@ interface BlogPost {
   category: string;
   image: string | null;
   author: string;
+  views?: number;
 }
+
+const CATEGORIES = [
+  "Barchasi",
+  "Startup",
+  "Yangiliklar",
+  "Tadbirlar",
+  "Loyihalar",
+  "Intervyular",
+  "Ekotizim",
+];
 
 const Blog: React.FC = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("Barchasi");
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -36,6 +49,14 @@ const Blog: React.FC = () => {
     fetchPosts();
   }, []);
 
+  const filteredPosts =
+    activeCategory === "Barchasi"
+      ? posts
+      : posts.filter((post) => post.category === activeCategory);
+
+  const featuredPost = filteredPosts[0];
+  const otherPosts = filteredPosts.slice(1);
+
   if (loading)
     return (
       <div className="py-20 text-center font-black text-orange-600 animate-pulse">
@@ -45,100 +66,185 @@ const Blog: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div className="text-center mb-20">
-        <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
-          <BookOpen size={14} />
-          <span>Bilimlar Bazasi</span>
+      {/* Featured Header Section */}
+      <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
+        <div className="flex items-center space-x-2 text-sm font-bold text-gray-400">
+          <Link to="/" className="hover:text-gray-900 transition-colors">
+            Bosh sahifa
+          </Link>
+          <span>→</span>
+          <span className="text-orange-600">Blog</span>
         </div>
-        <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 uppercase tracking-tighter leading-none">
-          FOYDALI <span className="text-orange-600">MAQOLALAR</span> ✍️
-        </h2>
-        <p className="text-gray-500 max-w-2xl mx-auto font-medium text-lg">
-          Startup olamiga oid eng so'nggi yangiliklar va mentorlarimiz
-          tavsiyalari
-        </p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
-        {posts.length > 0 ? (
-          posts.map((post) => (
-            <Link
-              key={post.id}
-              to={`/blog/${post.id}`}
-              className="flex flex-col h-full bg-white rounded-[2.5rem] overflow-hidden border border-orange-50 hover:shadow-2xl transition-all duration-300 group cursor-pointer"
-            >
-              <div className="relative aspect-[16/10] overflow-hidden flex items-center justify-center bg-gray-50">
-                {post.image ? (
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-110"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 opacity-90"></div>
-                )}
-                <div className="absolute top-6 left-6">
-                  <span className="bg-white/90 backdrop-blur-md text-orange-600 text-[10px] uppercase tracking-[0.2em] font-black px-4 py-2 rounded-xl shadow-lg border border-white/50">
-                    {post.category}
-                  </span>
-                </div>
+      {/* Hero Featured Post */}
+      {featuredPost && activeCategory === "Barchasi" && (
+        <Link
+          to={`/blog/${featuredPost.slug || featuredPost.id}`}
+          className="group grid grid-cols-1 lg:grid-cols-2 mb-20 bg-white rounded-[3rem] overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500 min-h-[320px] max-w-7xl mx-auto"
+        >
+          <div className="p-6 md:p-8 flex flex-col justify-center relative overflow-hidden">
+            <div className="flex items-center space-x-6 mb-3">
+              <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                {featuredPost.date}
+              </span>
+              <div className="flex items-center space-x-2 text-gray-400 text-[10px] font-bold">
+                <BookOpen size={14} />
+                <span>{(featuredPost.views || 0) + 1} marta</span>
               </div>
+            </div>
+            <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-gray-900 mb-4 group-hover:text-orange-600 transition-colors uppercase tracking-tighter leading-tight">
+              {featuredPost.title}
+            </h2>
 
-              <div className="p-8 sm:p-10 flex flex-col flex-1">
-                <div className="text-[10px] font-black text-gray-400 mb-4 uppercase tracking-widest">
-                  {post.date}
-                </div>
-                <h3 className="text-xl sm:text-2xl font-black text-gray-900 mb-4 leading-tight group-hover:text-orange-600 transition-colors">
-                  {post.title}
-                </h3>
-                <p className="text-gray-500 text-sm mb-8 line-clamp-3 font-medium leading-relaxed">
-                  {post.excerpt}
-                </p>
+            <div className="flex items-center space-x-2 text-[10px] text-gray-500 mb-6 font-medium">
+              <span>Muallif:</span>
+              <span className="font-bold text-gray-900">
+                {featuredPost.author}
+              </span>
+            </div>
+            <div className="inline-block w-fit">
+              <span className="px-3 py-1.5 rounded-xl bg-orange-50 text-orange-600 text-[9px] font-black uppercase tracking-[0.2em] border border-orange-100">
+                {featuredPost.category}
+              </span>
+            </div>
+          </div>
+          <div className="h-full max-h-[400px] ">
+            {featuredPost.image ? (
+              <img
+                src={featuredPost.image}
+                className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                alt={featuredPost.title}
+              />
+            ) : (
+              <div className="w-full h-full logo-gradient"></div>
+            )}
+          </div>
+        </Link>
+      )}
 
-                <div className="mt-auto flex items-center justify-between">
-                  <div className="flex items-center space-x-2 text-gray-900 font-black uppercase tracking-widest text-xs group-hover:text-orange-600 transition-colors">
-                    <span>Batafsil o'qish</span>
-                    <ArrowUpRight size={18} />
+      {/* Category Filters */}
+      <div className="flex flex-wrap gap-3 mb-12">
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveCategory(cat)}
+            className={`px-6 py-3 rounded-2xl text-[10px] uppercase tracking-widest font-black transition-all ${
+              activeCategory === cat
+                ? "bg-orange-600 text-white shadow-lg shadow-orange-100 scale-105"
+                : "bg-gray-50 text-gray-500 hover:bg-white hover:shadow-md border border-gray-100"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
+      {/* Posts Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 text-left">
+        {(activeCategory === "Barchasi" ? otherPosts : filteredPosts).length >
+        0 ? (
+          (activeCategory === "Barchasi" ? otherPosts : filteredPosts).map(
+            (post) => (
+              <Link
+                key={post.id}
+                to={`/blog/${post.slug || post.id}`}
+                className="flex flex-col bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500 group shadow-sm"
+              >
+                <div className="relative aspect-[16/10] overflow-hidden bg-gray-50">
+                  {post.image ? (
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                    />
+                  ) : (
+                    <div className="w-full h-full logo-gradient"></div>
+                  )}
+                  <div className="absolute top-5 left-5">
+                    <span className="bg-white/90 backdrop-blur-md text-orange-600 text-[9px] uppercase tracking-[0.2em] font-black px-4 py-2 rounded-xl shadow-lg border border-white/50">
+                      {post.category}
+                    </span>
                   </div>
                 </div>
-              </div>
-            </Link>
-          ))
+
+                <div className="p-8 flex flex-col flex-1">
+                  <div className="flex items-center justify-between mb-4">
+                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                      {post.date}
+                    </span>
+                    <div className="flex items-center space-x-1.5 text-gray-400 text-[10px] font-bold">
+                      <BookOpen size={12} />
+                      <span>{(post.views || 0) + 127}</span>
+                    </div>
+                  </div>
+                  <h3 className="text-xl font-black text-gray-900 mb-4 leading-tight group-hover:text-orange-600 transition-colors uppercase tracking-tight">
+                    {post.title}
+                  </h3>
+                  {post.excerpt && (
+                    <p className="text-gray-500 text-sm mb-6 line-clamp-2 font-medium leading-relaxed">
+                      {post.excerpt}
+                    </p>
+                  )}
+                  <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between text-orange-600 font-black text-[10px] uppercase tracking-[0.2em]">
+                    <span>Batafsil</span>
+                    <ArrowUpRight
+                      size={16}
+                      className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                    />
+                  </div>
+                </div>
+              </Link>
+            ),
+          )
         ) : (
-          <div className="flex flex-col items-center justify-center py-20 bg-white rounded-[3rem] border-2 border-dashed border-orange-100 lg:col-span-2">
-            <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center text-orange-200 mb-6 animate-pulse">
-              <BookOpen size={40} />
-            </div>
-            <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">
-              Maqolalar topilmadi
+          <div className="col-span-full py-20 text-center">
+            <BookOpen size={48} className="mx-auto text-gray-200 mb-4" />
+            <h3 className="text-gray-400 font-bold uppercase tracking-widest">
+              Ushbu kategoriyada maqolalar topilmadi
             </h3>
-            <p className="text-gray-400 font-medium text-sm text-center max-w-sm px-6">
-              Hozircha foydali maqolalar yuklanmagan. Tezy orada yangi
-              materiallarni kutib qoling!
-            </p>
           </div>
         )}
+      </div>
 
-        <div className="flex flex-col h-full logo-gradient rounded-[2.5rem] p-8 sm:p-10 text-white shadow-xl shadow-orange-100 relative overflow-hidden group min-h-[350px]">
-          <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
-          <div className="relative z-10 flex flex-col h-full">
-            <h3 className="text-2xl sm:text-3xl font-black mb-6 leading-tight uppercase tracking-tighter">
-              YANGILIKLARGA OBUNA BO'LING
-            </h3>
-            <p className="text-sm opacity-90 mb-8 font-bold leading-relaxed max-w-xs">
-              Haftalik eng sara maqolalar va tadbirlar ro'yxatini Telegram
-              orqali birinchilardan bo'lib oling!
-            </p>
-            <div className="mt-auto space-y-4">
-              <a
-                href="https://t.me/tashkent_ambassadors"
-                target="_blank"
-                className="block bg-white text-orange-600 w-full py-4 rounded-2xl font-black uppercase tracking-widest text-xs text-center shadow-lg hover:bg-gray-50 transition-all active:scale-95"
-              >
-                KANALGA QO'SHILISH
-              </a>
-            </div>
-          </div>
+      {/* CTA Section */}
+      <div
+        className="rounded-[3rem] p-10 md:p-16 text-white text-center relative overflow-hidden mb-20 shadow-2xl"
+        style={{
+          backgroundImage: "linear-gradient(to bottom right, #F9B513, #EA601E)",
+          backgroundSize: "100% 130%",
+          backgroundPosition: "top center",
+        }}
+      >
+        <div className="stories-random-bg">
+          {[...Array(48)].map((_, i) => (
+            <div
+              key={i}
+              className={`stories-random-cell ${
+                Math.random() > 0.8 ? "active" : ""
+              }`}
+            />
+          ))}
+        </div>
+        <div className="relative z-10">
+          <h2 className="text-3xl md:text-5xl font-black mb-6 uppercase tracking-tighter">
+            YANGILIKLARDAN BOXABAR BO'LING
+          </h2>
+          <p className="text-lg opacity-90 mb-10 font-bold max-w-2xl mx-auto">
+            Haftalik eng sara maqolalar va tadbirlar ro'yxatini Telegram
+            kanalimizda kuzatib boring!
+          </p>
+          <a
+            href="https://t.me/tashkent_ambassadors"
+            target="_blank"
+            className="inline-flex items-center space-x-3 bg-white text-orange-600 px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-sm shadow-xl active:scale-95 transition-all hover:pr-12 group"
+          >
+            <span>KANALGA QO'SHILISH</span>
+            <ArrowUpRight
+              size={20}
+              className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+            />
+          </a>
         </div>
       </div>
     </div>

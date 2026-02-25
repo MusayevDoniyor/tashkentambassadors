@@ -35,6 +35,7 @@ const TeamRequest: React.FC = () => {
     telegram: "",
     description: "",
     roles_needed: [] as string[],
+    other_role: "",
     message: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -53,6 +54,12 @@ const TeamRequest: React.FC = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    const finalRoles = formData.roles_needed.map((role) =>
+      role === "Boshqa" && formData.other_role
+        ? `Boshqa: ${formData.other_role}`
+        : role,
+    );
+
     try {
       const { error } = await supabase.from("team_requests").insert([
         {
@@ -62,7 +69,7 @@ const TeamRequest: React.FC = () => {
           email: formData.email || null,
           telegram: formData.telegram || null,
           description: formData.description,
-          roles_needed: formData.roles_needed,
+          roles_needed: finalRoles,
           message: formData.message || null,
           status: "PENDING",
         },
@@ -102,6 +109,7 @@ const TeamRequest: React.FC = () => {
                 telegram: "",
                 description: "",
                 roles_needed: [],
+                other_role: "",
                 message: "",
               });
             }}
@@ -268,6 +276,24 @@ const TeamRequest: React.FC = () => {
               </button>
             ))}
           </div>
+
+          {formData.roles_needed.includes("Boshqa") && (
+            <div className="mt-6 animate-in slide-in-from-top-2 duration-300">
+              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
+                Qanday mutaxassis kerakligini yozing *
+              </label>
+              <input
+                type="text"
+                required
+                value={formData.other_role}
+                onChange={(e) =>
+                  setFormData({ ...formData, other_role: e.target.value })
+                }
+                placeholder="Masalan: AI Engineer, Blockchain Expert"
+                className="w-full bg-gray-50 border-2 border-orange-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-inner"
+              />
+            </div>
+          )}
         </div>
 
         {/* Additional Message */}

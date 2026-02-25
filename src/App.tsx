@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -69,14 +69,13 @@ const HomePage: React.FC = () => (
     >
       <Events />
     </section>
-
-    <section
-      id="blog"
-      className="py-16 md:py-28 relative border-t border-gray-100/50 bg-white/40 backdrop-blur-[2px]"
-    >
-      <Blog />
-    </section>
   </>
+);
+
+const BlogPage: React.FC = () => (
+  <section className="py-16 md:py-20 relative">
+    <Blog />
+  </section>
 );
 
 const RequestPage: React.FC = () => (
@@ -88,6 +87,7 @@ const RequestPage: React.FC = () => (
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [showScrollTop, setShowScrollTop] = useState(false);
+  const location = useLocation();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -96,6 +96,29 @@ const App: React.FC = () => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  // Handle hash scroll on initial load or route change
+  useEffect(() => {
+    if (location.hash) {
+      const id = location.hash.substring(1);
+      setTimeout(() => {
+        const element = document.getElementById(id);
+        if (element) {
+          const offset = 80;
+          const elementPosition =
+            element.getBoundingClientRect().top + window.pageYOffset;
+          const offsetPosition = elementPosition - offset;
+          window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+        }
+      }, 300); // Wait for page to render
+    } else if (
+      location.pathname !== "/request" &&
+      !location.pathname.startsWith("/blog/")
+    ) {
+      // If no hash and not on subpages, scroll to top if appropriate
+      // but avoid interfering with normal navigation
+    }
+  }, [location.pathname, location.hash]);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -111,8 +134,9 @@ const App: React.FC = () => {
         <main className="overflow-x-hidden pt-32">
           <Routes>
             <Route path="/" element={<HomePage />} />
+            <Route path="/blog" element={<BlogPage />} />
             <Route path="/request" element={<RequestPage />} />
-            <Route path="/blog/:id" element={<BlogDetail />} />
+            <Route path="/blog/:slug" element={<BlogDetail />} />
           </Routes>
         </main>
 

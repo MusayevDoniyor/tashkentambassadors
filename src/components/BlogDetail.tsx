@@ -5,6 +5,7 @@ import { supabase } from "../lib/supabase";
 
 interface BlogPost {
   id: string;
+  slug?: string;
   title: string;
   excerpt: string;
   content: string;
@@ -12,10 +13,11 @@ interface BlogPost {
   category: string;
   image: string | null;
   author: string;
+  views?: number;
 }
 
 const BlogDetail: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
+  const { slug } = useParams<{ slug: string }>();
   const navigate = useNavigate();
   const [post, setPost] = useState<BlogPost | null>(null);
   const [relatedPosts, setRelatedPosts] = useState<BlogPost[]>([]);
@@ -23,27 +25,46 @@ const BlogDetail: React.FC = () => {
 
   useEffect(() => {
     const fetchPostData = async () => {
-      if (!id) return;
+      if (!slug) return;
       setLoading(true);
       try {
-        // Fetch current post
-        const { data: postData, error: postError } = await supabase
+        // Try fetching by slug first
+        let { data: postData, error: postError } = await supabase
           .from("blog_posts")
           .select("*")
-          .eq("id", id)
-          .single();
+          .eq("slug", slug)
+          .maybeSingle();
+
+        // Fallback to id if slug not found (for old links)
+        if (!postData) {
+          const { data: fallbackData } = await supabase
+            .from("blog_posts")
+            .select("*")
+            .eq("id", slug)
+            .maybeSingle();
+          postData = fallbackData;
+        }
 
         if (postError) throw postError;
-        setPost(postData);
 
-        // Fetch related posts (limited to 3)
-        const { data: relatedData } = await supabase
-          .from("blog_posts")
-          .select("*")
-          .neq("id", id)
-          .limit(3);
+        if (postData) {
+          setPost(postData);
 
-        setRelatedPosts(relatedData || []);
+          // Increment views
+          await supabase
+            .from("blog_posts")
+            .update({ views: (postData.views || 0) + 1 })
+            .eq("id", postData.id);
+
+          // Fetch related posts
+          const { data: relatedData } = await supabase
+            .from("blog_posts")
+            .select("*")
+            .neq("id", postData.id)
+            .limit(3);
+
+          setRelatedPosts(relatedData || []);
+        }
       } catch (err) {
         console.error("Error fetching post:", err);
       } finally {
@@ -53,7 +74,7 @@ const BlogDetail: React.FC = () => {
 
     fetchPostData();
     window.scrollTo(0, 0);
-  }, [id]);
+  }, [slug]);
 
   if (loading) {
     return (
@@ -82,23 +103,26 @@ const BlogDetail: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FBFCFE] flex flex-col pt-8">
-      {/* Detailed View Header / Breadcrumbs */}
-      <div className="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-[100px] z-[100] shadow-sm rounded-2xl mx-4 lg:mx-8">
+    <div className="min-h-screen bg-[#FBFCFE] flex flex-col relative">
+      {/* Detailed View Header / Breadcrumbs - Fixed Z-Index and Sticky */}
+      <div className="bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-12 z-40 shadow-sm rounded-2xl mx-4 lg:mx-8 my-4 transition-all duration-300">
         <div className="flex items-center space-x-4">
           <button
-            onClick={() => navigate(-1)}
-            className="flex items-center space-x-2 text-gray-900 hover:text-orange-600 transition-all font-black uppercase text-[10px] tracking-widest bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-100"
+            onClick={() => navigate("/")}
+            className="flex items-center space-x-2 text-gray-900 hover:text-orange-600 transition-all font-black uppercase text-[10px] tracking-widest bg-gray-50 px-4 py-2.5 rounded-xl border border-gray-100 group"
           >
-            <X size={18} />
+            <X
+              size={18}
+              className="group-hover:rotate-90 transition-transform duration-300"
+            />
             <span>Orqaga</span>
           </button>
           <div className="hidden md:flex items-center space-x-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-            <Link to="/" className="hover:text-gray-900">
+            <Link to="/" className="hover:text-gray-900 transition-colors">
               Asosiy
             </Link>
             <span>/</span>
-            <Link to="/#blog" className="hover:text-gray-900">
+            <Link to="/#blog" className="hover:text-gray-900 transition-colors">
               Blog
             </Link>
             <span>/</span>
@@ -108,7 +132,20 @@ const BlogDetail: React.FC = () => {
           </div>
         </div>
         <div className="flex items-center space-x-4">
-          <button className="flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all">
+          <button
+            onClick={() => {
+              if (navigator.share) {
+                navigator.share({
+                  title: post.title,
+                  url: window.location.href,
+                });
+              } else {
+                navigator.clipboard.writeText(window.location.href);
+                alert("Link nusxalandi!");
+              }
+            }}
+            className="flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:bg-orange-600 hover:text-white transition-all shadow-sm"
+          >
             <ArrowUpRight size={16} />
             <span>Ulashish</span>
           </button>
@@ -116,38 +153,40 @@ const BlogDetail: React.FC = () => {
       </div>
 
       <div className="flex-1 pb-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 md:pt-20">
           <div className="grid lg:grid-cols-12 gap-12">
             {/* Main Content Area */}
             <div className="lg:col-span-8">
-              <div className="mb-8">
-                <div className="flex flex-wrap items-center gap-4 mb-6">
-                  <span className="bg-orange-600 text-white text-[10px] uppercase tracking-[0.2em] font-black px-4 py-2 rounded-xl shadow-lg shadow-orange-100">
+              <div className="mb-10">
+                <div className="flex flex-wrap items-center gap-4 mb-8">
+                  <span className="bg-orange-600 text-white text-[10px] uppercase tracking-[0.2em] font-black px-5 py-2.5 rounded-xl shadow-lg shadow-orange-100">
                     {post.category}
                   </span>
-                  <div className="flex items-center space-x-4 text-gray-400 text-[10px] font-black uppercase tracking-widest">
-                    <div className="flex items-center space-x-1.5">
+                  <div className="flex items-center space-x-6 text-gray-400 text-[10px] font-black uppercase tracking-widest">
+                    <div className="flex items-center space-x-2">
                       <Calendar size={14} className="text-gray-300" />
                       <span>{post.date}</span>
                     </div>
-                    <div className="flex items-center space-x-1.5 border-l border-gray-100 pl-4">
+                    <div className="flex items-center space-x-2 border-l border-gray-100 pl-6">
                       <BookOpen size={14} className="text-gray-300" />
-                      <span>127 marta ko'rildi</span>
+                      <span>{(post.views || 0) + 127} marta ko'rildi</span>
                     </div>
                   </div>
                 </div>
 
-                <h1 className="text-3xl md:text-5xl lg:text-6xl font-black text-gray-900 tracking-tighter leading-[1.1] mb-8 uppercase">
+                <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-gray-900 tracking-tighter leading-[1.05] mb-10 uppercase">
                   {post.title}
                 </h1>
 
-                <p className="text-lg md:text-xl text-gray-500 font-medium leading-relaxed italic border-l-4 border-orange-500 pl-6 mb-12">
-                  {post.excerpt}
-                </p>
+                {post.excerpt && (
+                  <p className="text-xl md:text-2xl text-gray-500 font-medium leading-relaxed italic border-l-4 border-orange-500 pl-8 mb-16 lg:max-w-3xl">
+                    {post.excerpt}
+                  </p>
+                )}
               </div>
 
               {/* Featured Image */}
-              <div className="w-full aspect-[16/9] rounded-[2.5rem] md:rounded-[3.5rem] overflow-hidden mb-12 shadow-2xl border border-gray-100 bg-gray-50">
+              <div className="w-full aspect-[16/9] rounded-[3rem] md:rounded-[4rem] overflow-hidden mb-16 shadow-2xl shadow-orange-50 border border-gray-100 bg-gray-50">
                 {post.image ? (
                   <img
                     src={post.image}
@@ -155,7 +194,7 @@ const BlogDetail: React.FC = () => {
                     alt={post.title}
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-orange-400 to-orange-600"></div>
+                  <div className="w-full h-full logo-gradient"></div>
                 )}
               </div>
 
@@ -174,95 +213,112 @@ const BlogDetail: React.FC = () => {
                 />
               </div>
 
-              {/* Call to action inside post */}
-              <div className="mt-20 p-8 md:p-12 bg-white rounded-[3rem] border border-orange-100 shadow-xl shadow-orange-50 relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-orange-50 rounded-full -mr-16 -mt-16 group-hover:scale-110 transition-transform"></div>
-                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
-                  <div className="text-center md:text-left">
-                    <h3 className="text-2xl font-black text-gray-900 mb-2 uppercase tracking-tighter">
-                      Maqola foydali bo'ldimi?
+              {/* CTA Section with Decorative Grid */}
+              <div
+                className="mt-24 p-10 md:p-14 text-white text-center md:text-left relative overflow-hidden rounded-[3rem] shadow-2xl"
+                style={{
+                  backgroundImage:
+                    "linear-gradient(to bottom right, #F9B513, #EA601E)",
+                  backgroundSize: "100% 130%",
+                  backgroundPosition: "top center",
+                }}
+              >
+                <div className="stories-random-bg">
+                  {[...Array(24)].map((_, i) => (
+                    <div
+                      key={i}
+                      className={`stories-random-cell ${Math.random() > 0.8 ? "active" : ""}`}
+                    />
+                  ))}
+                </div>
+                <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-10">
+                  <div className="flex-1">
+                    <h3 className="text-3xl font-black mb-3 uppercase tracking-tighter">
+                      YANGILIKLARDAN BOXABAR BO'LING
                     </h3>
-                    <p className="text-gray-500 font-medium">
-                      Eng so'nggi yangiliklar va maqolalarni kanalimizda kuzatib
-                      boring!
+                    <p className="text-white/80 font-medium text-lg">
+                      Haftalik eng sara maqolalar va startap olamidagi
+                      yangiliklarni kanalimizda kuzatib boring!
                     </p>
                   </div>
                   <a
                     href="https://t.me/tashkent_ambassadors"
                     target="_blank"
-                    className="flex-shrink-0 inline-flex items-center space-x-3 px-8 py-4 bg-orange-600 text-white rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-orange-700 transition-all shadow-lg active:scale-95"
+                    className="flex-shrink-0 inline-flex items-center space-x-4 px-10 py-5 bg-white text-orange-600 rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-lg active:scale-95 hover:-translate-y-1 group"
                   >
-                    <span>Kanalga a'zo bo'lish</span>
-                    <ArrowUpRight size={18} />
+                    <span>KANALGA QO'SHILISH</span>
+                    <ArrowUpRight
+                      size={22}
+                      className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                    />
                   </a>
                 </div>
               </div>
             </div>
 
             {/* Sidebar */}
-            <div className="lg:col-span-4 space-y-8 pb-20">
-              {/* Author Card */}
-              <div className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm">
-                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">
-                  Muallif:
-                </h4>
-                <div className="flex items-center space-x-4">
-                  <div className="w-16 h-16 rounded-2xl bg-orange-50 flex items-center justify-center text-orange-600 border border-orange-100 shadow-sm font-black text-xl">
-                    {post.author.charAt(0)}
-                  </div>
-                  <div>
-                    <h3 className="font-black text-gray-900 uppercase tracking-tight text-lg leading-tight">
-                      {post.author}
-                    </h3>
-                    <p className="text-xs text-orange-600 font-bold uppercase tracking-widest mt-1">
-                      Ambassador
-                    </p>
+            <div className="lg:col-span-4">
+              <div className="lg:sticky lg:top-40 space-y-10">
+                {/* Author Card - Refined */}
+                <div className="bg-white p-8 md:p-10 rounded-[3rem] border border-gray-100 shadow-sm transition-all hover:shadow-md">
+                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-4 border-b border-gray-50 pb-4">
+                    Muallif:
+                  </h4>
+                  <div className="flex items-center space-x-4">
+                    <div>
+                      <h3 className="font-black text-gray-900 uppercase tracking-tight text-xl leading-none">
+                        {post.author}
+                      </h3>
+                      <div className="w-12 h-1 bg-orange-600 rounded-full mt-3"></div>
+                    </div>
                   </div>
                 </div>
-                <p className="mt-6 text-sm text-gray-500 font-medium leading-relaxed">
-                  Tashkent Startup Ambassadors jamoasi a'zosi. Startuplar va
-                  innovatsiyalar sohasida ekspert.
-                </p>
-              </div>
 
-              {/* Recommended Posts */}
-              <div className="bg-[#F8FAFC] p-8 rounded-[2.5rem] border border-gray-100">
-                <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.2em] mb-6">
-                  Tavsiya etamiz:
-                </h4>
-                <div className="space-y-6">
-                  {relatedPosts.map((rec) => (
-                    <Link
-                      key={rec.id}
-                      to={`/blog/${rec.id}`}
-                      className="group flex gap-4"
-                    >
-                      <div className="w-20 h-20 flex-shrink-0 rounded-2xl overflow-hidden bg-gray-200">
-                        {rec.image && (
-                          <img
-                            src={rec.image}
-                            className="w-full h-full object-cover transition-transform group-hover:scale-110"
-                          />
-                        )}
-                      </div>
-                      <div className="flex flex-col justify-center min-w-0">
-                        <h5 className="font-black text-gray-900 text-xs uppercase tracking-tight leading-snug group-hover:text-orange-600 transition-colors line-clamp-2">
-                          {rec.title}
-                        </h5>
-                        <span className="text-[9px] font-bold text-gray-400 mt-1 uppercase tracking-widest">
-                          {rec.date}
-                        </span>
-                      </div>
-                    </Link>
-                  ))}
+                {/* Recommended Posts */}
+                <div className="bg-[#F8FAFC] p-8 md:p-10 rounded-[3rem] border border-gray-100">
+                  <h4 className="text-[10px] font-black text-gray-900 uppercase tracking-[0.3em] mb-10 text-center">
+                    TAVSIYA ETAMIZ:
+                  </h4>
+                  <div className="space-y-10">
+                    {relatedPosts.map((rec) => (
+                      <Link
+                        key={rec.id}
+                        to={`/blog/${rec.slug || rec.id}`}
+                        className="group flex flex-col gap-4"
+                      >
+                        <div className="w-full aspect-video rounded-3xl overflow-hidden bg-gray-200 shadow-sm group-hover:shadow-md transition-shadow">
+                          {rec.image && (
+                            <img
+                              src={rec.image}
+                              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                            />
+                          )}
+                        </div>
+                        <div className="flex flex-col min-w-0">
+                          <span className="text-[9px] font-black text-orange-600 uppercase tracking-widest mb-2">
+                            {rec.category}
+                          </span>
+                          <h5 className="font-black text-gray-900 text-sm uppercase tracking-tight leading-snug group-hover:text-orange-600 transition-colors line-clamp-2">
+                            {rec.title}
+                          </h5>
+                          <span className="text-[10px] font-bold text-gray-400 mt-3 uppercase tracking-widest">
+                            {rec.date}
+                          </span>
+                        </div>
+                      </Link>
+                    ))}
+                  </div>
+                  <Link
+                    to="/blog"
+                    className="w-full mt-12 py-5 bg-white border border-gray-100 rounded-2xl text-[10px] font-black text-gray-900 uppercase tracking-widest hover:border-orange-600 hover:text-orange-600 transition-all flex items-center justify-center space-x-3 shadow-sm group"
+                  >
+                    <span>Barcha maqolalar</span>
+                    <ArrowRight
+                      size={16}
+                      className="text-orange-600 group-hover:translate-x-1 transition-transform"
+                    />
+                  </Link>
                 </div>
-                <Link
-                  to="/#blog"
-                  className="w-full mt-8 py-4 bg-white border border-gray-100 rounded-2xl text-[10px] font-black text-gray-900 uppercase tracking-widest hover:border-orange-200 transition-all flex items-center justify-center space-x-2"
-                >
-                  <span>Barcha maqolalar</span>
-                  <ArrowRight size={14} className="text-orange-600" />
-                </Link>
               </div>
             </div>
           </div>

@@ -133,6 +133,25 @@
         margin: 2rem 0;
         box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
       }
+      /* Stories Background Decorative Grid */
+      .stories-random-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: grid;
+        grid-template-columns: repeat(12, 1fr);
+        grid-template-rows: repeat(4, 1fr);
+        pointer-events: none;
+      }
+      .stories-random-cell {
+        border: 0.5px solid rgba(255, 255, 255, 0.05);
+        transition: background-color 0.5s ease;
+      }
+      .stories-random-cell.active {
+        background-color: rgba(255, 255, 255, 0.08);
+      }
     </style>
 
     <script type="importmap">
