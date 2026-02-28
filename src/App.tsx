@@ -6,6 +6,7 @@ import About from "./components/About";
 import TashkentMap from "./components/TashkentMap";
 import Events from "./components/Events";
 import TeamRequest from "./components/TeamRequest";
+import JobListings from "./components/JobListings";
 import Footer from "./components/Footer";
 import { ArrowUp } from "lucide-react";
 
@@ -117,6 +118,14 @@ const App: React.FC = () => {
               element={
                 <section className="py-16 md:py-28 relative">
                   <TeamRequest />
+                </section>
+              }
+            />
+            <Route
+              path="/elonlar"
+              element={
+                <section className="py-16 md:py-28 relative">
+                  <JobListings />
                 </section>
               }
             />
