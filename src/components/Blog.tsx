@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ArrowUpRight, BookOpen, Calendar } from "lucide-react";
+import { ArrowUpRight, BookOpen, Calendar, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { supabase } from "../lib/supabase";
@@ -111,39 +111,46 @@ const Blog: React.FC = () => {
         >
           <Link
             to={`/blog/${featuredPost.slug || featuredPost.id}`}
-            className="group grid grid-cols-1 lg:grid-cols-2 mb-20 bg-white rounded-[3rem] overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500 min-h-[320px] max-w-7xl mx-auto"
+            className="group grid grid-cols-1 lg:grid-cols-2 mb-20 bg-white rounded-[3rem] overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500 min-h-[350px] max-w-7xl mx-auto"
           >
-            <div className="p-6 md:p-8 flex flex-col justify-center relative overflow-hidden">
-              <div className="flex items-center space-x-6 mb-3">
-                <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+            <div className="p-8 md:p-12 lg:p-16 flex flex-col justify-start relative overflow-hidden">
+              <div className="flex items-center space-x-6 mb-6">
+                <span className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
                   {featuredPost.date}
                 </span>
-                <div className="flex items-center space-x-2 text-gray-400 text-[10px] font-bold">
-                  <BookOpen size={14} />
+                <div className="flex items-center space-x-2 text-gray-400 text-[10px] font-black uppercase tracking-[0.2em]">
+                  <BookOpen size={14} className="text-orange-600" />
                   <span>{(featuredPost.views || 0) + 1} marta</span>
                 </div>
               </div>
-              <h2 className="text-xl md:text-2xl lg:text-3xl font-black text-gray-900 mb-4 group-hover:text-orange-600 transition-colors uppercase tracking-tighter leading-tight">
-                {featuredPost.title}
-              </h2>
 
-              <div className="flex items-center space-x-2 text-[10px] text-gray-500 mb-6 font-medium">
-                <span>Muallif:</span>
-                <span className="font-bold text-gray-900">
-                  {featuredPost.author}
-                </span>
-              </div>
-              <div className="inline-block w-fit">
-                <span className="px-3 py-1.5 rounded-xl bg-orange-50 text-orange-600 text-[9px] font-black uppercase tracking-[0.2em] border border-orange-100">
+              <div className="mb-6">
+                <span className="px-4 py-2 rounded-xl bg-orange-600 text-white text-[10px] font-black uppercase tracking-[0.2em] shadow-lg shadow-orange-100">
                   {featuredPost.category}
                 </span>
               </div>
+
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-gray-900 mb-6 group-hover:text-orange-600 transition-colors uppercase tracking-tighter leading-[1.1]">
+                {featuredPost.title}
+              </h2>
+
+              <p className="text-gray-500 font-medium text-lg line-clamp-3 mb-8">
+                {featuredPost.excerpt}
+              </p>
+
+              <div className="mt-auto">
+                <div className="inline-flex items-center space-x-2 text-orange-600 font-black text-[11px] uppercase tracking-widest group-hover:translate-x-2 transition-transform">
+                  <span>Batafsil o'qish</span>
+                  <ArrowRight size={18} />
+                </div>
+              </div>
             </div>
-            <div className="h-full max-h-[400px] ">
+            <div className="relative h-full min-h-[300px] overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-r from-white via-transparent to-transparent z-10 hidden lg:block"></div>
               {featuredPost.image ? (
                 <img
                   src={featuredPost.image}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-all duration-700"
+                  className="w-full h-full object-cover group-hover:scale-110 transition-all duration-1000"
                   alt={featuredPost.title}
                 />
               ) : (

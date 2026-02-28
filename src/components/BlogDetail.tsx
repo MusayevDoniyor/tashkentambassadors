@@ -50,11 +50,21 @@ const BlogDetail: React.FC = () => {
         if (postData) {
           setPost(postData);
 
-          // Increment views
-          await supabase
-            .from("blog_posts")
-            .update({ views: (postData.views || 0) + 1 })
-            .eq("id", postData.id);
+          // Unique views logic using localStorage
+          const viewedPosts = JSON.parse(
+            localStorage.getItem("viewed_posts") || "[]",
+          );
+          if (!viewedPosts.includes(postData.id)) {
+            // Increment views only if not viewed before in this browser
+            await supabase
+              .from("blog_posts")
+              .update({ views: (postData.views || 0) + 1 })
+              .eq("id", postData.id);
+
+            // Mark as viewed
+            viewedPosts.push(postData.id);
+            localStorage.setItem("viewed_posts", JSON.stringify(viewedPosts));
+          }
 
           // Fetch related posts
           const { data: relatedData } = await supabase
@@ -200,14 +210,43 @@ const BlogDetail: React.FC = () => {
 
               {/* Content Body */}
               <div className="prose prose-orange prose-lg md:prose-xl max-w-none">
+                <style>{`
+                  .blog-content-styles img {
+                    max-width: 100%;
+                    height: auto;
+                    border-radius: 1.5rem;
+                    margin: 2rem 0;
+                    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+                  }
+                  .blog-content-styles p {
+                    margin-bottom: 1.5rem;
+                    line-height: 1.8;
+                    color: #374151;
+                  }
+                  .blog-content-styles strong {
+                    color: #111827;
+                    font-weight: 800;
+                  }
+                  .blog-content-styles iframe {
+                    width: 100%;
+                    aspect-ratio: 16/9;
+                    border-radius: 1.5rem;
+                    margin: 2rem 0;
+                  }
+                  @media (max-width: 768px) {
+                    .blog-content-styles {
+                      font-size: 1rem;
+                    }
+                  }
+                `}</style>
                 <div
-                  className="text-gray-800 font-medium leading-[1.8] space-y-8 text-lg blog-content-styles"
+                  className="text-gray-800 font-medium blog-content-styles"
                   dangerouslySetInnerHTML={{
                     __html: post.content.includes("<")
                       ? post.content
                       : post.content
                           .split("\n")
-                          .map((para) => `<p>${para}</p>`)
+                          .map((para) => (para.trim() ? `<p>${para}</p>` : ""))
                           .join(""),
                   }}
                 />

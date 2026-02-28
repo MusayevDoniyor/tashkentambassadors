@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
 import {
   Rocket,
@@ -9,6 +9,8 @@ import {
   Mail,
   Phone,
   MessageSquare,
+  Clock,
+  ChevronRight,
 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 
@@ -27,6 +29,29 @@ const ROLES_NEEDED = [
   "Boshqa",
 ];
 
+interface JobListing {
+  id: string;
+  startup_name: string;
+  founder_name: string;
+  phone: string;
+  telegram: string | null;
+  email: string | null;
+  description: string;
+  roles_needed: string[];
+  message: string | null;
+  status: string;
+  created_at: string;
+}
+
+const formatDate = (dateStr: string) => {
+  const d = new Date(dateStr);
+  return d.toLocaleDateString("uz-UZ", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
+
 const TeamRequest: React.FC = () => {
   const [formData, setFormData] = useState({
     startup_name: "",
@@ -41,6 +66,27 @@ const TeamRequest: React.FC = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [jobListings, setJobListings] = useState<JobListing[]>([]);
+  const [loadingListings, setLoadingListings] = useState(true);
+
+  useEffect(() => {
+    fetchJobListings();
+  }, []);
+
+  const fetchJobListings = async () => {
+    try {
+      const { data } = await supabase
+        .from("job_listings")
+        .select("*")
+        .eq("status", "APPROVED")
+        .order("created_at", { ascending: false });
+      if (data) setJobListings(data);
+    } catch (err) {
+      console.error("Error fetching job listings:", err);
+    } finally {
+      setLoadingListings(false);
+    }
+  };
 
   const handleRoleToggle = (role: string) => {
     setFormData((prev) => ({
@@ -62,7 +108,7 @@ const TeamRequest: React.FC = () => {
     );
 
     try {
-      const { error } = await supabase.from("team_requests").insert([
+      const { error } = await supabase.from("job_listings").insert([
         {
           startup_name: formData.startup_name,
           founder_name: formData.founder_name,
@@ -128,10 +174,20 @@ const TeamRequest: React.FC = () => {
             <CheckCircle size={48} className="text-green-500" />
           </motion.div>
           <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 uppercase tracking-tighter">
-            SO'ROV <span className="text-green-500">YUBORILDI!</span>
+            E'LON <span className="text-green-500">YUBORILDI!</span>
           </h2>
-          <p className="text-gray-600 font-medium text-lg mb-8">
-            Sizning so'rovingiz qabul qilindi. Tez orada siz bilan bog'lanamiz!
+          <p className="text-gray-600 font-medium text-lg mb-4">
+            Sizning e'loningiz admin tomonidan ko'rib chiqiladi.
+          </p>
+          <p className="text-gray-500 font-medium text-sm mb-8">
+            Tasdiqlangandan keyin e'loningiz saytda ko'rsatiladi. Admin bilan{" "}
+            <a
+              href="https://t.me/tashkent_ambassadors"
+              className="text-orange-600 hover:underline"
+            >
+              Telegram
+            </a>{" "}
+            orqali bog'laning.
           </p>
           <motion.button
             whileHover={{ scale: 1.05 }}
@@ -152,7 +208,7 @@ const TeamRequest: React.FC = () => {
             }}
             className="bg-orange-600 text-white px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-orange-700 transition-colors"
           >
-            Yana so'rov yuborish
+            Yana e'lon berish
           </motion.button>
         </motion.div>
       </div>
@@ -176,10 +232,129 @@ const TeamRequest: React.FC = () => {
           STARTUP UCHUN <span className="text-orange-600">JAMOA KERAK?</span>
         </h2>
         <p className="text-gray-600 max-w-2xl mx-auto font-medium text-lg px-4">
-          Startupingiz uchun kerakli mutaxassis va jamoani biz topib beramiz.
-          Formani to'ldiring va biz siz bilan bog'lanamiz!
+          Aktiv e'lonlarni ko'ring yoki startupingiz uchun yangi e'lon bering.
         </p>
       </motion.div>
+
+      {/* Active Job Listings */}
+      {!loadingListings && jobListings.length > 0 && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6, delay: 0.1 }}
+          className="mb-16"
+        >
+          <div className="flex items-center space-x-3 mb-6">
+            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+            <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">
+              Aktiv E'lonlar
+            </h3>
+            <span className="text-[10px] font-black text-green-600 bg-green-50 px-2 py-1 rounded-full uppercase tracking-widest">
+              {jobListings.length} ta
+            </span>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {jobListings.map((listing) => (
+              <motion.div
+                key={listing.id}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="bg-white rounded-[2rem] border-2 border-orange-50 hover:border-orange-200 shadow-sm hover:shadow-lg transition-all p-6 group"
+              >
+                <div className="flex items-start justify-between mb-4">
+                  <div>
+                    <h4 className="text-xl font-black text-gray-900 uppercase tracking-tighter group-hover:text-orange-600 transition-colors">
+                      {listing.startup_name}
+                    </h4>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
+                      {listing.founder_name}
+                    </p>
+                  </div>
+                  <div className="flex items-center space-x-1 text-gray-300">
+                    <Clock size={12} />
+                    <span className="text-[9px] font-bold">
+                      {formatDate(listing.created_at)}
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-gray-600 text-sm font-medium leading-relaxed mb-4 line-clamp-2">
+                  {listing.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {listing.roles_needed.slice(0, 4).map((role, i) => (
+                    <span
+                      key={i}
+                      className="px-2.5 py-1 bg-orange-50 text-orange-700 rounded-lg text-[9px] font-black uppercase tracking-widest border border-orange-100"
+                    >
+                      {role}
+                    </span>
+                  ))}
+                  {listing.roles_needed.length > 4 && (
+                    <span className="px-2.5 py-1 bg-gray-50 text-gray-500 rounded-lg text-[9px] font-black uppercase tracking-widest">
+                      +{listing.roles_needed.length - 4} ta
+                    </span>
+                  )}
+                </div>
+
+                <div className="flex items-center space-x-4 pt-4 border-t border-gray-50">
+                  {listing.telegram && (
+                    <a
+                      href={`https://t.me/${listing.telegram.replace("@", "")}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center space-x-2 text-orange-600 hover:text-orange-700 transition-colors font-bold text-xs"
+                    >
+                      <Send size={14} />
+                      <span>
+                        {listing.telegram.startsWith("@")
+                          ? listing.telegram
+                          : `@${listing.telegram}`}
+                      </span>
+                    </a>
+                  )}
+                  {listing.phone && (
+                    <a
+                      href={`tel:${listing.phone}`}
+                      className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors font-bold text-xs"
+                    >
+                      <Phone size={14} />
+                      <span>{listing.phone}</span>
+                    </a>
+                  )}
+                  <ChevronRight
+                    size={16}
+                    className="ml-auto text-gray-300 group-hover:text-orange-500 group-hover:translate-x-1 transition-all"
+                  />
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
+      )}
+
+      {loadingListings && (
+        <div className="text-center py-8 mb-12">
+          <div className="inline-block w-8 h-8 border-2 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+        </div>
+      )}
+
+      {/* Divider */}
+      <div className="flex items-center justify-center mb-12">
+        <div className="h-px flex-1 bg-gray-100"></div>
+        <div className="mx-6 px-4 py-2 bg-orange-50 rounded-full text-orange-600 text-[10px] font-black uppercase tracking-widest">
+          E'lon Berish
+        </div>
+        <div className="h-px flex-1 bg-gray-100"></div>
+      </div>
+
+      <p className="text-center text-gray-500 font-medium text-sm mb-10 max-w-xl mx-auto">
+        Startupingiz uchun kerakli mutaxassis toping. E'loningiz admin tomonidan
+        tasdiqlanganidan keyin saytda ko'rinadi.
+      </p>
 
       <motion.form
         variants={containerVariants}
@@ -397,7 +572,7 @@ const TeamRequest: React.FC = () => {
               isSubmitting ? "animate-pulse" : ""
             }`}
           >
-            <span>{isSubmitting ? "Yuborilmoqda..." : "So'rov Yuborish"}</span>
+            <span>{isSubmitting ? "Yuborilmoqda..." : "E'lon Berish"}</span>
             <Send size={18} />
           </motion.button>
           {formData.roles_needed.length === 0 && (

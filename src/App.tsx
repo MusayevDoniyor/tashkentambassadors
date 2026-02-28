@@ -4,12 +4,9 @@ import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import TashkentMap from "./components/TashkentMap";
-import Ambassadors from "./components/Ambassadors";
 import Events from "./components/Events";
-import Blog from "./components/Blog";
 import TeamRequest from "./components/TeamRequest";
 import Footer from "./components/Footer";
-import BlogDetail from "./components/BlogDetail";
 import { ArrowUp } from "lucide-react";
 
 const gridStyle = {
@@ -72,18 +69,6 @@ const HomePage: React.FC = () => (
   </>
 );
 
-const BlogPage: React.FC = () => (
-  <section className="py-16 md:py-20 relative">
-    <Blog />
-  </section>
-);
-
-const RequestPage: React.FC = () => (
-  <section className="py-16 md:py-28 relative">
-    <TeamRequest />
-  </section>
-);
-
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [showScrollTop, setShowScrollTop] = useState(false);
@@ -97,7 +82,6 @@ const App: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle hash scroll on initial load or route change
   useEffect(() => {
     if (location.hash) {
       const id = location.hash.substring(1);
@@ -110,13 +94,7 @@ const App: React.FC = () => {
           const offsetPosition = elementPosition - offset;
           window.scrollTo({ top: offsetPosition, behavior: "smooth" });
         }
-      }, 300); // Wait for page to render
-    } else if (
-      location.pathname !== "/request" &&
-      !location.pathname.startsWith("/blog/")
-    ) {
-      // If no hash and not on subpages, scroll to top if appropriate
-      // but avoid interfering with normal navigation
+      }, 300);
     }
   }, [location.pathname, location.hash]);
 
@@ -134,16 +112,20 @@ const App: React.FC = () => {
         <main className="overflow-x-hidden pt-32">
           <Routes>
             <Route path="/" element={<HomePage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/request" element={<RequestPage />} />
-            <Route path="/blog/:slug" element={<BlogDetail />} />
+            <Route
+              path="/request"
+              element={
+                <section className="py-16 md:py-28 relative">
+                  <TeamRequest />
+                </section>
+              }
+            />
           </Routes>
         </main>
 
         <Footer />
       </div>
 
-      {/* Floating Back to Top Button */}
       <button
         onClick={scrollToTop}
         className={`fixed bottom-8 right-8 z-50 p-4 rounded-2xl bg-orange-600 text-white shadow-2xl transition-all duration-300 transform active:scale-95 ${

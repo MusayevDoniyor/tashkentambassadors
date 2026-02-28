@@ -17,18 +17,11 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     { id: "about", label: "Biz haqimizda", path: "/#about" },
     { id: "ambassadors", label: "Ambassadorlar", path: "/#ambassadors" },
     { id: "events", label: "Tadbirlar", path: "/#events" },
-    { id: "blog", label: "Blog", path: "/blog" },
   ];
 
   const handleNavClick = (id: string, path: string) => {
     setActiveTab(id);
     setIsMenuOpen(false);
-
-    if (id === "blog") {
-      navigate("/blog");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      return;
-    }
 
     if (id === "home" && location.pathname === "/") {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -36,7 +29,6 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
       return;
     }
 
-    // If we're already on the home page and clicking a section
     if (location.pathname === "/") {
       const element = document.getElementById(id);
       if (element) {
@@ -48,7 +40,6 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
       }
       navigate(path);
     } else {
-      // If we're on a different page, navigation to home with hash will be handled by App.tsx useEffect
       navigate(path);
     }
   };
@@ -58,14 +49,11 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     navigate("/request");
   };
 
-  // Sync active tab with URL
   useEffect(() => {
     const currentPath = location.pathname;
     const currentHash = location.hash;
 
-    if (currentPath === "/blog") {
-      setActiveTab("blog");
-    } else if (currentPath === "/request") {
+    if (currentPath === "/request") {
       setActiveTab("");
     } else if (currentPath === "/") {
       if (!currentHash) {
@@ -77,7 +65,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
         if (matchedItem) setActiveTab(matchedItem.id);
       }
     }
-  }, [location, setActiveTab, navItems]);
+  }, [location, setActiveTab]);
 
   const isOnRequestPage = location.pathname === "/request";
 
@@ -97,7 +85,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             />
           </div>
 
-          {/* Desktop Nav - Centered & Simple */}
+          {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
             {navItems.map((item) => (
               <button
@@ -186,10 +174,11 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             Jamoa kerak
           </button>
           <a
-            href="https://t.me/toshkent_startup_community"
+            href="https://t.me/tashkent_ambassadors"
+            target="_blank"
             className="mt-2 bg-orange-600 text-white py-3 px-4 rounded-tl-2xl rounded-br-2xl text-center font-black uppercase tracking-widest text-xs"
           >
-            Klubga qo'shilish
+            Bog'lanish
           </a>
         </div>
       </div>

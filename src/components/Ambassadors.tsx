@@ -1,14 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import {
-  MapPin,
-  Send,
-  Linkedin,
-  Search,
-  X,
-  Users,
-  Star,
-  Crown,
-} from "lucide-react";
+import { MapPin, Send, Search, X, Users, Star, Crown } from "lucide-react";
 import { motion, AnimatePresence, Variants } from "framer-motion";
 import { supabase } from "../lib/supabase";
 
@@ -69,7 +60,6 @@ const Ambassadors: React.FC = () => {
     return ambassadors.filter((a) => {
       const matchesSearch =
         a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        a.role.toLowerCase().includes(searchQuery.toLowerCase()) ||
         (a.team && a.team.toLowerCase().includes(searchQuery.toLowerCase()));
       const matchesDistrict =
         selectedDistrict === "Barchasi" || a.district === selectedDistrict;
@@ -227,9 +217,6 @@ const Ambassadors: React.FC = () => {
                       ? amb.team
                       : "Ambassador"}
                   </span>
-                  <p className="bg-orange-50 text-gray-600 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-orange-100">
-                    {amb.role}
-                  </p>
                   <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">
                     {amb.district} tumani
                   </p>
@@ -244,20 +231,6 @@ const Ambassadors: React.FC = () => {
                       className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-orange-600 hover:text-white transition-all duration-300"
                     >
                       <Send size={18} />
-                    </a>
-                  )}
-                  {amb.linkedin && (
-                    <a
-                      href={
-                        amb.linkedin.startsWith("http")
-                          ? amb.linkedin
-                          : `https://${amb.linkedin}`
-                      }
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="w-10 h-10 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-blue-600 hover:text-white transition-all duration-300"
-                    >
-                      <Linkedin size={18} />
                     </a>
                   )}
                 </div>

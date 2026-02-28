@@ -1,27 +1,9 @@
-import React, { useState } from "react";
-import {
-  Rocket,
-  Send,
-  Instagram,
-  Linkedin,
-  Mail,
-  Phone,
-  ArrowUp,
-  User,
-  CheckCircle,
-} from "lucide-react";
+import React from "react";
+import { Rocket, Send, Instagram, ArrowUp, ExternalLink } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import { supabase } from "@/lib/supabase";
 
 const Footer: React.FC = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
   const navigate = useNavigate();
 
   const scrollToTop = () => {
@@ -41,31 +23,6 @@ const Footer: React.FC = () => {
       navigate(path);
     } else {
       navigate(path);
-    }
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-    try {
-      const { error } = await supabase.from("contact_submissions").insert([
-        {
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-          status: "PENDING",
-        },
-      ]);
-
-      if (error) throw error;
-      setIsSubmitted(true);
-      setFormData({ name: "", email: "", message: "" });
-      setTimeout(() => setIsSubmitted(false), 5000);
-    } catch (err) {
-      console.error("Error submitting contact form:", err);
-      alert("Xatolik yuz berdi. Iltimos qaytadan urinib ko'ring.");
-    } finally {
-      setIsSubmitting(false);
     }
   };
 
@@ -102,6 +59,7 @@ const Footer: React.FC = () => {
           viewport={{ once: true }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12 lg:gap-16 mb-20 border-b border-white/5 pb-20"
         >
+          {/* Brand */}
           <motion.div variants={columnVariants} className="space-y-8">
             <div
               className="flex items-center group cursor-pointer"
@@ -141,6 +99,7 @@ const Footer: React.FC = () => {
             </div>
           </motion.div>
 
+          {/* Nav Links */}
           <motion.div variants={columnVariants}>
             <h4 className="text-[10px] font-black mb-8 uppercase tracking-[0.3em] text-orange-500">
               Bo'limlar
@@ -172,14 +131,6 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <button
-                  onClick={() => navigate("/blog")}
-                  className="px-4 py-2 -ml-4 rounded-xl hover:bg-white/5 hover:text-white transition-all w-fit flex items-center"
-                >
-                  Blog
-                </button>
-              </li>
-              <li>
-                <button
                   onClick={() => navigate("/request")}
                   className="px-4 py-2 -ml-4 rounded-xl hover:bg-white/5 hover:text-white transition-all w-fit flex items-center"
                 >
@@ -189,77 +140,39 @@ const Footer: React.FC = () => {
             </ul>
           </motion.div>
 
+          {/* Admin Contact */}
           <motion.div variants={columnVariants}>
             <h4 className="text-[10px] font-black mb-8 uppercase tracking-[0.3em] text-orange-500">
-              Bog'lanish
+              Admin bilan bog'lanish
             </h4>
-            {isSubmitted ? (
-              <motion.div
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="bg-green-500/10 border border-green-500/20 rounded-[2rem] p-8 text-center"
-              >
-                <div className="w-12 h-12 rounded-full bg-green-500 flex items-center justify-center mx-auto mb-4">
-                  <CheckCircle size={24} className="text-white" />
-                </div>
-                <p className="text-green-500 font-black uppercase tracking-tighter text-lg leading-tight">
-                  Xabaringiz yuborildi!
+            <p className="text-gray-400 text-sm font-medium mb-6 leading-relaxed">
+              Savol, taklif yoki muammo bo'lsa — to'g'ridan-to'g'ri admin bilan
+              Telegram orqali bog'laning.
+            </p>
+            <motion.a
+              href="https://t.me/tashkent_ambassadors"
+              target="_blank"
+              rel="noopener noreferrer"
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.97 }}
+              className="flex items-center space-x-4 bg-white/5 hover:bg-orange-600/20 border border-white/10 hover:border-orange-500/50 rounded-2xl p-5 transition-all group w-full"
+            >
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-500 to-amber-500 flex items-center justify-center text-white flex-shrink-0 shadow-lg group-hover:scale-110 transition-transform">
+                <Rocket size={24} />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-black text-white text-sm uppercase tracking-tight">
+                  Admin
                 </p>
-                <p className="text-gray-400 text-xs mt-2 font-medium">
-                  Tez orada javob beramiz.
+                <p className="text-orange-400 text-[10px] font-black uppercase tracking-widest">
+                  @tashkent_ambassadors
                 </p>
-              </motion.div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-4">
-                <div className="relative">
-                  <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
-                  <input
-                    type="text"
-                    placeholder="Ismingiz"
-                    required
-                    value={formData.name}
-                    onChange={(e) =>
-                      setFormData({ ...formData, name: e.target.value })
-                    }
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-orange-500 transition-colors font-bold"
-                  />
-                </div>
-                <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-4 h-4" />
-                  <input
-                    type="email"
-                    placeholder="Email"
-                    required
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 pl-12 pr-4 text-sm focus:outline-none focus:border-orange-500 transition-colors font-bold"
-                  />
-                </div>
-                <textarea
-                  placeholder="Xabaringiz"
-                  required
-                  rows={3}
-                  value={formData.message}
-                  onChange={(e) =>
-                    setFormData({ ...formData, message: e.target.value })
-                  }
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl py-4 px-6 text-sm focus:outline-none focus:border-orange-500 transition-colors resize-none font-bold"
-                ></textarea>
-                <motion.button
-                  type="submit"
-                  disabled={isSubmitting}
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.95 }}
-                  className="w-full logo-gradient py-5 rounded-2xl font-black text-xs uppercase tracking-[0.2em] hover:brightness-110 active:scale-95 transition-all flex items-center justify-center space-x-3 shadow-xl shadow-orange-950/20 disabled:opacity-50"
-                >
-                  <span>{isSubmitting ? "Yuborilmoqda..." : "Yuborish"}</span>
-                  <Send size={16} />
-                </motion.button>
-              </form>
-            )}
+              </div>
+              <ExternalLink
+                size={16}
+                className="text-gray-500 group-hover:text-orange-400 flex-shrink-0 transition-colors"
+              />
+            </motion.a>
           </motion.div>
         </motion.div>
 
