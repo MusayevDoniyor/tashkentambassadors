@@ -8,6 +8,7 @@ import Events from "./components/Events";
 import TeamRequest from "./components/TeamRequest";
 import JobListings from "./components/JobListings";
 import Footer from "./components/Footer";
+import NotFound from "./components/NotFound";
 import { ArrowUp } from "lucide-react";
 
 const gridStyle = {
@@ -19,7 +20,7 @@ const gridStyle = {
 };
 
 const BackgroundLayer = () => (
-  <div className="absolute inset-0 pointer-events-none z-0 min-h-full">
+  <div className="absolute inset-0 pointer-events-none z-0 min-h-full overflow-hidden">
     <div className="absolute inset-0" style={gridStyle}></div>
     <div
       className="absolute inset-0 opacity-20"
@@ -107,10 +108,10 @@ const App: React.FC = () => {
     <div className="min-h-screen bg-white relative font-sans overflow-x-hidden">
       <BackgroundLayer />
 
-      <div className="relative z-10">
+      <div className="relative z-10 flex flex-col min-h-screen">
         <Header activeTab={activeTab} setActiveTab={setActiveTab} />
 
-        <main className="overflow-x-hidden pt-32">
+        <main className="flex-grow pt-32">
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route
@@ -129,6 +130,7 @@ const App: React.FC = () => {
                 </section>
               }
             />
+            <Route path="*" element={<NotFound />} />
           </Routes>
         </main>
 
@@ -137,7 +139,7 @@ const App: React.FC = () => {
 
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-28 right-8 z-50 p-4 rounded-2xl bg-orange-600 text-white shadow-2xl transition-all duration-300 transform active:scale-95 ${
+        className={`fixed bottom-12 right-8 z-50 p-4 rounded-2xl bg-orange-600 text-white shadow-2xl transition-all duration-300 transform active:scale-95 ${
           showScrollTop
             ? "translate-y-0 opacity-100 pointer-events-auto"
             : "translate-y-10 opacity-0 pointer-events-none"

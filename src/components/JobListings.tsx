@@ -38,6 +38,13 @@ const formatDate = (dateStr: string) => {
   return d.toLocaleDateString("uz-UZ", { day: "numeric", month: "long" });
 };
 
+const isNewListing = (dateStr: string) => {
+  const d = new Date(dateStr);
+  const now = new Date();
+  const diffHours = (now.getTime() - d.getTime()) / 3600000;
+  return diffHours < 48;
+};
+
 const JobListings: React.FC = () => {
   const [listings, setListings] = useState<JobListing[]>([]);
   const [loading, setLoading] = useState(true);
@@ -58,7 +65,6 @@ const JobListings: React.FC = () => {
     fetchListings();
   }, []);
 
-  // Collect all unique roles from listings
   const allRoles = Array.from(
     new Set(listings.flatMap((l) => l.roles_needed)),
   ).sort();
@@ -78,315 +84,402 @@ const JobListings: React.FC = () => {
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.08 } },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
   };
   const cardVariants: Variants = {
     hidden: { y: 20, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      transition: { duration: 0.4, ease: "easeOut" },
+      transition: { duration: 0.5, ease: "easeOut" },
     },
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      {/* Header */}
+    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
+      {/* Header Section */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
+        initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="text-center mb-16 py-10 relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-orange-50/50 to-white border-2 border-orange-50"
       >
-        <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-orange-100/30 rounded-full blur-3xl -z-10 -mt-32"></div>
+        <div className="inline-flex items-center space-x-2 bg-orange-100/50 text-orange-600 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8 border border-orange-200">
           <Rocket size={14} />
-          <span>Aktiv E'lonlar</span>
+          <span>Talantlar Platformasi</span>
         </div>
-        <h1 className="text-4xl md:text-6xl font-black text-gray-900 mb-4 uppercase tracking-tighter">
+        <h1 className="text-5xl md:text-8xl font-black text-gray-900 mb-6 uppercase tracking-tighter leading-none">
           STARTUP <span className="text-orange-600">E'LONLAR</span>
         </h1>
-        <p className="text-gray-500 font-medium max-w-xl mx-auto text-lg">
-          Startuplar tomonidan berilgan ish e'lonlarini ko'ring va o'zingizga
-          mos loyihaga qo'shiling
+        <p className="text-gray-500 font-medium max-w-2xl mx-auto text-lg md:text-xl leading-relaxed px-6">
+          Eng qiziqarli loyihalarni toping va jamoaga qo'shiling. O'z
+          mutaxassisligingiz bo'yicha e'lonlarni filtrlang.
         </p>
       </motion.div>
 
-      {/* Search & Filter */}
+      {/* Search & Filter Bar */}
       <motion.div
-        initial={{ opacity: 0, y: 10 }}
+        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.1 }}
-        className="flex flex-col sm:flex-row gap-3 mb-8"
+        transition={{ duration: 0.6, delay: 0.2 }}
+        className="flex flex-col md:flex-row gap-4 mb-12 bg-white/60 backdrop-blur-xl p-4 rounded-[2.5rem] border-2 border-orange-50 shadow-xl shadow-orange-100/20"
       >
-        <div className="relative flex-1">
-          <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-300 w-5 h-5" />
+        <div className="relative flex-1 group">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-orange-500 w-5 h-5 transition-colors" />
           <input
             type="text"
-            placeholder="Startup yoki kasb bo'yicha qidirish..."
+            placeholder="Kompaniya yoki ko'nikma bo'yicha..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="w-full bg-white border-2 border-gray-100 rounded-2xl py-3.5 pl-12 pr-10 text-sm font-bold focus:outline-none focus:border-orange-400 transition-all shadow-sm"
+            className="w-full bg-gray-50/50 border-2 border-transparent rounded-[1.5rem] py-4 pl-14 pr-12 text-sm font-bold focus:outline-none focus:border-orange-500 focus:bg-white transition-all"
           />
           {search && (
             <button
               onClick={() => setSearch("")}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-500 transition-colors"
+              className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-300 hover:text-gray-900"
             >
-              <X size={16} />
+              <X size={18} />
             </button>
           )}
         </div>
-        <select
-          value={selectedRole}
-          onChange={(e) => setSelectedRole(e.target.value)}
-          className="bg-white border-2 border-gray-100 rounded-2xl py-3.5 px-5 text-sm font-bold focus:outline-none focus:border-orange-400 transition-all shadow-sm appearance-none cursor-pointer text-gray-600 min-w-[200px]"
-        >
-          <option value="Barchasi">Barcha kasblar</option>
-          {allRoles.map((r) => (
-            <option key={r} value={r}>
-              {r}
-            </option>
-          ))}
-        </select>
+        <div className="relative">
+          <select
+            value={selectedRole}
+            onChange={(e) => setSelectedRole(e.target.value)}
+            className="w-full md:w-auto bg-gray-50/50 border-2 border-transparent rounded-[1.5rem] py-4 pl-6 pr-12 text-sm font-bold focus:outline-none focus:border-orange-500 focus:bg-white transition-all appearance-none cursor-pointer text-gray-700 min-w-[220px]"
+          >
+            <option value="Barchasi">Barcha kasblar</option>
+            {allRoles.map((r) => (
+              <option key={r} value={r}>
+                {r}
+              </option>
+            ))}
+          </select>
+          <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none w-4 h-4" />
+        </div>
       </motion.div>
 
-      {/* Count */}
-      {!loading && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="flex items-center space-x-2 mb-6"
-        >
-          <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-          <span className="text-sm font-black text-gray-500 uppercase tracking-widest">
-            {filtered.length} ta aktiv e'lon
-          </span>
-        </motion.div>
-      )}
+      {/* Results Content */}
+      <div className="space-y-6">
+        {!loading && (
+          <div className="flex items-center justify-between mb-8 px-2">
+            <div className="flex items-center space-x-3">
+              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+              <span className="text-xs font-black text-gray-400 uppercase tracking-widest">
+                {filtered.length} ta aktiv imkoniyat
+              </span>
+            </div>
+          </div>
+        )}
 
-      {/* Listings */}
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="w-10 h-10 border-2 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
-        </div>
-      ) : filtered.length === 0 ? (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="text-center py-24 bg-orange-50/30 rounded-[2.5rem] border-2 border-dashed border-orange-100"
-        >
-          <Rocket size={48} className="mx-auto text-orange-200 mb-4" />
-          <p className="text-gray-400 font-black uppercase tracking-widest text-xs mb-1">
-            E'lonlar topilmadi
-          </p>
-          <button
-            onClick={() => {
-              setSearch("");
-              setSelectedRole("Barchasi");
-            }}
-            className="mt-3 text-orange-600 font-black text-[10px] uppercase tracking-widest hover:underline"
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-24 space-y-4">
+            <div className="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+            <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest animate-pulse">
+              Yuklanmoqda...
+            </span>
+          </div>
+        ) : filtered.length === 0 ? (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="text-center py-32 bg-orange-50/20 rounded-[3rem] border-2 border-dashed border-orange-100/50"
           >
-            Filtrlarni tozalash
-          </button>
-        </motion.div>
-      ) : (
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="space-y-4"
-        >
-          {filtered.map((listing) => {
-            const isExpanded = expandedId === listing.id;
-            return (
-              <motion.div
-                key={listing.id}
-                variants={cardVariants}
-                layout
-                className="bg-white rounded-[2rem] border-2 border-gray-50 hover:border-orange-100 shadow-sm hover:shadow-md transition-all overflow-hidden group"
-              >
-                {/* Card header — clickable to expand */}
-                <div
-                  className="flex items-start justify-between p-6 cursor-pointer"
-                  onClick={() => setExpandedId(isExpanded ? null : listing.id)}
+            <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Search size={32} className="text-orange-300" />
+            </div>
+            <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">
+              Hech narsa topilmadi
+            </h3>
+            <p className="text-gray-400 font-medium mb-8 max-w-xs mx-auto text-sm">
+              Qidiruv kriteriyalarini o'zgartirib ko'ring yoki barcha e'lonlarni
+              ko'ring.
+            </p>
+            <button
+              onClick={() => {
+                setSearch("");
+                setSelectedRole("Barchasi");
+              }}
+              className="px-8 py-3 bg-white text-orange-600 border-2 border-orange-100 rounded-2xl font-black uppercase tracking-widest text-[10px] hover:bg-orange-600 hover:text-white hover:border-orange-600 transition-all active:scale-95"
+            >
+              Filtrlarni tozalash
+            </button>
+          </motion.div>
+        ) : (
+          <motion.div
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="grid grid-cols-1 gap-6"
+          >
+            {filtered.map((listing) => {
+              const isExpanded = expandedId === listing.id;
+              const isNew = isNewListing(listing.created_at);
+              return (
+                <motion.div
+                  key={listing.id}
+                  variants={cardVariants}
+                  layout
+                  className={`bg-white rounded-[2.5rem] border-2 transition-all duration-500 overflow-hidden group ${
+                    isExpanded
+                      ? "border-orange-200 shadow-2xl scale-[1.01]"
+                      : "border-gray-50 hover:border-orange-100 hover:shadow-xl shadow-sm"
+                  }`}
                 >
-                  <div className="flex items-start space-x-4 min-w-0">
-                    {/* Avatar */}
-                    <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white font-black text-2xl uppercase flex-shrink-0 shadow-sm group-hover:scale-105 transition-transform">
-                      {listing.startup_name.charAt(0)}
-                    </div>
-                    <div className="min-w-0">
-                      <h2 className="text-lg font-black text-gray-900 uppercase tracking-tighter group-hover:text-orange-600 transition-colors truncate">
-                        {listing.startup_name}
-                      </h2>
-                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mb-3">
-                        {listing.founder_name}
-                      </p>
-                      {/* Role tags */}
-                      <div className="flex flex-wrap gap-1.5">
-                        {listing.roles_needed.slice(0, 3).map((role, i) => (
+                  <div className="p-1">
+                    <div
+                      className="flex flex-col sm:flex-row items-start sm:items-center p-7 cursor-pointer"
+                      onClick={() =>
+                        setExpandedId(isExpanded ? null : listing.id)
+                      }
+                    >
+                      {/* Company Info */}
+                      <div className="flex items-center space-x-5 flex-1 min-w-0 mb-6 sm:mb-0">
+                        <div className="relative shrink-0">
+                          <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white font-black text-3xl uppercase shadow-lg shadow-orange-100 group-hover:rotate-3 transition-transform">
+                            {listing.startup_name.charAt(0)}
+                          </div>
+                          {isNew && (
+                            <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-md animate-bounce">
+                              Yangi
+                            </div>
+                          )}
+                        </div>
+                        <div className="min-w-0">
+                          <h2 className="text-xl md:text-2xl font-black text-gray-900 uppercase tracking-tighter group-hover:text-orange-600 transition-colors truncate mb-1">
+                            {listing.startup_name}
+                          </h2>
+                          <div className="flex items-center space-x-3">
+                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
+                              {listing.founder_name}
+                            </span>
+                            <span className="w-1 h-1 rounded-full bg-gray-200"></span>
+                            <div className="flex items-center space-x-1 text-gray-300">
+                              <Clock size={12} />
+                              <span className="text-[9px] font-bold">
+                                {formatDate(listing.created_at)}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Role Preview Tags */}
+                      <div className="flex flex-wrap gap-2 items-center sm:ml-4 sm:mr-8 max-w-xs justify-start sm:justify-end">
+                        {listing.roles_needed.slice(0, 2).map((role, i) => (
                           <span
                             key={i}
-                            className="px-2.5 py-1 bg-orange-50 text-orange-700 rounded-lg text-[9px] font-black uppercase tracking-widest border border-orange-100"
+                            className="px-3 py-1.5 bg-orange-50/50 text-orange-700 rounded-xl text-[9px] font-black uppercase tracking-widest border border-orange-100 group-hover:bg-orange-50 transition-colors"
                           >
                             {role}
                           </span>
                         ))}
-                        {listing.roles_needed.length > 3 && (
-                          <span className="px-2.5 py-1 bg-gray-50 text-gray-400 rounded-lg text-[9px] font-black uppercase tracking-widest border border-gray-100">
-                            +{listing.roles_needed.length - 3}
+                        {listing.roles_needed.length > 2 && (
+                          <span className="px-2 py-1.5 bg-gray-50 text-gray-400 rounded-xl text-[9px] font-black uppercase">
+                            +{listing.roles_needed.length - 2}
                           </span>
                         )}
+                        <div className="sm:hidden w-full h-px bg-gray-50 my-4"></div>
+                        <div
+                          className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isExpanded ? "bg-orange-600 text-white rotate-180" : "bg-gray-50 text-gray-300 group-hover:bg-orange-50 group-hover:text-orange-600"}`}
+                        >
+                          <ChevronDown size={18} />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div className="flex items-center space-x-3 flex-shrink-0 ml-4">
-                    <div className="text-right hidden sm:block">
-                      <div className="flex items-center space-x-1 text-gray-300">
-                        <Clock size={10} />
-                        <span className="text-[9px] font-bold">
-                          {formatDate(listing.created_at)}
-                        </span>
-                      </div>
-                    </div>
-                    <div className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 group-hover:bg-orange-50 group-hover:text-orange-600 transition-colors">
-                      {isExpanded ? (
-                        <ChevronUp size={16} />
-                      ) : (
-                        <ChevronDown size={16} />
+
+                    {/* Expandable Detail Section */}
+                    <AnimatePresence>
+                      {isExpanded && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{ duration: 0.4, ease: "circOut" }}
+                          className="overflow-hidden"
+                        >
+                          <div className="p-8 pt-2 border-t border-gray-50 bg-gray-50/30">
+                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                              <div className="lg:col-span-2 space-y-8">
+                                <div>
+                                  <div className="flex items-center space-x-2 mb-4">
+                                    <div className="w-1 h-4 bg-orange-600 rounded-full"></div>
+                                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                                      Startup haqida batafsil
+                                    </h4>
+                                  </div>
+                                  <p className="text-gray-700 text-sm md:text-base font-medium leading-relaxed">
+                                    {listing.description}
+                                  </p>
+                                </div>
+
+                                <div>
+                                  <div className="flex items-center space-x-2 mb-4">
+                                    <div className="w-1 h-4 bg-orange-600 rounded-full"></div>
+                                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                                      Mutaxassislikka talablar
+                                    </h4>
+                                  </div>
+                                  <div className="flex flex-wrap gap-2">
+                                    {listing.roles_needed.map((role, i) => (
+                                      <span
+                                        key={i}
+                                        className="px-4 py-2 bg-white text-orange-700 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-orange-100 shadow-sm"
+                                      >
+                                        {role}
+                                      </span>
+                                    ))}
+                                  </div>
+                                </div>
+
+                                {listing.message && (
+                                  <div className="bg-amber-50/80 rounded-3xl p-6 border border-amber-100 relative overflow-hidden">
+                                    <div className="absolute top-0 right-0 p-2 opacity-10">
+                                      <Rocket size={40} />
+                                    </div>
+                                    <h4 className="text-[9px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3">
+                                      Asoschidan xabar
+                                    </h4>
+                                    <p className="text-gray-600 text-sm font-bold italic leading-relaxed">
+                                      "{listing.message}"
+                                    </p>
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="space-y-6">
+                                <div className="bg-white rounded-3xl p-6 border border-orange-100 shadow-sm">
+                                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">
+                                    Bog'lanish uchun
+                                  </h4>
+                                  <div className="space-y-4">
+                                    {listing.telegram && (
+                                      <a
+                                        href={`https://t.me/${listing.telegram.replace("@", "")}`}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="flex items-center justify-between group/link bg-gray-50 p-4 rounded-2xl hover:bg-orange-600 hover:text-white transition-all duration-300"
+                                      >
+                                        <div className="flex items-center space-x-3">
+                                          <Send
+                                            size={18}
+                                            className="text-orange-600 group-hover/link:text-white"
+                                          />
+                                          <span className="text-xs font-black uppercase tracking-widest">
+                                            Telegram
+                                          </span>
+                                        </div>
+                                        <ExternalLink
+                                          size={14}
+                                          className="opacity-0 group-hover/link:opacity-100 transition-opacity"
+                                        />
+                                      </a>
+                                    )}
+                                    {listing.phone && (
+                                      <a
+                                        href={`tel:${listing.phone}`}
+                                        className="flex items-center space-x-3 bg-gray-50 p-4 rounded-2xl hover:bg-gray-100 transition-colors w-full"
+                                      >
+                                        <Phone
+                                          size={18}
+                                          className="text-gray-400"
+                                        />
+                                        <div className="flex flex-col">
+                                          <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">
+                                            Telefon
+                                          </span>
+                                          <span className="text-xs font-black text-gray-900">
+                                            {listing.phone}
+                                          </span>
+                                        </div>
+                                      </a>
+                                    )}
+                                    {listing.email && (
+                                      <a
+                                        href={`mailto:${listing.email}`}
+                                        className="flex items-center space-x-3 bg-gray-50 p-4 rounded-2xl hover:bg-gray-100 transition-colors w-full"
+                                      >
+                                        <Mail
+                                          size={18}
+                                          className="text-gray-400"
+                                        />
+                                        <div className="flex flex-col">
+                                          <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">
+                                            Email
+                                          </span>
+                                          <span className="text-xs font-black text-gray-900 truncate max-w-[150px]">
+                                            {listing.email}
+                                          </span>
+                                        </div>
+                                      </a>
+                                    )}
+                                  </div>
+                                </div>
+
+                                <motion.button
+                                  whileHover={{ scale: 1.02 }}
+                                  whileTap={{ scale: 0.98 }}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    if (listing.telegram)
+                                      window.open(
+                                        `https://t.me/${listing.telegram.replace("@", "")}`,
+                                        "_blank",
+                                      );
+                                    else if (listing.phone)
+                                      window.open(`tel:${listing.phone}`);
+                                  }}
+                                  className="w-full bg-orange-600 text-white py-5 rounded-3xl font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center space-x-3"
+                                >
+                                  <span>Loyiha bilan tanishish</span>
+                                  <ArrowRight size={16} />
+                                </motion.button>
+                              </div>
+                            </div>
+                          </div>
+                        </motion.div>
                       )}
-                    </div>
+                    </AnimatePresence>
                   </div>
-                </div>
+                </motion.div>
+              );
+            })}
+          </motion.div>
+        )}
+      </div>
 
-                {/* Expanded content */}
-                <AnimatePresence>
-                  {isExpanded && (
-                    <motion.div
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{ duration: 0.3, ease: "easeInOut" }}
-                      className="overflow-hidden"
-                    >
-                      <div className="px-6 pb-6 pt-2 border-t border-gray-50 space-y-5">
-                        {/* Description */}
-                        <div>
-                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
-                            Startup haqida
-                          </p>
-                          <p className="text-gray-700 text-sm font-medium leading-relaxed">
-                            {listing.description}
-                          </p>
-                        </div>
-
-                        {/* All roles */}
-                        <div>
-                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-2">
-                            Qidirilayotgan mutaxassislar
-                          </p>
-                          <div className="flex flex-wrap gap-2">
-                            {listing.roles_needed.map((role, i) => (
-                              <span
-                                key={i}
-                                className="px-3 py-1.5 bg-orange-50 text-orange-700 rounded-xl text-[10px] font-black uppercase tracking-widest border border-orange-100"
-                              >
-                                {role}
-                              </span>
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Additional notes */}
-                        {listing.message && (
-                          <div className="bg-amber-50/60 rounded-2xl p-4 border border-amber-100">
-                            <p className="text-[10px] font-black text-amber-600 uppercase tracking-widest mb-1">
-                              Qo'shimcha
-                            </p>
-                            <p className="text-gray-600 text-sm font-medium italic leading-relaxed">
-                              "{listing.message}"
-                            </p>
-                          </div>
-                        )}
-
-                        {/* Contact CTA */}
-                        <div className="bg-gray-50 rounded-2xl p-4 border border-gray-100">
-                          <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest mb-3">
-                            Bog'lanish
-                          </p>
-                          <div className="flex flex-wrap gap-3">
-                            {listing.telegram && (
-                              <a
-                                href={`https://t.me/${listing.telegram.replace("@", "")}`}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="flex items-center space-x-2 bg-orange-600 text-white px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:bg-orange-700 active:scale-95 transition-all shadow-sm"
-                              >
-                                <Send size={14} />
-                                <span>
-                                  {listing.telegram.startsWith("@")
-                                    ? listing.telegram
-                                    : `@${listing.telegram}`}
-                                </span>
-                                <ExternalLink size={12} />
-                              </a>
-                            )}
-                            {listing.phone && (
-                              <a
-                                href={`tel:${listing.phone}`}
-                                className="flex items-center space-x-2 bg-white text-gray-700 border border-gray-200 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:border-orange-400 hover:text-orange-600 active:scale-95 transition-all"
-                              >
-                                <Phone size={14} />
-                                <span>{listing.phone}</span>
-                              </a>
-                            )}
-                            {listing.email && (
-                              <a
-                                href={`mailto:${listing.email}`}
-                                className="flex items-center space-x-2 bg-white text-gray-700 border border-gray-200 px-5 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest hover:border-orange-400 hover:text-orange-600 active:scale-95 transition-all"
-                              >
-                                <Mail size={14} />
-                                <span>{listing.email}</span>
-                              </a>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
-            );
-          })}
-        </motion.div>
-      )}
-
-      {/* Post your own CTA */}
+      {/* Post CTA */}
       {!loading && (
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="mt-16 text-center p-10 bg-gradient-to-br from-orange-50 to-amber-50 rounded-[2.5rem] border border-orange-100"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          className="mt-24 p-12 bg-gradient-to-br from-gray-900 to-gray-800 rounded-[4rem] text-center relative overflow-hidden"
         >
-          <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tighter mb-3">
-            Startupingiz uchun jamoa kerakmi?
+          <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-600/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
+
+          <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 relative z-10">
+            O'zingizni startupingiz bormi?
           </h3>
-          <p className="text-gray-500 font-medium mb-6 text-sm">
-            E'lon bering — admin tasdiqlashi bilanoq e'loningiz shu sahifada
-            ko'rinadi
+          <p className="text-gray-400 font-medium mb-10 text-lg relative z-10 max-w-xl mx-auto">
+            Jamoangizga yangi talantlarni qo'shing. E'lon berish mutlaqo bepul!
           </p>
           <a
             href="/request"
-            className="inline-flex items-center space-x-2 bg-orange-600 text-white px-8 py-3.5 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-orange-700 active:scale-95 transition-all shadow-lg shadow-orange-100"
+            className="inline-flex items-center space-x-3 bg-white text-gray-900 px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs hover:bg-orange-600 hover:text-white transition-all shadow-2xl relative z-10"
           >
-            <Rocket size={16} />
-            <span>E'lon Berish</span>
+            <Plus size={18} />
+            <span>Hozir e'lon berish</span>
           </a>
         </motion.div>
       )}
     </div>
   );
 };
+
+// Import ArrowRight and Plus icons
+import { ArrowRight, Plus } from "lucide-react";
 
 export default JobListings;

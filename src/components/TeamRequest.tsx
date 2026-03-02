@@ -11,8 +11,9 @@ import {
   MessageSquare,
   Clock,
   ChevronRight,
+  AlertCircle,
 } from "lucide-react";
-import { motion, Variants } from "framer-motion";
+import { AnimatePresence, motion, Variants } from "framer-motion";
 
 const ROLES_NEEDED = [
   "Frontend Developer",
@@ -53,6 +54,7 @@ const formatDate = (dateStr: string) => {
 };
 
 const TeamRequest: React.FC = () => {
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     startup_name: "",
     founder_name: "",
@@ -97,8 +99,8 @@ const TeamRequest: React.FC = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     setIsSubmitting(true);
 
     const finalRoles = formData.roles_needed.map((role) =>
@@ -132,23 +134,35 @@ const TeamRequest: React.FC = () => {
     }
   };
 
-  const sectionVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6, ease: "easeOut" },
-    },
+  const nextStep = () => setStep((s) => Math.min(s + 1, 4));
+  const prevStep = () => setStep((s) => Math.max(s - 1, 1));
+
+  const isStepValid = () => {
+    if (step === 1)
+      return (
+        formData.startup_name && formData.founder_name && formData.description
+      );
+    if (step === 2)
+      return (
+        formData.roles_needed.length > 0 &&
+        (!formData.roles_needed.includes("Boshqa") || formData.other_role)
+      );
+    if (step === 3) return formData.phone;
+    return true;
   };
 
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     visible: {
       opacity: 1,
-      transition: {
-        staggerChildren: 0.15,
-      },
+      transition: { staggerChildren: 0.15 },
     },
+  };
+
+  const stepVariants: Variants = {
+    hidden: { opacity: 0, x: 20 },
+    visible: { opacity: 1, x: 0, transition: { duration: 0.4 } },
+    exit: { opacity: 0, x: -20, transition: { duration: 0.3 } },
   };
 
   if (isSubmitted) {
@@ -157,59 +171,58 @@ const TeamRequest: React.FC = () => {
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
-          transition={{ duration: 0.5, ease: "easeOut" }}
           className="max-w-2xl mx-auto text-center py-20"
         >
-          <motion.div
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{
-              duration: 0.5,
-              delay: 0.2,
-              type: "spring",
-              stiffness: 200,
-            }}
-            className="w-24 h-24 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-8"
-          >
+          <div className="w-24 h-24 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-8 shadow-inner">
             <CheckCircle size={48} className="text-green-500" />
-          </motion.div>
+          </div>
           <h2 className="text-3xl md:text-5xl font-black text-gray-900 mb-4 uppercase tracking-tighter">
             E'LON <span className="text-green-500">YUBORILDI!</span>
           </h2>
           <p className="text-gray-600 font-medium text-lg mb-4">
             Sizning e'loningiz admin tomonidan ko'rib chiqiladi.
           </p>
-          <p className="text-gray-500 font-medium text-sm mb-8">
-            Tasdiqlangandan keyin e'loningiz saytda ko'rsatiladi. Admin bilan{" "}
+          <p className="text-gray-500 font-medium text-sm mb-10 bg-gray-50 p-6 rounded-3xl border border-gray-100">
+            Tasdiqlangandan keyin e'loningiz saytda ko'rsatiladi. Savollar
+            bo'lsa, admin bilan{" "}
             <a
               href="https://t.me/ambassadorsadmin"
-              className="text-orange-600 hover:underline"
+              className="text-orange-600 font-black hover:underline"
             >
-              Telegram
+              @ambassadorsadmin
             </a>{" "}
             orqali bog'laning.
           </p>
-          <motion.button
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            onClick={() => {
-              setIsSubmitted(false);
-              setFormData({
-                startup_name: "",
-                founder_name: "",
-                phone: "",
-                email: "",
-                telegram: "",
-                description: "",
-                roles_needed: [],
-                other_role: "",
-                message: "",
-              });
-            }}
-            className="bg-orange-600 text-white px-8 py-3 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-orange-700 transition-colors"
-          >
-            Yana e'lon berish
-          </motion.button>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+            <motion.button
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={() => {
+                setIsSubmitted(false);
+                setStep(1);
+                setFormData({
+                  startup_name: "",
+                  founder_name: "",
+                  phone: "",
+                  email: "",
+                  telegram: "",
+                  description: "",
+                  roles_needed: [],
+                  other_role: "",
+                  message: "",
+                });
+              }}
+              className="w-full sm:w-auto bg-orange-600 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-orange-700 transition-all shadow-xl shadow-orange-100"
+            >
+              Yana e'lon berish
+            </motion.button>
+            <a
+              href="/elonlar"
+              className="w-full sm:w-auto bg-white text-gray-900 border-2 border-gray-100 px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:border-orange-500 hover:text-orange-600 transition-all"
+            >
+              E'lonlarni ko'rish
+            </a>
+          </div>
         </motion.div>
       </div>
     );
@@ -221,367 +234,492 @@ const TeamRequest: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
-        className="text-center mb-12"
+        className="text-center mb-16"
       >
-        <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6">
+        <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-orange-100">
           <Rocket size={14} />
           <span>Jamoa Toping</span>
         </div>
-        <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 uppercase tracking-tighter">
+        <h2 className="text-4xl md:text-7xl font-black text-gray-900 mb-6 uppercase tracking-tighter">
           STARTUP UCHUN <span className="text-orange-600">JAMOA KERAK?</span>
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto font-medium text-lg px-4">
-          Aktiv e'lonlarni ko'ring yoki startupingiz uchun yangi e'lon bering.
+        <p className="text-gray-500 max-w-2xl mx-auto font-medium text-lg leading-relaxed">
+          Toshkent startup ekotizimida o'z loyihangiz uchun kerakli
+          mutaxassislarni toping.
         </p>
       </motion.div>
 
-      {/* Active Job Listings */}
-      {!loadingListings && jobListings.length > 0 && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-          className="mb-16"
-        >
-          <div className="flex items-center space-x-3 mb-6">
-            <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-            <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">
-              Aktiv E'lonlar
-            </h3>
-            <span className="text-[10px] font-black text-green-600 bg-green-50 px-2 py-1 rounded-full uppercase tracking-widest">
-              {jobListings.length} ta
+      {/* Progress Indicator */}
+      <div className="max-w-3xl mx-auto mb-16 px-4">
+        <div className="relative flex items-center justify-between">
+          <div className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 w-full bg-gray-100 -z-10"></div>
+          <div
+            className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-orange-600 transition-all duration-500 -z-10"
+            style={{ width: `${((step - 1) / 3) * 100}%` }}
+          ></div>
+
+          {[1, 2, 3, 4].map((s) => (
+            <div
+              key={s}
+              className={`w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-300 ${
+                step >= s
+                  ? "bg-orange-600 text-white shadow-lg shadow-orange-200"
+                  : "bg-white text-gray-300 border-2 border-gray-100"
+              }`}
+            >
+              {s}
+            </div>
+          ))}
+        </div>
+        <div className="flex justify-between mt-4">
+          {["Startup", "Mutaxassis", "Aloqa", "Tekshirish"].map((label, i) => (
+            <span
+              key={i}
+              className={`text-[9px] font-black uppercase tracking-widest ${
+                step >= i + 1 ? "text-orange-600" : "text-gray-300"
+              }`}
+            >
+              {label}
             </span>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {jobListings.map((listing) => (
-              <motion.div
-                key={listing.id}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                className="bg-white rounded-[2rem] border-2 border-orange-50 hover:border-orange-200 shadow-sm hover:shadow-lg transition-all p-6 group"
-              >
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <h4 className="text-xl font-black text-gray-900 uppercase tracking-tighter group-hover:text-orange-600 transition-colors">
-                      {listing.startup_name}
-                    </h4>
-                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">
-                      {listing.founder_name}
-                    </p>
+          ))}
+        </div>
+      </div>
+
+      <div className="max-w-3xl mx-auto mb-20 bg-white/40 backdrop-blur-xl border-2 border-orange-50 p-8 md:p-12 rounded-[3rem] shadow-xl relative overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-32 h-32 bg-orange-100/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
+        <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-50/30 rounded-full blur-3xl -ml-20 -mb-20"></div>
+
+        <AnimatePresence mode="wait">
+          {step === 1 && (
+            <motion.div
+              key="step1"
+              variants={stepVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="space-y-8"
+            >
+              <div className="space-y-6">
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
+                    <Briefcase size={20} />
                   </div>
-                  <div className="flex items-center space-x-1 text-gray-300">
-                    <Clock size={12} />
-                    <span className="text-[9px] font-bold">
-                      {formatDate(listing.created_at)}
-                    </span>
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">
+                    Startup Haqida
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                      Startup nomi *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.startup_name}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          startup_name: e.target.value,
+                        })
+                      }
+                      placeholder="TechVenture"
+                      className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                      Ismingiz *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.founder_name}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          founder_name: e.target.value,
+                        })
+                      }
+                      placeholder="Ismingizni kiriting"
+                      className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
+                    />
                   </div>
                 </div>
 
-                <p className="text-gray-600 text-sm font-medium leading-relaxed mb-4 line-clamp-2">
-                  {listing.description}
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                    Startup tavsifi *
+                  </label>
+                  <textarea
+                    required
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                    placeholder="Startupingiz qanday muammo hal qiladi? Qisqacha yozing..."
+                    rows={4}
+                    className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm resize-none"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {step === 2 && (
+            <motion.div
+              key="step2"
+              variants={stepVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="space-y-8"
+            >
+              <div className="space-y-6">
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
+                    <Users size={20} />
+                  </div>
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">
+                    Mutaxassislar
+                  </h3>
+                </div>
+                <p className="text-gray-500 text-sm font-medium">
+                  Sizga kim kerak? (Bir nechta tanlash mumkin)
                 </p>
 
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {listing.roles_needed.slice(0, 4).map((role, i) => (
+                <div className="flex flex-wrap gap-3">
+                  {ROLES_NEEDED.map((role) => (
+                    <motion.button
+                      key={role}
+                      type="button"
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => handleRoleToggle(role)}
+                      className={`px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
+                        formData.roles_needed.includes(role)
+                          ? "bg-orange-600 text-white shadow-lg shadow-orange-100"
+                          : "bg-white text-gray-500 border-2 border-gray-50 hover:border-orange-200"
+                      }`}
+                    >
+                      {role}
+                    </motion.button>
+                  ))}
+                </div>
+
+                {formData.roles_needed.includes("Boshqa") && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    className="pt-4"
+                  >
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
+                      Kasb nomini yozing *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={formData.other_role}
+                      onChange={(e) =>
+                        setFormData({ ...formData, other_role: e.target.value })
+                      }
+                      placeholder="Masalan: AI Engineer"
+                      className="w-full bg-white border-2 border-orange-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
+                    />
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
+          )}
+
+          {step === 3 && (
+            <motion.div
+              key="step3"
+              variants={stepVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="space-y-8"
+            >
+              <div className="space-y-6">
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
+                    <Mail size={20} />
+                  </div>
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">
+                    Bog'lanish
+                  </h3>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                      Telefon raqami *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={formData.phone}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
+                      placeholder="+998 90 000 00 00"
+                      className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                      Telegram (Username)
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.telegram}
+                      onChange={(e) =>
+                        setFormData({ ...formData, telegram: e.target.value })
+                      }
+                      placeholder="@username"
+                      className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                    Email (Ixtiyoriy)
+                  </label>
+                  <input
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) =>
+                      setFormData({ ...formData, email: e.target.value })
+                    }
+                    placeholder="email@example.com"
+                    className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
+                    Qo'shimcha xabar
+                  </label>
+                  <textarea
+                    value={formData.message}
+                    onChange={(e) =>
+                      setFormData({ ...formData, message: e.target.value })
+                    }
+                    placeholder="Talablar, maosh yoki boshqa tafsilotlar..."
+                    rows={3}
+                    className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm resize-none"
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
+
+          {step === 4 && (
+            <motion.div
+              key="step4"
+              variants={stepVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="space-y-8"
+            >
+              <div className="space-y-6 text-left">
+                <div className="flex items-center space-x-3 mb-2">
+                  <div className="p-2 bg-green-100 text-green-600 rounded-xl">
+                    <CheckCircle size={20} />
+                  </div>
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">
+                    Tekshirish
+                  </h3>
+                </div>
+
+                <div className="bg-orange-50/50 rounded-3xl p-6 border border-orange-100 space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <span className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">
+                        Startup
+                      </span>
+                      <p className="text-sm font-black text-gray-900 uppercase">
+                        {formData.startup_name}
+                      </p>
+                    </div>
+                    <div>
+                      <span className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">
+                        Asoschi
+                      </span>
+                      <p className="text-sm font-bold text-gray-700">
+                        {formData.founder_name}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">
+                      Kerakli Rollar
+                    </span>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.roles_needed.map((r, i) => (
+                        <span
+                          key={i}
+                          className="px-2 py-0.5 bg-white text-orange-600 text-[9px] font-black uppercase tracking-widest rounded-lg border border-orange-200"
+                        >
+                          {r === "Boshqa" ? formData.other_role : r}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <span className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">
+                      Aloqa
+                    </span>
+                    <p className="text-xs font-bold text-gray-600">
+                      {formData.phone}{" "}
+                      {formData.telegram && `• ${formData.telegram}`}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start space-x-3">
+                  <AlertCircle
+                    size={18}
+                    className="text-amber-600 shrink-0 mt-0.5"
+                  />
+                  <p className="text-[10px] text-amber-700 font-medium leading-relaxed uppercase tracking-wider italic">
+                    E'lon yuborilgandan so'ng admin tomonidan tekshiriladi va 24
+                    soat ichida e'lon qilinadi.
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Navigation Buttons */}
+        <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-50">
+          <button
+            onClick={prevStep}
+            className={`flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest transition-all ${
+              step === 1
+                ? "opacity-0 pointer-events-none"
+                : "text-gray-400 hover:text-gray-900"
+            }`}
+          >
+            <span>Qaytish</span>
+          </button>
+
+          <motion.button
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
+            disabled={!isStepValid() || isSubmitting}
+            onClick={() => (step === 4 ? handleSubmit() : nextStep())}
+            className={`flex items-center space-x-3 px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed ${
+              step === 4
+                ? "bg-green-600 text-white shadow-green-100 hover:bg-green-700"
+                : "bg-orange-600 text-white shadow-orange-100 hover:bg-orange-700"
+            }`}
+          >
+            <span>
+              {step === 4
+                ? isSubmitting
+                  ? "Yuborilmoqda..."
+                  : "Yakunlash"
+                : "Davom Etish"}
+            </span>
+            {step === 4 ? (
+              <CheckCircle size={18} />
+            ) : (
+              <ChevronRight size={18} />
+            )}
+          </motion.button>
+        </div>
+      </div>
+
+      {/* Active Listings Preview */}
+      {!loadingListings && jobListings.length > 0 && (
+        <div className="max-w-7xl mx-auto mb-20 px-4">
+          <div className="flex items-center justify-between mb-10">
+            <div>
+              <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">
+                Aktiv E'lonlar
+              </h3>
+              <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1">
+                Startuplar hozirda qidirayotgan mutaxassislar
+              </p>
+            </div>
+            <a
+              href="/elonlar"
+              className="text-orange-600 font-black text-[10px] uppercase tracking-widest hover:underline flex items-center space-x-1"
+            >
+              <span>Barchasini ko'rish</span>
+              <ChevronRight size={14} />
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {jobListings.slice(0, 3).map((listing) => (
+              <motion.div
+                key={listing.id}
+                whileHover={{ y: -5 }}
+                className="bg-white rounded-[2.5rem] p-8 border-2 border-orange-50 hover:border-orange-200 transition-all shadow-sm"
+              >
+                <div className="flex items-center justify-between mb-6">
+                  <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 font-black text-xl uppercase">
+                    {listing.startup_name.charAt(0)}
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest">
+                      {formatDate(listing.created_at)}
+                    </span>
+                    <div className="flex items-center space-x-1 mt-1">
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                      <span className="text-[8px] font-black text-green-600 uppercase tracking-widest">
+                        Aktiv
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                <h4 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-4">
+                  {listing.startup_name}
+                </h4>
+
+                <div className="flex flex-wrap gap-2 mb-8">
+                  {listing.roles_needed.slice(0, 3).map((role, i) => (
                     <span
                       key={i}
-                      className="px-2.5 py-1 bg-orange-50 text-orange-700 rounded-lg text-[9px] font-black uppercase tracking-widest border border-orange-100"
+                      className="px-2.5 py-1 bg-gray-50 text-gray-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-gray-100"
                     >
                       {role}
                     </span>
                   ))}
-                  {listing.roles_needed.length > 4 && (
-                    <span className="px-2.5 py-1 bg-gray-50 text-gray-500 rounded-lg text-[9px] font-black uppercase tracking-widest">
-                      +{listing.roles_needed.length - 4} ta
+                  {listing.roles_needed.length > 3 && (
+                    <span className="px-2.5 py-1 bg-orange-50 text-orange-600 rounded-lg text-[9px] font-black uppercase tracking-widest border border-orange-100">
+                      +{listing.roles_needed.length - 3}
                     </span>
                   )}
                 </div>
 
-                <div className="flex items-center space-x-4 pt-4 border-t border-gray-50">
-                  {listing.telegram && (
-                    <a
-                      href={`https://t.me/${listing.telegram.replace("@", "")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex items-center space-x-2 text-orange-600 hover:text-orange-700 transition-colors font-bold text-xs"
-                    >
-                      <Send size={14} />
-                      <span>
-                        {listing.telegram.startsWith("@")
-                          ? listing.telegram
-                          : `@${listing.telegram}`}
-                      </span>
-                    </a>
-                  )}
-                  {listing.phone && (
-                    <a
-                      href={`tel:${listing.phone}`}
-                      className="flex items-center space-x-2 text-gray-500 hover:text-gray-700 transition-colors font-bold text-xs"
-                    >
-                      <Phone size={14} />
-                      <span>{listing.phone}</span>
-                    </a>
-                  )}
-                  <ChevronRight
-                    size={16}
-                    className="ml-auto text-gray-300 group-hover:text-orange-500 group-hover:translate-x-1 transition-all"
-                  />
+                <div className="flex items-center justify-between pt-6 border-t border-gray-50">
+                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                    {listing.founder_name}
+                  </span>
+                  <a
+                    href="/elonlar"
+                    className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 hover:bg-orange-600 hover:text-white transition-all shadow-sm shadow-orange-50"
+                  >
+                    <ChevronRight size={18} />
+                  </a>
                 </div>
               </motion.div>
             ))}
           </div>
-        </motion.div>
-      )}
-
-      {loadingListings && (
-        <div className="text-center py-8 mb-12">
-          <div className="inline-block w-8 h-8 border-2 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
-
-      {/* Divider */}
-      <div className="flex items-center justify-center mb-12">
-        <div className="h-px flex-1 bg-gray-100"></div>
-        <div className="mx-6 px-4 py-2 bg-orange-50 rounded-full text-orange-600 text-[10px] font-black uppercase tracking-widest">
-          E'lon Berish
-        </div>
-        <div className="h-px flex-1 bg-gray-100"></div>
-      </div>
-
-      <p className="text-center text-gray-500 font-medium text-sm mb-10 max-w-xl mx-auto">
-        Startupingiz uchun kerakli mutaxassis toping. E'loningiz admin tomonidan
-        tasdiqlanganidan keyin saytda ko'rinadi.
-      </p>
-
-      <motion.form
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true }}
-        onSubmit={handleSubmit}
-        className="max-w-3xl mx-auto space-y-8"
-      >
-        {/* Startup Info */}
-        <motion.div
-          variants={sectionVariants}
-          className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6"
-        >
-          <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter flex items-center space-x-2">
-            <Briefcase size={20} className="text-orange-600" />
-            <span>Startup haqida</span>
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
-                Startup nomi *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.startup_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, startup_name: e.target.value })
-                }
-                placeholder="Masalan: TechVenture"
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all"
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
-                Asoschining ismi *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.founder_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, founder_name: e.target.value })
-                }
-                placeholder="Ismingiz"
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all"
-              />
-            </div>
-          </div>
-
-          <div>
-            <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
-              Startup tavsifi *
-            </label>
-            <textarea
-              required
-              value={formData.description}
-              onChange={(e) =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              placeholder="Startupingiz nima qiladi? Qanday muammo hal qiladi?"
-              rows={3}
-              className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all resize-none"
-            />
-          </div>
-        </motion.div>
-
-        {/* Contact Info */}
-        <motion.div
-          variants={sectionVariants}
-          className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6"
-        >
-          <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter flex items-center space-x-2">
-            <Mail size={20} className="text-orange-600" />
-            <span>Aloqa ma'lumotlari</span>
-          </h3>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div>
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
-                <Phone size={12} className="inline mr-1" /> Telefon *
-              </label>
-              <input
-                type="tel"
-                required
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                placeholder="+998 90 123 45 67"
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all"
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
-                <Send size={12} className="inline mr-1" /> Telegram
-              </label>
-              <input
-                type="text"
-                value={formData.telegram}
-                onChange={(e) =>
-                  setFormData({ ...formData, telegram: e.target.value })
-                }
-                placeholder="@username"
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all"
-              />
-            </div>
-            <div>
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
-                <Mail size={12} className="inline mr-1" /> Email
-              </label>
-              <input
-                type="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                placeholder="email@example.com"
-                className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all"
-              />
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Roles Needed */}
-        <motion.div
-          variants={sectionVariants}
-          className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6"
-        >
-          <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter flex items-center space-x-2">
-            <Users size={20} className="text-orange-600" />
-            <span>Qanday mutaxassis kerak? *</span>
-          </h3>
-          <p className="text-gray-500 text-sm font-medium">
-            Kerakli mutaxassis turlarini belgilang (bir nechta tanlash mumkin)
-          </p>
-
-          <div className="flex flex-wrap gap-3">
-            {ROLES_NEEDED.map((role) => (
-              <motion.button
-                key={role}
-                type="button"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => handleRoleToggle(role)}
-                className={`px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${
-                  formData.roles_needed.includes(role)
-                    ? "bg-orange-600 text-white shadow-lg"
-                    : "bg-gray-50 text-gray-600 border border-gray-100 hover:border-orange-500 hover:text-orange-600"
-                }`}
-              >
-                {role}
-              </motion.button>
-            ))}
-          </div>
-
-          {formData.roles_needed.includes("Boshqa") && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              transition={{ duration: 0.3 }}
-              className="mt-6"
-            >
-              <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
-                Qanday mutaxassis kerakligini yozing *
-              </label>
-              <input
-                type="text"
-                required
-                value={formData.other_role}
-                onChange={(e) =>
-                  setFormData({ ...formData, other_role: e.target.value })
-                }
-                placeholder="Masalan: AI Engineer, Blockchain Expert"
-                className="w-full bg-gray-50 border-2 border-orange-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-inner"
-              />
-            </motion.div>
-          )}
-        </motion.div>
-
-        {/* Additional Message */}
-        <motion.div
-          variants={sectionVariants}
-          className="bg-white/60 backdrop-blur-xl rounded-[2rem] p-8 border-2 border-orange-100/50 shadow-lg space-y-6"
-        >
-          <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter flex items-center space-x-2">
-            <MessageSquare size={20} className="text-orange-600" />
-            <span>Qo'shimcha xabar</span>
-          </h3>
-          <textarea
-            value={formData.message}
-            onChange={(e) =>
-              setFormData({ ...formData, message: e.target.value })
-            }
-            placeholder="Qanday tajribali odam kerak? Qo'shimcha talablaringiz bormi?"
-            rows={4}
-            className="w-full bg-gray-50 border-2 border-gray-100 rounded-xl py-3 px-4 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all resize-none"
-          />
-        </motion.div>
-
-        {/* Submit */}
-        <motion.div variants={sectionVariants} className="text-center">
-          <motion.button
-            type="submit"
-            disabled={isSubmitting || formData.roles_needed.length === 0}
-            whileHover={{
-              y: -2,
-              boxShadow: "0 20px 40px rgba(234, 88, 12, 0.2)",
-            }}
-            whileTap={{ scale: 0.95 }}
-            className={`inline-flex items-center space-x-3 bg-orange-600 text-white px-12 py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed ${
-              isSubmitting ? "animate-pulse" : ""
-            }`}
-          >
-            <span>{isSubmitting ? "Yuborilmoqda..." : "E'lon Berish"}</span>
-            <Send size={18} />
-          </motion.button>
-          {formData.roles_needed.length === 0 && (
-            <p className="mt-3 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-              Kamida bitta mutaxassis turini tanlang
-            </p>
-          )}
-        </motion.div>
-      </motion.form>
     </div>
   );
 };

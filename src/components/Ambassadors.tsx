@@ -72,18 +72,17 @@ const Ambassadors: React.FC = () => {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.06,
+        staggerChildren: 0.03,
       },
     },
   };
 
   const cardVariants: Variants = {
-    hidden: { y: 30, opacity: 0, scale: 0.95 },
+    hidden: { y: 10, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
-      scale: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
+      transition: { duration: 0.4, ease: "easeOut" },
     },
   };
 

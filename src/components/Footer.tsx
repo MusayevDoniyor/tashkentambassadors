@@ -144,7 +144,7 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Floating Chat Button */}
-      <motion.a
+      {/* <motion.a
         href="https://t.me/ambassadorsadmin"
         target="_blank"
         rel="noopener noreferrer"
@@ -160,7 +160,7 @@ const Footer: React.FC = () => {
         <span className="pr-5 font-black text-gray-900 text-xs uppercase tracking-tight hidden sm:block">
           Bog'lanish
         </span>
-      </motion.a>
+      </motion.a> */}
     </footer>
   );
 };

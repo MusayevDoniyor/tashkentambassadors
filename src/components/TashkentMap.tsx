@@ -152,11 +152,11 @@ const TashkentMap: React.FC = () => {
     : null;
 
   const containerVariants: Variants = {
-    hidden: { opacity: 0, y: 30 },
+    hidden: { opacity: 0, y: 10 },
     visible: {
       opacity: 1,
       y: 0,
-      transition: { duration: 0.8, staggerChildren: 0.05 },
+      transition: { duration: 0.6 },
     },
   };
 
@@ -221,9 +221,8 @@ const TashkentMap: React.FC = () => {
                   a.is_district_ambassador,
               );
               return (
-                <motion.path
+                <path
                   key={district.id}
-                  variants={pathVariants}
                   d={district.path}
                   className={`transition-all duration-300 cursor-pointer stroke-white stroke-[2.5px] ${
                     isSelected
