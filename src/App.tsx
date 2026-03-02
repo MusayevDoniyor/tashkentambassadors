@@ -137,7 +137,7 @@ const App: React.FC = () => {
 
       <button
         onClick={scrollToTop}
-        className={`fixed bottom-8 right-8 z-50 p-4 rounded-2xl bg-orange-600 text-white shadow-2xl transition-all duration-300 transform active:scale-95 ${
+        className={`fixed bottom-28 right-8 z-50 p-4 rounded-2xl bg-orange-600 text-white shadow-2xl transition-all duration-300 transform active:scale-95 ${
           showScrollTop
             ? "translate-y-0 opacity-100 pointer-events-auto"
             : "translate-y-10 opacity-0 pointer-events-none"

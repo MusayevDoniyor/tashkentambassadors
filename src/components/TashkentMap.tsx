@@ -306,7 +306,7 @@ const TashkentMap: React.FC = () => {
                           {officialAmbassador.name}
                         </h4>
                         <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest truncate">
-                          {officialAmbassador.team || "Ambassador"}
+                          Ambassador
                         </p>
                       </div>
                     </div>

@@ -150,20 +150,6 @@ export const EVENTS: Event[] = [
   },
 ];
 
-export const BLOG_POSTS: BlogPost[] = [
-  {
-    id: 1,
-    title: "Venchur fond nima va u startuplarga nega kerak?",
-    excerpt:
-      "Investitsiya jalb qilishning asosiy qoidalari va fondlar bilan ishlash sirlari.",
-    date: "12-Mart, 2024",
-    category: "Investitsiya",
-    image:
-      "https://images.unsplash.com/photo-1454165833767-027ffea9e778?auto=format&fit=crop&q=80&w=800",
-    author: "Hamjamiyat Jamoasi",
-  },
-];
-
 export const TRAINING_PROGRAMS: TrainingProgram[] = [
   {
     id: 1,

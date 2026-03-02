@@ -119,7 +119,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
           {/* Action Button */}
           <div className="hidden md:block">
             <a
-              href="https://t.me/tashkent_ambassadors"
+              href="https://t.me/ambassadorsadmin"
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center space-x-2 text-gray-900 font-bold hover:text-orange-600 transition-colors group"
@@ -174,7 +174,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             Jamoa kerak
           </button>
           <a
-            href="https://t.me/tashkent_ambassadors"
+            href="https://t.me/ambassadorsadmin"
             target="_blank"
             className="mt-2 bg-orange-600 text-white py-3 px-4 rounded-tl-2xl rounded-br-2xl text-center font-black uppercase tracking-widest text-xs"
           >

@@ -182,7 +182,7 @@ const TeamRequest: React.FC = () => {
           <p className="text-gray-500 font-medium text-sm mb-8">
             Tasdiqlangandan keyin e'loningiz saytda ko'rsatiladi. Admin bilan{" "}
             <a
-              href="https://t.me/tashkent_ambassadors"
+              href="https://t.me/ambassadorsadmin"
               className="text-orange-600 hover:underline"
             >
               Telegram
