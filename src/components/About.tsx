@@ -15,25 +15,25 @@ const About: React.FC = () => {
       icon: <Users className="w-8 h-8" />,
       title: "Jamoa Topish",
       description:
-        "Startupingiz uchun kerakli mutaxassislarni — developer, dizayner, marketing va boshqalarni topamiz.",
+        "Har bir startup uchun kerakli mutaxassislarni — developer, dizayner va marketologlarni topishda yordam beramiz.",
     },
     {
       icon: <Rocket className="w-8 h-8" />,
-      title: "Startup Rivojlantirish",
+      title: "Venture Fondlar",
       description:
-        "G'oyangizni real biznesga aylantirish uchun mentorlar va venture fondlarga yo'l ochamiz.",
+        "Startup g'oyalaringizni rivojlantirib, ularni Yoshlar Ventures va boshqa venture fondlarga taqdim etish imkoniyati.",
+    },
+    {
+      icon: <Sparkles className="w-8 h-8" />,
+      title: "Noldan O'rganish",
+      description:
+        "Agar startup nimaligini bilmasangiz xavotir olmang, biz sizga buni bosqichma-bosqich o'rgatamiz.",
     },
     {
       icon: <Target className="w-8 h-8" />,
-      title: "Loyiha Validatsiyasi",
+      title: "Amaliy Ko'nikma",
       description:
-        "Biznes g'oyangizni real bozor talablariga muvofiqligini tekshirishda yordam beramiz.",
-    },
-    {
-      icon: <Handshake className="w-8 h-8" />,
-      title: "Hamkorlik Imkoniyatlari",
-      description:
-        "Yoshlar Ventures va Yoshlar ishlari agentligi bilan bevosita hamkorlik qilish imkoniyati.",
+        "Nazariy bilim va amaliy ko'nikmalarni oshirish, jamoa bilan ishlash va loyiha validatsiyasi.",
     },
   ];
 
@@ -59,7 +59,7 @@ const About: React.FC = () => {
                 </div>
                 <div>
                   <p className="font-bold text-gray-900 text-sm leading-tight">
-                    Hamjamiyatimiz sizni kutmoqda
+                    Tashkent Ambassadors
                   </p>
                   <p className="text-gray-500 text-xs mt-0.5">
                     G'oyadan biznesga — birgalikda
@@ -81,19 +81,22 @@ const About: React.FC = () => {
             <Megaphone className="w-8 h-8 md:w-10 md:h-10 text-orange-500 -rotate-12" />
           </h2>
           <p className="text-base sm:text-lg text-gray-600 mb-8 md:mb-10 leading-relaxed font-medium">
-            Startup ekotizimida jamoa topish — eng muhim qadam. Bizning club{" "}
-            <strong>Yoshlar Ventures</strong> va{" "}
-            <strong>Yoshlar ishlari agentligi</strong> tomonidan qo'llab
-            quvvatlanib, har bir startupga kerakli jamoani topishda yordam
-            beradi.
+            Klubimiz Toshkent shahrida startap g‘oyalarni shakllantirish,
+            rivojlantirish va ularni <strong>Yoshlar Ventures</strong>’ga taqdim
+            etish yo‘nalishida faoliyat yuritadi.
+          </p>
+          <p className="text-base sm:text-lg text-gray-600 mb-8 md:mb-10 leading-relaxed font-medium">
+            Bizning club <strong>Yoshlar ishlari agentligi</strong> hamda{" "}
+            <strong>Yoshlar Ventures</strong> tomonidan qo'llab-quvvatlanib, har
+            bir startupga kerakli jamoani topishda yaqindan ko'maklashadi.
           </p>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
             {[
-              "Jamoa tanlash va birlashtirish",
-              "Venture fondlarga yo'l",
-              "Mentor va ekspertlar bilan ishlash",
-              "Org jamoa ko'magi",
+              "Har bir startupga jamoa topish",
+              "Venture fondlarga taqdimot",
+              "Noldan startup o'rganish",
+              "Professional mentorlik",
             ].map((item, i) => (
               <div
                 key={i}
@@ -111,14 +114,14 @@ const About: React.FC = () => {
         </div>
       </div>
 
-      {/* What we offer section (merged from Nimalarni o'rgatamiz) */}
+      {/* What we offer section */}
       <div className="text-center mb-20">
         <h3 className="text-3xl md:text-5xl font-black text-gray-900 mb-6 uppercase tracking-tighter italic">
           NIMA UCHUN <span className="text-orange-600">BIZ?</span>
         </h3>
         <p className="text-gray-500 font-medium max-w-xl mx-auto">
-          Startup ekotizimida o'sish uchun kerak bo'lgan asosiy bilim,
-          tajribalar va jamoani taqdim etamiz
+          Startup ekotizimida o'sish uchun kerak bo'lgan asosiy bilim, tajriba
+          va yuqori darajadagi jamoani taqdim etamiz
         </p>
       </div>
 
