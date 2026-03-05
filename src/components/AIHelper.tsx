@@ -68,14 +68,14 @@ const AIHelper: React.FC = () => {
           className="logo-gradient text-white w-16 h-16 sm:w-18 sm:h-18 rounded-3xl shadow-2xl flex items-center justify-center hover:brightness-110 transition-all transform hover:scale-110 group relative p-4 btn-3d"
         >
           <div className="absolute -top-1 -right-1 bg-white w-5 h-5 rounded-full flex items-center justify-center border-2 border-orange-500">
-            <span className="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+            <span className="w-2 h-2 bg-green-500 rounded-full"></span>
           </div>
           <Sparkles className="w-8 h-8" />
         </button>
       )}
 
       {isOpen && (
-        <div className="bg-white w-[320px] sm:w-[420px] h-[550px] sm:h-[600px] rounded-[2.5rem] shadow-2xl flex flex-col border border-orange-100 overflow-hidden animate-in fade-in zoom-in duration-300">
+        <div className="bg-white w-[320px] sm:w-[420px] h-[550px] sm:h-[600px] rounded-[2.5rem] shadow-2xl flex flex-col border border-orange-100 overflow-hidden">
           <div className="logo-gradient p-6 sm:p-8 flex items-center justify-between text-white">
             <div className="flex items-center space-x-4">
               <div className="bg-white/20 p-2 sm:p-3 rounded-2xl">
@@ -119,7 +119,7 @@ const AIHelper: React.FC = () => {
             {isLoading && (
               <div className="flex justify-start">
                 <div className="bg-white p-4 rounded-3xl rounded-tl-none border border-orange-100">
-                  <Loader2 className="w-6 h-6 text-orange-600 animate-spin" />
+                  <Loader2 className="w-6 h-6 text-orange-600" />
                 </div>
               </div>
             )}

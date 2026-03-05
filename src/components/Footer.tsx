@@ -1,6 +1,5 @@
 import React from "react";
 import { Send, Instagram, ExternalLink, MessageCircle } from "lucide-react";
-import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
 const Footer: React.FC = () => {
@@ -144,14 +143,10 @@ const Footer: React.FC = () => {
       </div>
 
       {/* Floating Chat Button */}
-      {/* <motion.a
+      {/* <a
         href="https://t.me/ambassadorsadmin"
         target="_blank"
         rel="noopener noreferrer"
-        initial={{ scale: 0, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
         className="fixed bottom-8 right-8 z-[100] bg-white rounded-full p-1 shadow-2xl flex items-center space-x-3 group"
       >
         <div className="bg-orange-600 rounded-full p-3 text-white transition-colors group-hover:bg-orange-700">
@@ -160,7 +155,7 @@ const Footer: React.FC = () => {
         <span className="pr-5 font-black text-gray-900 text-xs uppercase tracking-tight hidden sm:block">
           Bog'lanish
         </span>
-      </motion.a> */}
+      </a> */}
     </footer>
   );
 };

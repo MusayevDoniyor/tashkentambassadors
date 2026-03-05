@@ -13,8 +13,7 @@ import {
   ChevronRight,
   AlertCircle,
 } from "lucide-react";
-import { AnimatePresence, motion, Variants } from "framer-motion";
-
+import { Variants } from "framer-motion";
 const ROLES_NEEDED = [
   "Frontend Developer",
   "Backend Developer",
@@ -168,11 +167,7 @@ const TeamRequest: React.FC = () => {
   if (isSubmitted) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.div
-          initial={{ scale: 0.8, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          className="max-w-2xl mx-auto text-center py-20"
-        >
+        <div className="max-w-2xl mx-auto text-center py-20">
           <div className="w-24 h-24 rounded-full bg-green-50 flex items-center justify-center mx-auto mb-8 shadow-inner">
             <CheckCircle size={48} className="text-green-500" />
           </div>
@@ -194,9 +189,7 @@ const TeamRequest: React.FC = () => {
             orqali bog'laning.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               onClick={() => {
                 setIsSubmitted(false);
                 setStep(1);
@@ -215,7 +208,7 @@ const TeamRequest: React.FC = () => {
               className="w-full sm:w-auto bg-orange-600 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-orange-700 transition-all shadow-xl shadow-orange-100"
             >
               Yana e'lon berish
-            </motion.button>
+            </button>
             <a
               href="/elonlar"
               className="w-full sm:w-auto bg-white text-gray-900 border-2 border-gray-100 px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:border-orange-500 hover:text-orange-600 transition-all"
@@ -223,19 +216,14 @@ const TeamRequest: React.FC = () => {
               E'lonlarni ko'rish
             </a>
           </div>
-        </motion.div>
+        </div>
       </div>
     );
   }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        className="text-center mb-16"
-      >
+      <div className="text-center mb-16">
         <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-orange-100">
           <Rocket size={14} />
           <span>Jamoa Toping</span>
@@ -247,7 +235,7 @@ const TeamRequest: React.FC = () => {
           Toshkent startup ekotizimida o'z loyihangiz uchun kerakli
           mutaxassislarni toping.
         </p>
-      </motion.div>
+      </div>
 
       {/* Progress Indicator */}
       <div className="max-w-3xl mx-auto mb-16 px-4">
@@ -290,16 +278,9 @@ const TeamRequest: React.FC = () => {
         <div className="absolute top-0 right-0 w-32 h-32 bg-orange-100/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
         <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-50/30 rounded-full blur-3xl -ml-20 -mb-20"></div>
 
-        <AnimatePresence mode="wait">
+        <div>
           {step === 1 && (
-            <motion.div
-              key="step1"
-              variants={stepVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="space-y-8"
-            >
+            <div className="space-y-8">
               <div className="space-y-6">
                 <div className="flex items-center space-x-3 mb-2">
                   <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
@@ -365,18 +346,11 @@ const TeamRequest: React.FC = () => {
                   />
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {step === 2 && (
-            <motion.div
-              key="step2"
-              variants={stepVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="space-y-8"
-            >
+            <div className="space-y-8">
               <div className="space-y-6">
                 <div className="flex items-center space-x-3 mb-2">
                   <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
@@ -392,11 +366,9 @@ const TeamRequest: React.FC = () => {
 
                 <div className="flex flex-wrap gap-3">
                   {ROLES_NEEDED.map((role) => (
-                    <motion.button
+                    <button
                       key={role}
                       type="button"
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
                       onClick={() => handleRoleToggle(role)}
                       className={`px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
                         formData.roles_needed.includes(role)
@@ -405,16 +377,12 @@ const TeamRequest: React.FC = () => {
                       }`}
                     >
                       {role}
-                    </motion.button>
+                    </button>
                   ))}
                 </div>
 
                 {formData.roles_needed.includes("Boshqa") && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: "auto" }}
-                    className="pt-4"
-                  >
+                  <div className="pt-4">
                     <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
                       Kasb nomini yozing *
                     </label>
@@ -428,21 +396,14 @@ const TeamRequest: React.FC = () => {
                       placeholder="Masalan: AI Engineer"
                       className="w-full bg-white border-2 border-orange-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
                     />
-                  </motion.div>
+                  </div>
                 )}
               </div>
-            </motion.div>
+            </div>
           )}
 
           {step === 3 && (
-            <motion.div
-              key="step3"
-              variants={stepVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="space-y-8"
-            >
+            <div className="space-y-8">
               <div className="space-y-6">
                 <div className="flex items-center space-x-3 mb-2">
                   <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
@@ -515,18 +476,11 @@ const TeamRequest: React.FC = () => {
                   />
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
 
           {step === 4 && (
-            <motion.div
-              key="step4"
-              variants={stepVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
-              className="space-y-8"
-            >
+            <div className="space-y-8">
               <div className="space-y-6 text-left">
                 <div className="flex items-center space-x-3 mb-2">
                   <div className="p-2 bg-green-100 text-green-600 rounded-xl">
@@ -595,9 +549,9 @@ const TeamRequest: React.FC = () => {
                   </p>
                 </div>
               </div>
-            </motion.div>
+            </div>
           )}
-        </AnimatePresence>
+        </div>
 
         {/* Navigation Buttons */}
         <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-50">
@@ -612,9 +566,7 @@ const TeamRequest: React.FC = () => {
             <span>Qaytish</span>
           </button>
 
-          <motion.button
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
+          <button
             disabled={!isStepValid() || isSubmitting}
             onClick={() => (step === 4 ? handleSubmit() : nextStep())}
             className={`flex items-center space-x-3 px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed ${
@@ -635,7 +587,7 @@ const TeamRequest: React.FC = () => {
             ) : (
               <ChevronRight size={18} />
             )}
-          </motion.button>
+          </button>
         </div>
       </div>
 
@@ -662,9 +614,8 @@ const TeamRequest: React.FC = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {jobListings.slice(0, 3).map((listing) => (
-              <motion.div
+              <div
                 key={listing.id}
-                whileHover={{ y: -5 }}
                 className="bg-white rounded-[2.5rem] p-8 border-2 border-orange-50 hover:border-orange-200 transition-all shadow-sm"
               >
                 <div className="flex items-center justify-between mb-6">
@@ -676,7 +627,7 @@ const TeamRequest: React.FC = () => {
                       {formatDate(listing.created_at)}
                     </span>
                     <div className="flex items-center space-x-1 mt-1">
-                      <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse"></div>
+                      <div className="w-1.5 h-1.5 rounded-full bg-green-500"></div>
                       <span className="text-[8px] font-black text-green-600 uppercase tracking-widest">
                         Aktiv
                       </span>
@@ -715,7 +666,7 @@ const TeamRequest: React.FC = () => {
                     <ChevronRight size={18} />
                   </a>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

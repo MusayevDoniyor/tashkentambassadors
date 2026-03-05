@@ -99,7 +99,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               >
                 {item.label}
                 {activeTab === item.id && !isOnRequestPage && (
-                  <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-orange-600 rounded-full animate-in fade-in zoom-in duration-300"></span>
+                  <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-orange-600 rounded-full"></span>
                 )}
               </button>
             ))}

@@ -89,7 +89,7 @@ const BlogDetail: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-orange-600 font-black animate-pulse uppercase tracking-widest text-xl">
+        <div className="text-orange-600 font-black uppercase tracking-widest text-xl">
           Maqola yuklanmoqda...
         </div>
       </div>

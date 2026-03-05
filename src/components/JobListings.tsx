@@ -11,8 +11,9 @@ import {
   ChevronDown,
   ChevronUp,
   ExternalLink,
+  ArrowRight,
+  Plus,
 } from "lucide-react";
-import { motion, AnimatePresence, Variants } from "framer-motion";
 
 interface JobListing {
   id: string;
@@ -82,28 +83,10 @@ const JobListings: React.FC = () => {
     return matchSearch && matchRole;
   });
 
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-  };
-  const cardVariants: Variants = {
-    hidden: { y: 20, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.5, ease: "easeOut" },
-    },
-  };
-
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
       {/* Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="text-center mb-16 py-10 relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-orange-50/50 to-white border-2 border-orange-50"
-      >
+      <div className="text-center mb-16 py-10 relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-orange-50/50 to-white border-2 border-orange-50">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-orange-100/30 rounded-full blur-3xl -z-10 -mt-32"></div>
         <div className="inline-flex items-center space-x-2 bg-orange-100/50 text-orange-600 px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-[0.2em] mb-8 border border-orange-200">
           <Rocket size={14} />
@@ -116,15 +99,10 @@ const JobListings: React.FC = () => {
           Eng qiziqarli loyihalarni toping va jamoaga qo'shiling. O'z
           mutaxassisligingiz bo'yicha e'lonlarni filtrlang.
         </p>
-      </motion.div>
+      </div>
 
       {/* Search & Filter Bar */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, delay: 0.2 }}
-        className="flex flex-col md:flex-row gap-4 mb-12 bg-white/60 backdrop-blur-xl p-4 rounded-[2.5rem] border-2 border-orange-50 shadow-xl shadow-orange-100/20"
-      >
+      <div className="flex flex-col md:flex-row gap-4 mb-12 bg-white/60 backdrop-blur-xl p-4 rounded-[2.5rem] border-2 border-orange-50 shadow-xl shadow-orange-100/20">
         <div className="relative flex-1 group">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-orange-500 w-5 h-5 transition-colors" />
           <input
@@ -158,14 +136,14 @@ const JobListings: React.FC = () => {
           </select>
           <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none w-4 h-4" />
         </div>
-      </motion.div>
+      </div>
 
       {/* Results Content */}
       <div className="space-y-6">
         {!loading && (
           <div className="flex items-center justify-between mb-8 px-2">
             <div className="flex items-center space-x-3">
-              <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+              <div className="w-2 h-2 rounded-full bg-green-500"></div>
               <span className="text-xs font-black text-gray-400 uppercase tracking-widest">
                 {filtered.length} ta aktiv imkoniyat
               </span>
@@ -175,17 +153,13 @@ const JobListings: React.FC = () => {
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24 space-y-4">
-            <div className="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
-            <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest animate-pulse">
+            <div className="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full"></div>
+            <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest">
               Yuklanmoqda...
             </span>
           </div>
         ) : filtered.length === 0 ? (
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="text-center py-32 bg-orange-50/20 rounded-[3rem] border-2 border-dashed border-orange-100/50"
-          >
+          <div className="text-center py-32 bg-orange-50/20 rounded-[3rem] border-2 border-dashed border-orange-100/50">
             <div className="w-20 h-20 bg-orange-50 rounded-full flex items-center justify-center mx-auto mb-6">
               <Search size={32} className="text-orange-300" />
             </div>
@@ -205,22 +179,15 @@ const JobListings: React.FC = () => {
             >
               Filtrlarni tozalash
             </button>
-          </motion.div>
+          </div>
         ) : (
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            className="grid grid-cols-1 gap-6"
-          >
+          <div className="grid grid-cols-1 gap-6">
             {filtered.map((listing) => {
               const isExpanded = expandedId === listing.id;
               const isNew = isNewListing(listing.created_at);
               return (
-                <motion.div
+                <div
                   key={listing.id}
-                  variants={cardVariants}
-                  layout
                   className={`bg-white rounded-[2.5rem] border-2 transition-all duration-500 overflow-hidden group ${
                     isExpanded
                       ? "border-orange-200 shadow-2xl scale-[1.01]"
@@ -241,7 +208,7 @@ const JobListings: React.FC = () => {
                             {listing.startup_name.charAt(0)}
                           </div>
                           {isNew && (
-                            <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-md animate-bounce">
+                            <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-md">
                               Yangi
                             </div>
                           )}
@@ -290,173 +257,158 @@ const JobListings: React.FC = () => {
                     </div>
 
                     {/* Expandable Detail Section */}
-                    <AnimatePresence>
-                      {isExpanded && (
-                        <motion.div
-                          initial={{ height: 0, opacity: 0 }}
-                          animate={{ height: "auto", opacity: 1 }}
-                          exit={{ height: 0, opacity: 0 }}
-                          transition={{ duration: 0.4, ease: "circOut" }}
-                          className="overflow-hidden"
-                        >
-                          <div className="p-8 pt-2 border-t border-gray-50 bg-gray-50/30">
-                            <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                              <div className="lg:col-span-2 space-y-8">
-                                <div>
-                                  <div className="flex items-center space-x-2 mb-4">
-                                    <div className="w-1 h-4 bg-orange-600 rounded-full"></div>
-                                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
-                                      Startup haqida batafsil
-                                    </h4>
+                    {isExpanded && (
+                      <div className="overflow-hidden">
+                        <div className="p-8 pt-2 border-t border-gray-50 bg-gray-50/30">
+                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
+                            <div className="lg:col-span-2 space-y-8">
+                              <div>
+                                <div className="flex items-center space-x-2 mb-4">
+                                  <div className="w-1 h-4 bg-orange-600 rounded-full"></div>
+                                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                                    Startup haqida batafsil
+                                  </h4>
+                                </div>
+                                <p className="text-gray-700 text-sm md:text-base font-medium leading-relaxed">
+                                  {listing.description}
+                                </p>
+                              </div>
+
+                              <div>
+                                <div className="flex items-center space-x-2 mb-4">
+                                  <div className="w-1 h-4 bg-orange-600 rounded-full"></div>
+                                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
+                                    Mutaxassislikka talablar
+                                  </h4>
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                  {listing.roles_needed.map((role, i) => (
+                                    <span
+                                      key={i}
+                                      className="px-4 py-2 bg-white text-orange-700 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-orange-100 shadow-sm"
+                                    >
+                                      {role}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+
+                              {listing.message && (
+                                <div className="bg-amber-50/80 rounded-3xl p-6 border border-amber-100 relative overflow-hidden">
+                                  <div className="absolute top-0 right-0 p-2 opacity-10">
+                                    <Rocket size={40} />
                                   </div>
-                                  <p className="text-gray-700 text-sm md:text-base font-medium leading-relaxed">
-                                    {listing.description}
+                                  <h4 className="text-[9px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3">
+                                    Asoschidan xabar
+                                  </h4>
+                                  <p className="text-gray-600 text-sm font-bold italic leading-relaxed">
+                                    "{listing.message}"
                                   </p>
                                 </div>
+                              )}
+                            </div>
 
-                                <div>
-                                  <div className="flex items-center space-x-2 mb-4">
-                                    <div className="w-1 h-4 bg-orange-600 rounded-full"></div>
-                                    <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
-                                      Mutaxassislikka talablar
-                                    </h4>
-                                  </div>
-                                  <div className="flex flex-wrap gap-2">
-                                    {listing.roles_needed.map((role, i) => (
-                                      <span
-                                        key={i}
-                                        className="px-4 py-2 bg-white text-orange-700 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-orange-100 shadow-sm"
-                                      >
-                                        {role}
-                                      </span>
-                                    ))}
-                                  </div>
+                            <div className="space-y-6">
+                              <div className="bg-white rounded-3xl p-6 border border-orange-100 shadow-sm">
+                                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">
+                                  Bog'lanish uchun
+                                </h4>
+                                <div className="space-y-4">
+                                  {listing.telegram && (
+                                    <a
+                                      href={`https://t.me/${listing.telegram.replace("@", "")}`}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="flex items-center justify-between group/link bg-gray-50 p-4 rounded-2xl hover:bg-orange-600 hover:text-white transition-all duration-300"
+                                    >
+                                      <div className="flex items-center space-x-3">
+                                        <Send
+                                          size={18}
+                                          className="text-orange-600 group-hover/link:text-white"
+                                        />
+                                        <span className="text-xs font-black uppercase tracking-widest">
+                                          Telegram
+                                        </span>
+                                      </div>
+                                      <ExternalLink
+                                        size={14}
+                                        className="opacity-0 group-hover/link:opacity-100 transition-opacity"
+                                      />
+                                    </a>
+                                  )}
+                                  {listing.phone && (
+                                    <a
+                                      href={`tel:${listing.phone}`}
+                                      className="flex items-center space-x-3 bg-gray-50 p-4 rounded-2xl hover:bg-gray-100 transition-colors w-full"
+                                    >
+                                      <Phone
+                                        size={18}
+                                        className="text-gray-400"
+                                      />
+                                      <div className="flex flex-col">
+                                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">
+                                          Telefon
+                                        </span>
+                                        <span className="text-xs font-black text-gray-900">
+                                          {listing.phone}
+                                        </span>
+                                      </div>
+                                    </a>
+                                  )}
+                                  {listing.email && (
+                                    <a
+                                      href={`mailto:${listing.email}`}
+                                      className="flex items-center space-x-3 bg-gray-50 p-4 rounded-2xl hover:bg-gray-100 transition-colors w-full"
+                                    >
+                                      <Mail
+                                        size={18}
+                                        className="text-gray-400"
+                                      />
+                                      <div className="flex flex-col">
+                                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">
+                                          Email
+                                        </span>
+                                        <span className="text-xs font-black text-gray-900 truncate max-w-[150px]">
+                                          {listing.email}
+                                        </span>
+                                      </div>
+                                    </a>
+                                  )}
                                 </div>
-
-                                {listing.message && (
-                                  <div className="bg-amber-50/80 rounded-3xl p-6 border border-amber-100 relative overflow-hidden">
-                                    <div className="absolute top-0 right-0 p-2 opacity-10">
-                                      <Rocket size={40} />
-                                    </div>
-                                    <h4 className="text-[9px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3">
-                                      Asoschidan xabar
-                                    </h4>
-                                    <p className="text-gray-600 text-sm font-bold italic leading-relaxed">
-                                      "{listing.message}"
-                                    </p>
-                                  </div>
-                                )}
                               </div>
 
-                              <div className="space-y-6">
-                                <div className="bg-white rounded-3xl p-6 border border-orange-100 shadow-sm">
-                                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">
-                                    Bog'lanish uchun
-                                  </h4>
-                                  <div className="space-y-4">
-                                    {listing.telegram && (
-                                      <a
-                                        href={`https://t.me/${listing.telegram.replace("@", "")}`}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="flex items-center justify-between group/link bg-gray-50 p-4 rounded-2xl hover:bg-orange-600 hover:text-white transition-all duration-300"
-                                      >
-                                        <div className="flex items-center space-x-3">
-                                          <Send
-                                            size={18}
-                                            className="text-orange-600 group-hover/link:text-white"
-                                          />
-                                          <span className="text-xs font-black uppercase tracking-widest">
-                                            Telegram
-                                          </span>
-                                        </div>
-                                        <ExternalLink
-                                          size={14}
-                                          className="opacity-0 group-hover/link:opacity-100 transition-opacity"
-                                        />
-                                      </a>
-                                    )}
-                                    {listing.phone && (
-                                      <a
-                                        href={`tel:${listing.phone}`}
-                                        className="flex items-center space-x-3 bg-gray-50 p-4 rounded-2xl hover:bg-gray-100 transition-colors w-full"
-                                      >
-                                        <Phone
-                                          size={18}
-                                          className="text-gray-400"
-                                        />
-                                        <div className="flex flex-col">
-                                          <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">
-                                            Telefon
-                                          </span>
-                                          <span className="text-xs font-black text-gray-900">
-                                            {listing.phone}
-                                          </span>
-                                        </div>
-                                      </a>
-                                    )}
-                                    {listing.email && (
-                                      <a
-                                        href={`mailto:${listing.email}`}
-                                        className="flex items-center space-x-3 bg-gray-50 p-4 rounded-2xl hover:bg-gray-100 transition-colors w-full"
-                                      >
-                                        <Mail
-                                          size={18}
-                                          className="text-gray-400"
-                                        />
-                                        <div className="flex flex-col">
-                                          <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">
-                                            Email
-                                          </span>
-                                          <span className="text-xs font-black text-gray-900 truncate max-w-[150px]">
-                                            {listing.email}
-                                          </span>
-                                        </div>
-                                      </a>
-                                    )}
-                                  </div>
-                                </div>
-
-                                <motion.button
-                                  whileHover={{ scale: 1.02 }}
-                                  whileTap={{ scale: 0.98 }}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    if (listing.telegram)
-                                      window.open(
-                                        `https://t.me/${listing.telegram.replace("@", "")}`,
-                                        "_blank",
-                                      );
-                                    else if (listing.phone)
-                                      window.open(`tel:${listing.phone}`);
-                                  }}
-                                  className="w-full bg-orange-600 text-white py-5 rounded-3xl font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center space-x-3"
-                                >
-                                  <span>Loyiha bilan tanishish</span>
-                                  <ArrowRight size={16} />
-                                </motion.button>
-                              </div>
+                              <button
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  if (listing.telegram)
+                                    window.open(
+                                      `https://t.me/${listing.telegram.replace("@", "")}`,
+                                      "_blank",
+                                    );
+                                  else if (listing.phone)
+                                    window.open(`tel:${listing.phone}`);
+                                }}
+                                className="w-full bg-orange-600 text-white py-5 rounded-3xl font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center space-x-3"
+                              >
+                                <span>Loyiha bilan tanishish</span>
+                                <ArrowRight size={16} />
+                              </button>
                             </div>
                           </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                </motion.div>
+                </div>
               );
             })}
-          </motion.div>
+          </div>
         )}
       </div>
 
       {/* Post CTA */}
       {!loading && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          className="mt-24 p-12 bg-gradient-to-br from-gray-900 to-gray-800 rounded-[4rem] text-center relative overflow-hidden"
-        >
+        <div className="mt-24 p-12 bg-gradient-to-br from-gray-900 to-gray-800 rounded-[4rem] text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/10 rounded-full blur-3xl -mr-32 -mt-32"></div>
           <div className="absolute bottom-0 left-0 w-64 h-64 bg-orange-600/10 rounded-full blur-3xl -ml-32 -mb-32"></div>
 
@@ -473,13 +425,10 @@ const JobListings: React.FC = () => {
             <Plus size={18} />
             <span>Hozir e'lon berish</span>
           </a>
-        </motion.div>
+        </div>
       )}
     </div>
   );
 };
-
-// Import ArrowRight and Plus icons
-import { ArrowRight, Plus } from "lucide-react";
 
 export default JobListings;

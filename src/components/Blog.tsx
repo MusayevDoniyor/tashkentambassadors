@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { ArrowUpRight, BookOpen, Calendar, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence, Variants } from "framer-motion";
 import { supabase } from "../lib/supabase";
 
 interface BlogPost {
@@ -57,42 +56,16 @@ const Blog: React.FC = () => {
 
   const featuredPost = filteredPosts[0];
   const otherPosts = filteredPosts.slice(1);
-
-  const containerVariants: Variants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-      },
-    },
-  };
-
-  const cardVariants: Variants = {
-    hidden: { y: 10, opacity: 0 },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: { duration: 0.4, ease: "easeOut" },
-    },
-  };
-
-  if (loading)
-    return (
-      <div className="py-20 text-center font-black text-orange-600 animate-pulse">
-        BLOG YUKLANMOQDA...
-      </div>
-    );
+  return (
+    <div className="py-20 text-center font-black text-orange-600">
+      BLOG YUKLANMOQDA...
+    </div>
+  );
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       {/* Featured Header Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="flex flex-col md:flex-row items-center justify-between mb-12 gap-4"
-      >
+      <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
         <div className="flex items-center space-x-2 text-sm font-bold text-gray-400">
           <Link to="/" className="hover:text-gray-900 transition-colors">
             Bosh sahifa
@@ -100,15 +73,11 @@ const Blog: React.FC = () => {
           <span>→</span>
           <span className="text-orange-600">Blog</span>
         </div>
-      </motion.div>
+      </div>
 
       {/* Hero Featured Post */}
       {featuredPost && activeCategory === "Barchasi" && (
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1 }}
-        >
+        <div>
           <Link
             to={`/blog/${featuredPost.slug || featuredPost.id}`}
             className="group grid grid-cols-1 lg:grid-cols-2 mb-20 bg-white rounded-[3rem] overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500 min-h-[350px] max-w-7xl mx-auto"
@@ -158,21 +127,14 @@ const Blog: React.FC = () => {
               )}
             </div>
           </Link>
-        </motion.div>
+        </div>
       )}
 
       {/* Category Filters */}
-      <motion.div
-        initial={{ opacity: 0, y: 10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-        className="flex flex-wrap gap-3 mb-12"
-      >
+      <div className="flex flex-wrap gap-3 mb-12">
         {CATEGORIES.map((cat) => (
-          <motion.button
+          <button
             key={cat}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
             onClick={() => setActiveCategory(cat)}
             className={`px-6 py-3 rounded-2xl text-[10px] uppercase tracking-widest font-black transition-all ${
               activeCategory === cat
@@ -181,97 +143,80 @@ const Blog: React.FC = () => {
             }`}
           >
             {cat}
-          </motion.button>
+          </button>
         ))}
-      </motion.div>
+      </div>
 
       {/* Posts Grid */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeCategory}
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          exit="hidden"
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 text-left"
-        >
-          {(activeCategory === "Barchasi" ? otherPosts : filteredPosts).length >
-          0 ? (
-            (activeCategory === "Barchasi" ? otherPosts : filteredPosts).map(
-              (post) => (
-                <motion.div key={post.id} variants={cardVariants}>
-                  <Link
-                    to={`/blog/${post.slug || post.id}`}
-                    className="flex flex-col bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500 group shadow-sm h-full"
-                  >
-                    <div className="relative aspect-[16/10] overflow-hidden bg-gray-50">
-                      {post.image ? (
-                        <img
-                          src={post.image}
-                          alt={post.title}
-                          className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
-                        />
-                      ) : (
-                        <div className="w-full h-full logo-gradient"></div>
-                      )}
-                      <div className="absolute top-5 left-5">
-                        <span className="bg-white/90 backdrop-blur-md text-orange-600 text-[9px] uppercase tracking-[0.2em] font-black px-4 py-2 rounded-xl shadow-lg border border-white/50">
-                          {post.category}
-                        </span>
-                      </div>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-20 text-left">
+        {(activeCategory === "Barchasi" ? otherPosts : filteredPosts).length >
+        0 ? (
+          (activeCategory === "Barchasi" ? otherPosts : filteredPosts).map(
+            (post) => (
+              <div key={post.id}>
+                <Link
+                  to={`/blog/${post.slug || post.id}`}
+                  className="flex flex-col bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 hover:shadow-2xl transition-all duration-500 group shadow-sm h-full"
+                >
+                  <div className="relative aspect-[16/10] overflow-hidden bg-gray-50">
+                    {post.image ? (
+                      <img
+                        src={post.image}
+                        alt={post.title}
+                        className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full logo-gradient"></div>
+                    )}
+                    <div className="absolute top-5 left-5">
+                      <span className="bg-white/90 backdrop-blur-md text-orange-600 text-[9px] uppercase tracking-[0.2em] font-black px-4 py-2 rounded-xl shadow-lg border border-white/50">
+                        {post.category}
+                      </span>
                     </div>
+                  </div>
 
-                    <div className="p-8 flex flex-col flex-1">
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                          {post.date}
-                        </span>
-                        <div className="flex items-center space-x-1.5 text-gray-400 text-[10px] font-bold">
-                          <BookOpen size={12} />
-                          <span>{(post.views || 0) + 127}</span>
-                        </div>
-                      </div>
-                      <h3 className="text-xl font-black text-gray-900 mb-4 leading-tight group-hover:text-orange-600 transition-colors uppercase tracking-tight">
-                        {post.title}
-                      </h3>
-                      {post.excerpt && (
-                        <p className="text-gray-500 text-sm mb-6 line-clamp-2 font-medium leading-relaxed">
-                          {post.excerpt}
-                        </p>
-                      )}
-                      <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between text-orange-600 font-black text-[10px] uppercase tracking-[0.2em]">
-                        <span>Batafsil</span>
-                        <ArrowUpRight
-                          size={16}
-                          className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
-                        />
+                  <div className="p-8 flex flex-col flex-1">
+                    <div className="flex items-center justify-between mb-4">
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                        {post.date}
+                      </span>
+                      <div className="flex items-center space-x-1.5 text-gray-400 text-[10px] font-bold">
+                        <BookOpen size={12} />
+                        <span>{(post.views || 0) + 127}</span>
                       </div>
                     </div>
-                  </Link>
-                </motion.div>
-              ),
-            )
-          ) : (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              className="col-span-full py-20 text-center"
-            >
-              <BookOpen size={48} className="mx-auto text-gray-200 mb-4" />
-              <h3 className="text-gray-400 font-bold uppercase tracking-widest">
-                Ushbu kategoriyada maqolalar topilmadi
-              </h3>
-            </motion.div>
-          )}
-        </motion.div>
-      </AnimatePresence>
+                    <h3 className="text-xl font-black text-gray-900 mb-4 leading-tight group-hover:text-orange-600 transition-colors uppercase tracking-tight">
+                      {post.title}
+                    </h3>
+                    {post.excerpt && (
+                      <p className="text-gray-500 text-sm mb-6 line-clamp-2 font-medium leading-relaxed">
+                        {post.excerpt}
+                      </p>
+                    )}
+                    <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between text-orange-600 font-black text-[10px] uppercase tracking-[0.2em]">
+                      <span>Batafsil</span>
+                      <ArrowUpRight
+                        size={16}
+                        className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"
+                      />
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ),
+          )
+        ) : (
+          <div className="col-span-full py-20 text-center">
+            <BookOpen size={48} className="mx-auto text-gray-200 mb-4" />
+            <h3 className="text-gray-400 font-bold uppercase tracking-widest">
+              Ushbu kategoriyada maqolalar topilmadi
+            </h3>
+          </div>
+        )}
+      </div>
 
       {/* CTA Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.6 }}
+      <div
         className="rounded-[3rem] p-10 md:p-16 text-white text-center relative overflow-hidden mb-20 shadow-2xl"
         style={{
           backgroundImage: "linear-gradient(to bottom right, #F9B513, #EA601E)",
@@ -309,7 +254,7 @@ const Blog: React.FC = () => {
             />
           </a>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 };

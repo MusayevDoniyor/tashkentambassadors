@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
-import { motion, AnimatePresence, Variants } from "framer-motion";
 import { MapPin, Send, Shield, X } from "lucide-react";
 
 interface Ambassador {
@@ -151,37 +150,13 @@ const TashkentMap: React.FC = () => {
     ? getOfficialAmbassador(selectedDistrict)
     : null;
 
-  const containerVariants: Variants = {
-    hidden: { opacity: 0, y: 10 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.6 },
-    },
-  };
-
-  const pathVariants: Variants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
-  };
-
   return (
-    <motion.div
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true }}
-      variants={containerVariants}
-      className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
-    >
+    <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="text-center mb-8">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4"
-        >
+        <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-4">
           <MapPin size={14} />
           <span>Interaktiv Xarita</span>
-        </motion.div>
+        </div>
         <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-4 uppercase tracking-tighter">
           TOSHKENT <span className="text-orange-600">HUDUDLARI</span>
         </h2>
@@ -196,12 +171,7 @@ const TashkentMap: React.FC = () => {
         ref={mapContainerRef}
       >
         {/* Map */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1 }}
-          className="relative bg-white/60 backdrop-blur-xl rounded-[2rem] p-6 md:p-8 border-2 border-orange-100/50 shadow-lg overflow-hidden w-full max-w-lg lg:flex-shrink-0"
-        >
+        <div className="relative bg-white/60 backdrop-blur-xl rounded-[2rem] p-6 md:p-8 border-2 border-orange-100/50 shadow-lg overflow-hidden w-full max-w-lg lg:flex-shrink-0">
           <div
             className="absolute inset-0 opacity-[0.03] pointer-events-none"
             style={{
@@ -242,125 +212,105 @@ const TashkentMap: React.FC = () => {
               );
             })}
           </svg>
-        </motion.div>
+        </div>
 
         {/* Info Panel — slides in on the right (desktop) or below (mobile) */}
         <div className="w-full lg:w-[280px] lg:sticky lg:top-8">
-          <AnimatePresence mode="wait">
-            {selectedDistrict ? (
-              <motion.div
-                key={selectedDistrict}
-                initial={{ opacity: 0, x: 20, scale: 0.96 }}
-                animate={{ opacity: 1, x: 0, scale: 1 }}
-                exit={{ opacity: 0, x: 20, scale: 0.96 }}
-                transition={{ duration: 0.25 }}
-                className="bg-white rounded-2xl p-5 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-orange-100/50"
-              >
-                {/* Header */}
-                <div className="flex items-center justify-between mb-4">
+          {selectedDistrict ? (
+            <div className="bg-white rounded-2xl p-5 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-orange-100/50">
+              {/* Header */}
+              <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 flex-shrink-0">
+                    <MapPin size={20} />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">
+                      {selectedDistrict}
+                    </h3>
+                    <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
+                      Tumani
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setSelectedDistrict(null)}
+                  className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors flex-shrink-0"
+                >
+                  <X size={14} />
+                </button>
+              </div>
+
+              {/* Official Ambassador */}
+              {officialAmbassador ? (
+                <div className="bg-gradient-to-r from-orange-50 to-orange-50/50 rounded-xl p-3 border border-orange-100/80">
+                  <div className="flex items-center space-x-1.5 mb-2.5">
+                    <Shield size={10} className="text-orange-600" />
+                    <span className="text-[8px] font-black text-orange-600 uppercase tracking-[0.15em]">
+                      Biriktirilgan Ambassador
+                    </span>
+                  </div>
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-orange-600 flex-shrink-0">
-                      <MapPin size={20} />
-                    </div>
-                    <div>
-                      <h3 className="text-lg font-black text-gray-900 uppercase tracking-tighter">
-                        {selectedDistrict}
-                      </h3>
-                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                        Tumani
+                    {officialAmbassador.image ? (
+                      <img
+                        src={officialAmbassador.image}
+                        alt={officialAmbassador.name}
+                        className="w-14 h-14 rounded-xl object-cover border-2 border-white shadow-sm flex-shrink-0"
+                      />
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-black text-xl uppercase shadow-sm flex-shrink-0">
+                        {officialAmbassador.name.charAt(0)}
+                      </div>
+                    )}
+                    <div className="min-w-0">
+                      <h4 className="font-black text-gray-900 text-sm uppercase tracking-tight truncate">
+                        {officialAmbassador.name}
+                      </h4>
+                      <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest truncate">
+                        Ambassador
                       </p>
                     </div>
                   </div>
-                  <button
-                    onClick={() => setSelectedDistrict(null)}
-                    className="w-8 h-8 rounded-xl bg-gray-50 flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-600 transition-colors flex-shrink-0"
-                  >
-                    <X size={14} />
-                  </button>
+
+                  {officialAmbassador.telegram && (
+                    <div className="flex items-center space-x-2 mt-2.5 pt-2.5 border-t border-orange-100/80">
+                      <a
+                        href={`https://t.me/${officialAmbassador.telegram.replace("@", "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center space-x-1.5 text-orange-600 hover:text-orange-700 transition-colors"
+                      >
+                        <Send size={11} />
+                        <span className="text-[10px] font-bold">
+                          {officialAmbassador.telegram.startsWith("@")
+                            ? officialAmbassador.telegram
+                            : `@${officialAmbassador.telegram}`}
+                        </span>
+                      </a>
+                    </div>
+                  )}
                 </div>
-
-                {/* Official Ambassador */}
-                {officialAmbassador ? (
-                  <div className="bg-gradient-to-r from-orange-50 to-orange-50/50 rounded-xl p-3 border border-orange-100/80">
-                    <div className="flex items-center space-x-1.5 mb-2.5">
-                      <Shield size={10} className="text-orange-600" />
-                      <span className="text-[8px] font-black text-orange-600 uppercase tracking-[0.15em]">
-                        Biriktirilgan Ambassador
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-3">
-                      {officialAmbassador.image ? (
-                        <img
-                          src={officialAmbassador.image}
-                          alt={officialAmbassador.name}
-                          className="w-14 h-14 rounded-xl object-cover border-2 border-white shadow-sm flex-shrink-0"
-                        />
-                      ) : (
-                        <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-black text-xl uppercase shadow-sm flex-shrink-0">
-                          {officialAmbassador.name.charAt(0)}
-                        </div>
-                      )}
-                      <div className="min-w-0">
-                        <h4 className="font-black text-gray-900 text-sm uppercase tracking-tight truncate">
-                          {officialAmbassador.name}
-                        </h4>
-                        <p className="text-[9px] font-bold text-gray-500 uppercase tracking-widest truncate">
-                          Ambassador
-                        </p>
-                      </div>
-                    </div>
-
-                    {officialAmbassador.telegram && (
-                      <div className="flex items-center space-x-2 mt-2.5 pt-2.5 border-t border-orange-100/80">
-                        <a
-                          href={`https://t.me/${officialAmbassador.telegram.replace("@", "")}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center space-x-1.5 text-orange-600 hover:text-orange-700 transition-colors"
-                        >
-                          <Send size={11} />
-                          <span className="text-[10px] font-bold">
-                            {officialAmbassador.telegram.startsWith("@")
-                              ? officialAmbassador.telegram
-                              : `@${officialAmbassador.telegram}`}
-                          </span>
-                        </a>
-                      </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="py-4 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
-                    <p className="text-gray-400 font-bold uppercase tracking-widest text-[9px]">
-                      Ambassador tayinlanmagan
-                    </p>
-                  </div>
-                )}
-              </motion.div>
-            ) : (
-              <motion.div
-                key="placeholder"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className="bg-white/60 rounded-2xl p-6 border-2 border-dashed border-orange-100 text-center hidden lg:flex flex-col items-center justify-center min-h-[180px]"
-              >
-                <MapPin size={32} className="text-orange-200 mb-3" />
-                <p className="text-gray-400 font-bold text-xs uppercase tracking-widest">
-                  Tuman ustiga bosing
-                </p>
-              </motion.div>
-            )}
-          </AnimatePresence>
+              ) : (
+                <div className="py-4 text-center bg-gray-50 rounded-xl border border-dashed border-gray-200">
+                  <p className="text-gray-400 font-bold uppercase tracking-widest text-[9px]">
+                    Ambassador tayinlanmagan
+                  </p>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="bg-white/60 rounded-2xl p-6 border-2 border-dashed border-orange-100 text-center hidden lg:flex flex-col items-center justify-center min-h-[180px]">
+              <MapPin size={32} className="text-orange-200 mb-3" />
+              <p className="text-gray-400 font-bold text-xs uppercase tracking-widest">
+                Tuman ustiga bosing
+              </p>
+            </div>
+          )}
         </div>
       </div>
 
       {/* District buttons */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1 }}
-        transition={{ delay: 0.5 }}
-        className="mt-8 flex flex-wrap justify-center gap-2 max-w-2xl mx-auto"
-      >
+      <div className="mt-8 flex flex-wrap justify-center gap-2 max-w-2xl mx-auto">
         {DISTRICTS_DATA.map((d) => {
           const hasOfficialAmbassador = ambassadors.some(
             (a) =>
@@ -384,16 +334,10 @@ const TashkentMap: React.FC = () => {
             </button>
           );
         })}
-      </motion.div>
+      </div>
 
       {/* Stats Strip — BELOW the map */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.8, delay: 0.3 }}
-        className="flex justify-center gap-6 mt-10"
-      >
+      <div className="flex justify-center gap-6 mt-10">
         {[
           { label: "Tumanlar", val: 12 },
           { label: "Ambassadorlar", val: `${ambassadorCount}+` },
@@ -410,8 +354,8 @@ const TashkentMap: React.FC = () => {
             </div>
           </div>
         ))}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
