@@ -26,6 +26,7 @@ interface JobListing {
   roles_needed: string[];
   message: string | null;
   status: string;
+  logo: string | null;
   created_at: string;
 }
 
@@ -204,9 +205,17 @@ const JobListings: React.FC = () => {
                       {/* Company Info */}
                       <div className="flex items-center space-x-5 flex-1 min-w-0 mb-6 sm:mb-0">
                         <div className="relative shrink-0">
-                          <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white font-black text-3xl uppercase shadow-lg shadow-orange-100 group-hover:rotate-3 transition-transform">
-                            {listing.startup_name.charAt(0)}
-                          </div>
+                          {listing.logo ? (
+                            <img
+                              src={listing.logo}
+                              className="w-16 h-16 rounded-3xl object-cover shadow-lg shadow-orange-100 group-hover:rotate-3 transition-transform border border-orange-50 bg-white"
+                              alt={listing.startup_name}
+                            />
+                          ) : (
+                            <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white font-black text-3xl uppercase shadow-lg shadow-orange-100 group-hover:rotate-3 transition-transform">
+                              {listing.startup_name.charAt(0)}
+                            </div>
+                          )}
                           {isNew && (
                             <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-md">
                               Yangi

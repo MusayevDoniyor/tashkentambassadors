@@ -11,6 +11,7 @@ interface Ambassador {
   image: string | null;
   telegram: string | null;
   linkedin: string | null;
+  phone: string | null;
   is_leader: boolean;
 }
 

@@ -12,6 +12,9 @@ import {
   Clock,
   ChevronRight,
   AlertCircle,
+  Image as ImageIcon,
+  Loader2,
+  Plus,
 } from "lucide-react";
 import { Variants } from "framer-motion";
 const ROLES_NEEDED = [
@@ -40,6 +43,7 @@ interface JobListing {
   roles_needed: string[];
   message: string | null;
   status: string;
+  logo: string | null;
   created_at: string;
 }
 
@@ -64,7 +68,9 @@ const TeamRequest: React.FC = () => {
     roles_needed: [] as string[],
     other_role: "",
     message: "",
+    logo: null as string | null,
   });
+  const [logoUploading, setLogoUploading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [jobListings, setJobListings] = useState<JobListing[]>([]);
@@ -86,6 +92,35 @@ const TeamRequest: React.FC = () => {
       console.error("Error fetching job listings:", err);
     } finally {
       setLoadingListings(false);
+    }
+  };
+
+  const handleLogoUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setLogoUploading(true);
+    try {
+      const fileExt = file.name.split(".").pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `startups/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("images")
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("images").getPublicUrl(filePath);
+
+      setFormData((prev) => ({ ...prev, logo: publicUrl }));
+    } catch (error: any) {
+      console.error("Logo upload error:", error);
+      alert(`Logo yuklashda xatolik: ${error.message || "Noma'lum xatolik"}`);
+    } finally {
+      setLogoUploading(false);
     }
   };
 
@@ -120,6 +155,7 @@ const TeamRequest: React.FC = () => {
           roles_needed: finalRoles,
           message: formData.message || null,
           status: "PENDING",
+          logo: formData.logo || null,
         },
       ]);
 
@@ -203,6 +239,7 @@ const TeamRequest: React.FC = () => {
                   roles_needed: [],
                   other_role: "",
                   message: "",
+                  logo: null,
                 });
               }}
               className="w-full sm:w-auto bg-orange-600 text-white px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs hover:bg-orange-700 transition-all shadow-xl shadow-orange-100"
@@ -281,6 +318,36 @@ const TeamRequest: React.FC = () => {
         <div>
           {step === 1 && (
             <div className="space-y-8">
+              <div className="flex flex-col items-center mb-8">
+                <div className="relative group cursor-pointer">
+                  <div className="w-24 h-24 rounded-3xl bg-white border-2 border-dashed border-orange-100 flex items-center justify-center text-gray-400 overflow-hidden hover:border-orange-500 transition-all shadow-sm">
+                    {logoUploading ? (
+                      <Loader2 className="animate-spin text-orange-600" />
+                    ) : formData.logo ? (
+                      <img
+                        src={formData.logo}
+                        className="w-full h-full object-cover"
+                        alt="Startup logo"
+                      />
+                    ) : (
+                      <ImageIcon size={32} />
+                    )}
+                  </div>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                    onChange={handleLogoUpload}
+                  />
+                  <div className="absolute -bottom-2 -right-2 bg-white p-2 rounded-xl shadow-lg border border-orange-50 text-orange-600">
+                    <Plus size={14} />
+                  </div>
+                </div>
+                <p className="text-[9px] font-black uppercase text-gray-400 mt-3 tracking-widest">
+                  Startup Logosi (Ixtiyoriy)
+                </p>
+              </div>
+
               <div className="space-y-6">
                 <div className="flex items-center space-x-3 mb-2">
                   <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
