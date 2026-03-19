@@ -81,6 +81,28 @@ const TeamRequest: React.FC = () => {
     fetchJobListings();
   }, []);
 
+  useEffect(() => {
+    if (isSubmitted) {
+      const timer = setTimeout(() => {
+        setIsSubmitted(false);
+        setStep(1);
+        setFormData({
+          startup_name: "",
+          founder_name: "",
+          phone: "",
+          email: "",
+          telegram: "",
+          description: "",
+          roles_needed: [],
+          other_role: "",
+          message: "",
+          logo: null,
+        });
+      }, 10000); // 10 soniyadan keyin yo'qoladi
+      return () => clearTimeout(timer);
+    }
+  }, [isSubmitted]);
+
   const fetchJobListings = async () => {
     try {
       const { data } = await supabase
