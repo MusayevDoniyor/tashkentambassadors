@@ -29,6 +29,7 @@ const ROLES_NEEDED = [
   "Project Manager",
   "Data Analyst",
   "DevOps Engineer",
+  "AI Engineer",
   "Boshqa",
 ];
 
