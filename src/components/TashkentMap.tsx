@@ -112,7 +112,7 @@ const matchesDistrict = (
 const TashkentMap: React.FC = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
   const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
-  const [ambassadorCount, setAmbassadorCount] = useState(26);
+  const [ambassadorCount, setAmbassadorCount] = useState(1);
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -120,7 +120,7 @@ const TashkentMap: React.FC = () => {
       const { data } = await supabase.from("ambassadors").select("*");
       if (data) {
         setAmbassadors(data);
-        if (data.length > 26) setAmbassadorCount(data.length);
+        if (data.length) setAmbassadorCount(data.length);
       }
     };
     fetchData();
@@ -227,130 +227,134 @@ const TashkentMap: React.FC = () => {
           </svg>
         </div>
 
-      {/* District Info Modal */}
-      {selectedDistrict && (
-        <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-            onClick={() => setSelectedDistrict(null)}
-          />
+        {/* District Info Modal */}
+        {selectedDistrict && (
+          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={() => setSelectedDistrict(null)}
+            />
 
-          {officialAmbassador ? (
-            <div className="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 animate-in zoom-in-95 duration-300">
-              {/* Close */}
-              <button
-                onClick={() => setSelectedDistrict(null)}
-                className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:bg-orange-600 transition-all hover:rotate-90 duration-300"
-              >
-                <X size={16} />
-              </button>
-
-              {/* Hero image */}
-              <div className="relative h-72 w-full overflow-hidden bg-white">
-                {officialAmbassador.image ? (
-                  <img
-                    src={officialAmbassador.image}
-                    alt={officialAmbassador.name}
-                    className="w-full h-full object-contain"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 flex items-center justify-center text-white font-black text-8xl uppercase">
-                    {officialAmbassador.name.charAt(0)}
-                  </div>
-                )}
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-
-                {/* Name over image */}
-                <div className="absolute bottom-5 left-5 right-5">
-                  <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-tight">
-                    {officialAmbassador.name}
-                  </h3>
-                  <div className="flex items-center gap-1.5 mt-1 text-orange-300">
-                    <MapPin size={12} />
-                    <span className="text-[10px] font-bold uppercase tracking-widest">{selectedDistrict} tumani</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Body */}
-              <div className="p-5 space-y-4">
-
-
-                {/* Phone */}
-                {officialAmbassador.phone && (
-                  <a
-                    href={`tel:${officialAmbassador.phone}`}
-                    className="flex items-center gap-4 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-100 group hover:border-orange-300 transition-all"
-                  >
-                    <div className="w-10 h-10 rounded-xl bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-200 group-hover:scale-110 transition-transform">
-                      <Phone size={18} />
-                    </div>
-                    <div>
-                      <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest">Telefon</p>
-                      <p className="text-sm font-black text-gray-900 tracking-tight">{officialAmbassador.phone}</p>
-                    </div>
-                  </a>
-                )}
-
-                {/* Social links */}
-                <div className="flex gap-2.5">
-                  {officialAmbassador.telegram && (
-                    <a
-                      href={`https://t.me/${officialAmbassador.telegram.replace("@", "")}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#26A5E4] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-md shadow-blue-100"
-                    >
-                      <Send size={14} />
-                      Telegram
-                    </a>
-                  )}
-                  {officialAmbassador.linkedin && (
-                    <a
-                      href={officialAmbassador.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#0077B5] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-md shadow-blue-100"
-                    >
-                      <Linkedin size={14} />
-                      LinkedIn
-                    </a>
-                  )}
-                </div>
-              </div>
-            </div>
-          ) : (
-            /* No ambassador card */
-            <div className="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 animate-in zoom-in-95 duration-300">
-              <button
-                onClick={() => setSelectedDistrict(null)}
-                className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-orange-600 hover:text-white transition-all hover:rotate-90 duration-300"
-              >
-                <X size={16} />
-              </button>
-              <div className="p-12 text-center flex flex-col items-center justify-center">
-                <div className="w-20 h-20 bg-orange-50 rounded-3xl flex items-center justify-center text-orange-300 mb-6 border-2 border-dashed border-orange-200">
-                  <MapPin size={36} />
-                </div>
-                <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">
-                  {selectedDistrict} Tumani
-                </h3>
-                <p className="text-gray-400 font-medium text-sm max-w-[220px] leading-relaxed mb-8">
-                  Bu tumanga hozircha rasmiy ambassador biriktirilmagan.
-                </p>
+            {officialAmbassador ? (
+              <div className="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 animate-in zoom-in-95 duration-300">
+                {/* Close */}
                 <button
                   onClick={() => setSelectedDistrict(null)}
-                  className="px-8 py-3 bg-gray-900 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all"
+                  className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:bg-orange-600 transition-all hover:rotate-90 duration-300"
                 >
-                  Yopish
+                  <X size={16} />
                 </button>
+
+                {/* Hero image */}
+                <div className="relative h-72 w-full overflow-hidden bg-white">
+                  {officialAmbassador.image ? (
+                    <img
+                      src={officialAmbassador.image}
+                      alt={officialAmbassador.name}
+                      className="w-full h-full object-contain"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 flex items-center justify-center text-white font-black text-8xl uppercase">
+                      {officialAmbassador.name.charAt(0)}
+                    </div>
+                  )}
+                  {/* Gradient overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
+
+                  {/* Name over image */}
+                  <div className="absolute bottom-5 left-5 right-5">
+                    <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-tight">
+                      {officialAmbassador.name}
+                    </h3>
+                    <div className="flex items-center gap-1.5 mt-1 text-orange-300">
+                      <MapPin size={12} />
+                      <span className="text-[10px] font-bold uppercase tracking-widest">
+                        {selectedDistrict} tumani
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Body */}
+                <div className="p-5 space-y-4">
+                  {/* Phone */}
+                  {officialAmbassador.phone && (
+                    <a
+                      href={`tel:${officialAmbassador.phone}`}
+                      className="flex items-center gap-4 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-100 group hover:border-orange-300 transition-all"
+                    >
+                      <div className="w-10 h-10 rounded-xl bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-200 group-hover:scale-110 transition-transform">
+                        <Phone size={18} />
+                      </div>
+                      <div>
+                        <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest">
+                          Telefon
+                        </p>
+                        <p className="text-sm font-black text-gray-900 tracking-tight">
+                          {officialAmbassador.phone}
+                        </p>
+                      </div>
+                    </a>
+                  )}
+
+                  {/* Social links */}
+                  <div className="flex gap-2.5">
+                    {officialAmbassador.telegram && (
+                      <a
+                        href={`https://t.me/${officialAmbassador.telegram.replace("@", "")}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#26A5E4] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-md shadow-blue-100"
+                      >
+                        <Send size={14} />
+                        Telegram
+                      </a>
+                    )}
+                    {officialAmbassador.linkedin && (
+                      <a
+                        href={officialAmbassador.linkedin}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#0077B5] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-md shadow-blue-100"
+                      >
+                        <Linkedin size={14} />
+                        LinkedIn
+                      </a>
+                    )}
+                  </div>
+                </div>
               </div>
-            </div>
-          )}
-        </div>
-      )}
+            ) : (
+              /* No ambassador card */
+              <div className="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 animate-in zoom-in-95 duration-300">
+                <button
+                  onClick={() => setSelectedDistrict(null)}
+                  className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-orange-600 hover:text-white transition-all hover:rotate-90 duration-300"
+                >
+                  <X size={16} />
+                </button>
+                <div className="p-12 text-center flex flex-col items-center justify-center">
+                  <div className="w-20 h-20 bg-orange-50 rounded-3xl flex items-center justify-center text-orange-300 mb-6 border-2 border-dashed border-orange-200">
+                    <MapPin size={36} />
+                  </div>
+                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">
+                    {selectedDistrict} Tumani
+                  </h3>
+                  <p className="text-gray-400 font-medium text-sm max-w-[220px] leading-relaxed mb-8">
+                    Bu tumanga hozircha rasmiy ambassador biriktirilmagan.
+                  </p>
+                  <button
+                    onClick={() => setSelectedDistrict(null)}
+                    className="px-8 py-3 bg-gray-900 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all"
+                  >
+                    Yopish
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* District buttons */}
