@@ -140,6 +140,18 @@ const TashkentMap: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Prevent background scroll when modal is open
+  useEffect(() => {
+    if (selectedDistrict) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedDistrict]);
+
   const getOfficialAmbassador = (districtName: string): Ambassador | null => {
     const districtAmbs = ambassadors.filter((a) =>
       matchesDistrict(a.district, districtName),
