@@ -112,7 +112,7 @@ const matchesDistrict = (
 const TashkentMap: React.FC = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
   const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
-  const [ambassadorCount, setAmbassadorCount] = useState(1);
+  const [ambassadorCount, setAmbassadorCount] = useState(22);
   const mapContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -388,7 +388,7 @@ const TashkentMap: React.FC = () => {
       <div className="flex flex-wrap justify-center gap-8 mt-16">
         {[
           { label: "Tumanlar", val: 12 },
-          { label: "Ambassadorlar", val: `${ambassadorCount}+` },
+          { label: "Ambassadorlar", val: `${ambassadorCount}` },
         ].map((stat, i) => (
           <div
             key={i}
