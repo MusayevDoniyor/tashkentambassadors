@@ -68,5 +68,19 @@ export interface Department {
 export interface TeamStructure {
   overallLeader: Ambassador;
   deputyLeaders: Ambassador[];
-  departments: Department[];
+}
+
+export interface JobListing {
+  id: string;
+  startup_name: string;
+  founder_name: string;
+  phone: string;
+  telegram: string | null;
+  email: string | null;
+  description: string;
+  roles_needed: string[];
+  message: string | null;
+  status: string;
+  logo: string | null;
+  created_at: string;
 }

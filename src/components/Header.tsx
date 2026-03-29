@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Menu, X, ArrowRight } from "lucide-react";
+import { smoothScrollTo } from "../lib/utils";
 
 interface HeaderProps {
   activeTab: string;
@@ -30,14 +31,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     }
 
     if (location.pathname === "/") {
-      const element = document.getElementById(id);
-      if (element) {
-        const offset = 80;
-        const elementPosition =
-          element.getBoundingClientRect().top + window.pageYOffset;
-        const offsetPosition = elementPosition - offset;
-        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-      }
+      smoothScrollTo(id);
       navigate(path);
     } else {
       navigate(path);

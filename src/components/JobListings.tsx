@@ -11,42 +11,16 @@ import {
   Clock,
   ChevronDown,
   ChevronUp,
+  ChevronLeft,
+  ChevronRight,
   ExternalLink,
   ArrowRight,
   Plus,
 } from "lucide-react";
 
-interface JobListing {
-  id: string;
-  startup_name: string;
-  founder_name: string;
-  phone: string;
-  telegram: string | null;
-  email: string | null;
-  description: string;
-  roles_needed: string[];
-  message: string | null;
-  status: string;
-  logo: string | null;
-  created_at: string;
-}
-
-const formatDate = (dateStr: string) => {
-  const d = new Date(dateStr);
-  const now = new Date();
-  const diff = Math.floor((now.getTime() - d.getTime()) / 86400000);
-  if (diff === 0) return "Bugun";
-  if (diff === 1) return "Kecha";
-  if (diff < 7) return `${diff} kun oldin`;
-  return d.toLocaleDateString("uz-UZ", { day: "numeric", month: "long" });
-};
-
-const isNewListing = (dateStr: string) => {
-  const d = new Date(dateStr);
-  const now = new Date();
-  const diffHours = (now.getTime() - d.getTime()) / 3600000;
-  return diffHours < 48;
-};
+import { JobListing } from "../types";
+import { JobCard } from "./ui/JobCard";
+import { CustomSelect } from "./ui/CustomSelect";
 
 const JobListings: React.FC = () => {
   const [listings, setListings] = useState<JobListing[]>([]);
@@ -54,6 +28,13 @@ const JobListings: React.FC = () => {
   const [search, setSearch] = useState("");
   const [selectedRole, setSelectedRole] = useState("Barchasi");
   const [expandedId, setExpandedId] = useState<string | null>(null);
+
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 5;
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [search, selectedRole]);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -72,6 +53,11 @@ const JobListings: React.FC = () => {
     new Set(listings.flatMap((l) => l.roles_needed)),
   ).sort();
 
+  const roleOptions = [
+    { value: "Barchasi", label: "Barcha kasblar" },
+    ...allRoles.map((r) => ({ value: r, label: r })),
+  ];
+
   const filtered = listings.filter((l) => {
     const matchSearch =
       !search ||
@@ -85,9 +71,15 @@ const JobListings: React.FC = () => {
     return matchSearch && matchRole;
   });
 
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE);
+  const paginatedListings = filtered.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE,
+  );
+
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
-      <SEO 
+      <SEO
         title="Startup E'lonlar | Toshkent Startup Ekotizimi"
         description="Toshkentdagi startup loyihalarga qo'shiling. O'z mutaxassisligingiz bo'yicha e'lonlarni toping va qiziqarli loyihalarga a'zo bo'ling."
         canonical="https://startuptashkent.uz/elonlar"
@@ -109,7 +101,7 @@ const JobListings: React.FC = () => {
       </div>
 
       {/* Search & Filter Bar */}
-      <div className="flex flex-col md:flex-row gap-4 mb-12 bg-white/60 backdrop-blur-xl p-4 rounded-[2.5rem] border-2 border-orange-50 shadow-xl shadow-orange-100/20">
+      <div className="relative z-50 flex flex-col md:flex-row gap-4 mb-12 bg-white/60 backdrop-blur-xl p-4 rounded-[2.5rem] border-2 border-orange-50 shadow-xl shadow-orange-100/20">
         <div className="relative flex-1 group">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 group-focus-within:text-orange-500 w-5 h-5 transition-colors" />
           <input
@@ -128,20 +120,12 @@ const JobListings: React.FC = () => {
             </button>
           )}
         </div>
-        <div className="relative">
-          <select
+        <div className="w-full md:w-[220px]">
+          <CustomSelect
             value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="w-full md:w-auto bg-gray-50/50 border-2 border-transparent rounded-[1.5rem] py-4 pl-6 pr-12 text-sm font-bold focus:outline-none focus:border-orange-500 focus:bg-white transition-all appearance-none cursor-pointer text-gray-700 min-w-[220px]"
-          >
-            <option value="Barchasi">Barcha kasblar</option>
-            {allRoles.map((r) => (
-              <option key={r} value={r}>
-                {r}
-              </option>
-            ))}
-          </select>
-          <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none w-4 h-4" />
+            onChange={setSelectedRole}
+            options={roleOptions}
+          />
         </div>
       </div>
 
@@ -188,235 +172,64 @@ const JobListings: React.FC = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 gap-6">
-            {filtered.map((listing) => {
-              const isExpanded = expandedId === listing.id;
-              const isNew = isNewListing(listing.created_at);
-              return (
-                <div
-                  key={listing.id}
-                  className={`bg-white rounded-[2.5rem] border-2 transition-all duration-500 overflow-hidden group ${
-                    isExpanded
-                      ? "border-orange-200 shadow-2xl scale-[1.01]"
-                      : "border-gray-50 hover:border-orange-100 hover:shadow-xl shadow-sm"
-                  }`}
+          <div>
+            <div className="grid grid-cols-1 gap-6 items-start">
+              {paginatedListings.map((listing) => {
+                const isExpanded = expandedId === listing.id;
+                return (
+                  <JobCard
+                    key={listing.id}
+                    listing={listing}
+                    isExpanded={isExpanded}
+                    onToggle={() =>
+                      setExpandedId(isExpanded ? null : listing.id)
+                    }
+                  />
+                );
+              })}
+            </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center space-x-2 mt-12 bg-white/50 backdrop-blur-sm p-2 rounded-2xl w-max mx-auto border border-gray-100 shadow-sm">
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(prev - 1, 1))
+                  }
+                  disabled={currentPage === 1}
+                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 hover:text-orange-600 hover:border-orange-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  <div className="p-1">
-                    <div
-                      className="flex flex-col sm:flex-row items-start sm:items-center p-7 cursor-pointer"
-                      onClick={() =>
-                        setExpandedId(isExpanded ? null : listing.id)
-                      }
-                    >
-                      {/* Company Info */}
-                      <div className="flex items-center space-x-5 flex-1 min-w-0 mb-6 sm:mb-0">
-                        <div className="relative shrink-0">
-                          {listing.logo ? (
-                            <img
-                              src={listing.logo}
-                              className="w-16 h-16 rounded-3xl object-cover shadow-lg shadow-orange-100 group-hover:rotate-3 transition-transform border border-orange-50 bg-white"
-                              alt={listing.startup_name}
-                            />
-                          ) : (
-                            <div className="w-16 h-16 rounded-3xl bg-gradient-to-br from-orange-400 to-amber-500 flex items-center justify-center text-white font-black text-3xl uppercase shadow-lg shadow-orange-100 group-hover:rotate-3 transition-transform">
-                              {listing.startup_name.charAt(0)}
-                            </div>
-                          )}
-                          {isNew && (
-                            <div className="absolute -top-2 -right-2 bg-green-500 text-white text-[8px] font-black px-2 py-1 rounded-lg uppercase tracking-widest shadow-md">
-                              Yangi
-                            </div>
-                          )}
-                        </div>
-                        <div className="min-w-0">
-                          <h2 className="text-xl md:text-2xl font-black text-gray-900 uppercase tracking-tighter group-hover:text-orange-600 transition-colors truncate mb-1">
-                            {listing.startup_name}
-                          </h2>
-                          <div className="flex items-center space-x-3">
-                            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">
-                              {listing.founder_name}
-                            </span>
-                            <span className="w-1 h-1 rounded-full bg-gray-200"></span>
-                            <div className="flex items-center space-x-1 text-gray-300">
-                              <Clock size={12} />
-                              <span className="text-[9px] font-bold">
-                                {formatDate(listing.created_at)}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                  <ChevronLeft size={18} />
+                </button>
 
-                      {/* Role Preview Tags */}
-                      <div className="flex flex-wrap gap-2 items-center sm:ml-4 sm:mr-8 max-w-xs justify-start sm:justify-end">
-                        {listing.roles_needed.slice(0, 2).map((role, i) => (
-                          <span
-                            key={i}
-                            className="px-3 py-1.5 bg-orange-50/50 text-orange-700 rounded-xl text-[9px] font-black uppercase tracking-widest border border-orange-100 group-hover:bg-orange-50 transition-colors"
-                          >
-                            {role}
-                          </span>
-                        ))}
-                        {listing.roles_needed.length > 2 && (
-                          <span className="px-2 py-1.5 bg-gray-50 text-gray-400 rounded-xl text-[9px] font-black uppercase">
-                            +{listing.roles_needed.length - 2}
-                          </span>
-                        )}
-                        <div className="sm:hidden w-full h-px bg-gray-50 my-4"></div>
-                        <div
-                          className={`w-10 h-10 rounded-2xl flex items-center justify-center transition-all ${isExpanded ? "bg-orange-600 text-white rotate-180" : "bg-gray-50 text-gray-300 group-hover:bg-orange-50 group-hover:text-orange-600"}`}
-                        >
-                          <ChevronDown size={18} />
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Expandable Detail Section */}
-                    {isExpanded && (
-                      <div className="overflow-hidden">
-                        <div className="p-8 pt-2 border-t border-gray-50 bg-gray-50/30">
-                          <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-                            <div className="lg:col-span-2 space-y-8">
-                              <div>
-                                <div className="flex items-center space-x-2 mb-4">
-                                  <div className="w-1 h-4 bg-orange-600 rounded-full"></div>
-                                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
-                                    Startup haqida batafsil
-                                  </h4>
-                                </div>
-                                <p className="text-gray-700 text-sm md:text-base font-medium leading-relaxed">
-                                  {listing.description}
-                                </p>
-                              </div>
-
-                              <div>
-                                <div className="flex items-center space-x-2 mb-4">
-                                  <div className="w-1 h-4 bg-orange-600 rounded-full"></div>
-                                  <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em]">
-                                    Mutaxassislikka talablar
-                                  </h4>
-                                </div>
-                                <div className="flex flex-wrap gap-2">
-                                  {listing.roles_needed.map((role, i) => (
-                                    <span
-                                      key={i}
-                                      className="px-4 py-2 bg-white text-orange-700 rounded-2xl text-[10px] font-black uppercase tracking-widest border border-orange-100 shadow-sm"
-                                    >
-                                      {role}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-
-                              {listing.message && (
-                                <div className="bg-amber-50/80 rounded-3xl p-6 border border-amber-100 relative overflow-hidden">
-                                  <div className="absolute top-0 right-0 p-2 opacity-10">
-                                    <Rocket size={40} />
-                                  </div>
-                                  <h4 className="text-[9px] font-black text-amber-600 uppercase tracking-[0.2em] mb-3">
-                                    Asoschidan xabar
-                                  </h4>
-                                  <p className="text-gray-600 text-sm font-bold italic leading-relaxed">
-                                    "{listing.message}"
-                                  </p>
-                                </div>
-                              )}
-                            </div>
-
-                            <div className="space-y-6">
-                              <div className="bg-white rounded-3xl p-6 border border-orange-100 shadow-sm">
-                                <h4 className="text-[10px] font-black text-gray-400 uppercase tracking-[0.2em] mb-6">
-                                  Bog'lanish uchun
-                                </h4>
-                                <div className="space-y-4">
-                                  {listing.telegram && (
-                                    <a
-                                      href={`https://t.me/${listing.telegram.replace("@", "")}`}
-                                      target="_blank"
-                                      rel="noopener noreferrer"
-                                      className="flex items-center justify-between group/link bg-gray-50 p-4 rounded-2xl hover:bg-orange-600 hover:text-white transition-all duration-300"
-                                    >
-                                      <div className="flex items-center space-x-3">
-                                        <Send
-                                          size={18}
-                                          className="text-orange-600 group-hover/link:text-white"
-                                        />
-                                        <span className="text-xs font-black uppercase tracking-widest">
-                                          Telegram
-                                        </span>
-                                      </div>
-                                      <ExternalLink
-                                        size={14}
-                                        className="opacity-0 group-hover/link:opacity-100 transition-opacity"
-                                      />
-                                    </a>
-                                  )}
-                                  {listing.phone && (
-                                    <a
-                                      href={`tel:${listing.phone}`}
-                                      className="flex items-center space-x-3 bg-gray-50 p-4 rounded-2xl hover:bg-gray-100 transition-colors w-full"
-                                    >
-                                      <Phone
-                                        size={18}
-                                        className="text-gray-400"
-                                      />
-                                      <div className="flex flex-col">
-                                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">
-                                          Telefon
-                                        </span>
-                                        <span className="text-xs font-black text-gray-900">
-                                          {listing.phone}
-                                        </span>
-                                      </div>
-                                    </a>
-                                  )}
-                                  {listing.email && (
-                                    <a
-                                      href={`mailto:${listing.email}`}
-                                      className="flex items-center space-x-3 bg-gray-50 p-4 rounded-2xl hover:bg-gray-100 transition-colors w-full"
-                                    >
-                                      <Mail
-                                        size={18}
-                                        className="text-gray-400"
-                                      />
-                                      <div className="flex flex-col">
-                                        <span className="text-[8px] font-black text-gray-400 uppercase tracking-widest">
-                                          Email
-                                        </span>
-                                        <span className="text-xs font-black text-gray-900 truncate max-w-[150px]">
-                                          {listing.email}
-                                        </span>
-                                      </div>
-                                    </a>
-                                  )}
-                                </div>
-                              </div>
-
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  if (listing.telegram)
-                                    window.open(
-                                      `https://t.me/${listing.telegram.replace("@", "")}`,
-                                      "_blank",
-                                    );
-                                  else if (listing.phone)
-                                    window.open(`tel:${listing.phone}`);
-                                }}
-                                className="w-full bg-orange-600 text-white py-5 rounded-3xl font-black uppercase tracking-[0.2em] text-xs shadow-xl shadow-orange-100 hover:bg-orange-700 transition-all flex items-center justify-center space-x-3"
-                              >
-                                <span>Loyiha bilan tanishish</span>
-                                <ArrowRight size={16} />
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                <div className="flex items-center px-2 space-x-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(
+                    (page) => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`w-10 h-10 rounded-xl font-bold transition-all text-sm ${
+                          currentPage === page
+                            ? "bg-orange-600 text-white shadow-lg shadow-orange-200"
+                            : "text-gray-500 hover:bg-orange-50 hover:text-orange-600"
+                        }`}
+                      >
+                        {page}
+                      </button>
+                    ),
+                  )}
                 </div>
-              );
-            })}
+
+                <button
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+                  }
+                  disabled={currentPage === totalPages}
+                  className="w-10 h-10 flex items-center justify-center rounded-xl bg-white border border-gray-100 text-gray-400 hover:text-orange-600 hover:border-orange-200 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ChevronRight size={18} />
+                </button>
+              </div>
+            )}
           </div>
         )}
       </div>

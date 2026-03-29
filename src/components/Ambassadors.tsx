@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { MapPin, Send, Search, X, Users, Star, Crown } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import { CustomSelect } from "./ui/CustomSelect";
 
 interface Ambassador {
   id: string;
@@ -30,6 +31,8 @@ const DISTRICTS = [
   "Bektemir",
   "Yangihayot",
 ];
+
+const districtOptions = DISTRICTS.map(d => ({ value: d, label: d }));
 
 const Ambassadors: React.FC = () => {
   const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
@@ -90,7 +93,7 @@ const Ambassadors: React.FC = () => {
       </div>
 
       {/* Search & Filter Section */}
-      <div className="mb-16 flex flex-col md:flex-row gap-4 items-center justify-center px-4">
+      <div className="relative z-50 mb-16 flex flex-col md:flex-row gap-4 items-center justify-center px-4">
         <div className="relative w-full max-w-md">
           <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-orange-300 w-5 h-5" />
           <input
@@ -110,17 +113,13 @@ const Ambassadors: React.FC = () => {
           )}
         </div>
 
-        <select
-          value={selectedDistrict}
-          onChange={(e) => setSelectedDistrict(e.target.value)}
-          className="bg-white border-2 border-orange-50 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 shadow-sm transition-all appearance-none cursor-pointer text-gray-700 min-w-[200px]"
-        >
-          {DISTRICTS.map((d) => (
-            <option key={d} value={d}>
-              {d}
-            </option>
-          ))}
-        </select>
+        <div className="w-full md:w-[200px]">
+          <CustomSelect
+            value={selectedDistrict}
+            onChange={setSelectedDistrict}
+            options={districtOptions}
+          />
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 md:gap-12 justify-center">

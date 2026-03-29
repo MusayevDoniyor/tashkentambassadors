@@ -11,6 +11,23 @@ import {
   Check,
 } from "lucide-react";
 
+import { CustomSelect } from "./ui/CustomSelect";
+
+const DISTRICT_OPTIONS = [
+  { value: "Yunusobod", label: "Yunusobod" },
+  { value: "Yashnobod", label: "Yashnobod" },
+  { value: "Yakkasaroy", label: "Yakkasaroy" },
+  { value: "Uchtepa", label: "Uchtepa" },
+  { value: "Shayxontohur", label: "Shayxontohur" },
+  { value: "Olmazor", label: "Olmazor" },
+  { value: "Mirzo Ulug'bek", label: "Mirzo Ulug'bek" },
+  { value: "Mirobod", label: "Mirobod" },
+  { value: "Chilonzor", label: "Chilonzor" },
+  { value: "Sergeli", label: "Sergeli" },
+  { value: "Bektemir", label: "Bektemir" },
+  { value: "Yangihayot", label: "Yangihayot" }
+];
+
 interface Event {
   id: string;
   title: string;
@@ -391,28 +408,13 @@ const Events: React.FC = () => {
                     <label className="block text-[10px] font-black uppercase tracking-widest text-gray-400 mb-2 ml-1">
                       Tuman
                     </label>
-                    <select
-                      required
-                      className="w-full px-6 py-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-orange-500/20 focus:border-orange-500 transition-all font-bold appearance-none"
+                    <CustomSelect
                       value={regData.district}
-                      onChange={(e) =>
-                        setRegData({ ...regData, district: e.target.value })
-                      }
-                    >
-                      <option value="">Tumanni tanlang</option>
-                      <option value="Yunusobod">Yunusobod</option>
-                      <option value="Yashnobod">Yashnobod</option>
-                      <option value="Yakkasaroy">Yakkasaroy</option>
-                      <option value="Uchtepa">Uchtepa</option>
-                      <option value="Shayxontohur">Shayxontohur</option>
-                      <option value="Olmazor">Olmazor</option>
-                      <option value="Mirzo Ulug'bek">Mirzo Ulug'bek</option>
-                      <option value="Mirobod">Mirobod</option>
-                      <option value="Chilonzor">Chilonzor</option>
-                      <option value="Sergeli">Sergeli</option>
-                      <option value="Bektemir">Bektemir</option>
-                      <option value="Yangihayot">Yangihayot</option>
-                    </select>
+                      onChange={(val) => setRegData({ ...regData, district: val })}
+                      options={DISTRICT_OPTIONS}
+                      placeholder="Tumanni tanlang"
+                      className="w-full"
+                    />
                   </div>
                   <button
                     type="submit"

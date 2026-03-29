@@ -18,6 +18,9 @@ import {
   Plus,
 } from "lucide-react";
 import { Variants } from "framer-motion";
+import { JobListing } from "../types";
+import { formatDate } from "../lib/utils";
+
 const ROLES_NEEDED = [
   "Frontend Developer",
   "Backend Developer",
@@ -33,30 +36,6 @@ const ROLES_NEEDED = [
   "AI Engineer",
   "Boshqa",
 ];
-
-interface JobListing {
-  id: string;
-  startup_name: string;
-  founder_name: string;
-  phone: string;
-  telegram: string | null;
-  email: string | null;
-  description: string;
-  roles_needed: string[];
-  message: string | null;
-  status: string;
-  logo: string | null;
-  created_at: string;
-}
-
-const formatDate = (dateStr: string) => {
-  const d = new Date(dateStr);
-  return d.toLocaleDateString("uz-UZ", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-};
 
 const TeamRequest: React.FC = () => {
   const [step, setStep] = useState(1);
@@ -719,9 +698,17 @@ const TeamRequest: React.FC = () => {
                 className="bg-white rounded-[2.5rem] p-8 border-2 border-orange-50 hover:border-orange-200 transition-all shadow-sm"
               >
                 <div className="flex items-center justify-between mb-6">
-                  <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 font-black text-xl uppercase">
-                    {listing.startup_name.charAt(0)}
-                  </div>
+                  {listing.logo ? (
+                    <img
+                      src={listing.logo}
+                      alt={listing.startup_name}
+                      className="w-12 h-12 rounded-2xl object-cover border border-orange-50 bg-white shadow-sm"
+                    />
+                  ) : (
+                    <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center text-orange-600 font-black text-xl uppercase shadow-sm">
+                      {listing.startup_name.charAt(0)}
+                    </div>
+                  )}
                   <div className="flex flex-col items-end">
                     <span className="text-[8px] font-black text-gray-300 uppercase tracking-widest">
                       {formatDate(listing.created_at)}
