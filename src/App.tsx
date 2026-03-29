@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
+import { Helmet } from "react-helmet-async";
+import SEO from "./components/SEO";
 import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
@@ -106,6 +108,25 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white relative font-sans overflow-x-hidden">
+      <SEO 
+        title="Startup Ambassadors Tashkent | Toshkent Startup Ekotizimi"
+        description="Toshkent startup ekotizimini rivojlantirish bo'yicha Yoshlar ishlari agentligi va Yoshlar Ventures tomonidan qo'llab-quvvatlanuvchi rasmiy platforma."
+        canonical="https://startuptashkent.uz/"
+      />
+      <Helmet>
+        <script type="application/ld+json">
+          {`
+            {
+              "@context": "https://schema.org",
+              "@type": "Organization",
+              "name": "Startup Ambassadors Tashkent",
+              "url": "https://startuptashkent.uz/",
+              "logo": "https://startuptashkent.uz/AVA.jpg",
+              "description": "Toshkent startup ekotizimini rivojlantirish bo'yicha Yoshlar ishlari agentligi va Yoshlar Ventures tomonidan qo'llab-quvvatlanuvchi rasmiy platforma."
+            }
+          `}
+        </script>
+      </Helmet>
       <BackgroundLayer />
 
       <div className="relative z-10 flex flex-col min-h-screen">

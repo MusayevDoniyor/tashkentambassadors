@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import SEO from "./SEO";
 import { supabase } from "../lib/supabase";
 import {
   Rocket,
@@ -86,6 +87,11 @@ const JobListings: React.FC = () => {
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-32">
+      <SEO 
+        title="Startup E'lonlar | Toshkent Startup Ekotizimi"
+        description="Toshkentdagi startup loyihalarga qo'shiling. O'z mutaxassisligingiz bo'yicha e'lonlarni toping va qiziqarli loyihalarga a'zo bo'ling."
+        canonical="https://startuptashkent.uz/elonlar"
+      />
       {/* Header Section */}
       <div className="text-center mb-16 py-10 relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-orange-50/50 to-white border-2 border-orange-50">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-64 h-64 bg-orange-100/30 rounded-full blur-3xl -z-10 -mt-32"></div>
