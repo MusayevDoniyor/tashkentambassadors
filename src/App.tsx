@@ -111,7 +111,7 @@ const App: React.FC = () => {
       <SEO 
         title="Startup Ambassadors Tashkent | Toshkent Startup Ekotizimi"
         description="Toshkent startup ekotizimini rivojlantirish bo'yicha Yoshlar ishlari agentligi va Yoshlar Ventures tomonidan qo'llab-quvvatlanuvchi rasmiy platforma."
-        canonical="https://startuptashkent.uz/"
+        canonical="https://www.startuptashkent.uz/"
       />
       <Helmet>
         <script type="application/ld+json">
@@ -120,8 +120,8 @@ const App: React.FC = () => {
               "@context": "https://schema.org",
               "@type": "Organization",
               "name": "Startup Ambassadors Tashkent",
-              "url": "https://startuptashkent.uz/",
-              "logo": "https://startuptashkent.uz/AVA.jpg",
+              "url": "https://www.startuptashkent.uz/",
+              "logo": "https://www.startuptashkent.uz/AVA.jpg",
               "description": "Toshkent startup ekotizimini rivojlantirish bo'yicha Yoshlar ishlari agentligi va Yoshlar Ventures tomonidan qo'llab-quvvatlanuvchi rasmiy platforma."
             }
           `}
