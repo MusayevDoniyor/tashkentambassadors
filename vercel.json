@@ -5,10 +5,10 @@
       "has": [
         {
           "type": "host",
-          "value": "www.startuptashkent.uz"
+          "value": "startuptashkent.uz"
         }
       ],
-      "destination": "https://startuptashkent.uz/$1",
+      "destination": "https://www.startuptashkent.uz/$1",
       "permanent": true
     }
   ],
