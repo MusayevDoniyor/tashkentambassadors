@@ -7,9 +7,17 @@ interface SEOProps {
   name?: string;
   type?: string;
   canonical?: string;
+  image?: string;
 }
 
-export default function SEO({ title, description, name = "Startup Ambassadors Tashkent", type = "website", canonical }: SEOProps) {
+export default function SEO({ 
+  title, 
+  description, 
+  name = "Startup Ambassadors Tashkent", 
+  type = "website", 
+  canonical, 
+  image = "/AVA.jpg" 
+}: SEOProps) {
   return (
     <Helmet>
       {/* Standard metadata tags */}
@@ -23,12 +31,14 @@ export default function SEO({ title, description, name = "Startup Ambassadors Ta
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
       {canonical && <meta property="og:url" content={canonical} />}
+      <meta property="og:image" content={image} />
       
       {/* Twitter tags */}
       <meta name="twitter:creator" content={name} />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
+      <meta name="twitter:image" content={image} />
     </Helmet>
   );
 }

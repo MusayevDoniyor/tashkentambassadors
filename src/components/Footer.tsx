@@ -1,23 +1,18 @@
-import React from "react";
 import { Send, Instagram, ExternalLink, MessageCircle } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Footer: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const handleNavClick = (id: string, path: string) => {
-    if (window.location.pathname === "/") {
-      const element = document.getElementById(id);
-      if (element) {
-        const offset = 80;
-        const elementPosition =
-          element.getBoundingClientRect().top + window.pageYOffset;
-        const offsetPosition = elementPosition - offset;
-        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
-      }
-      navigate(path);
-    } else {
-      navigate(path);
+  const handleScroll = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      const offset = 80;
+      const elementPosition =
+        element.getBoundingClientRect().top + window.pageYOffset;
+      const offsetPosition = elementPosition - offset;
+      window.scrollTo({ top: offsetPosition, behavior: "smooth" });
     }
   };
 
@@ -27,11 +22,13 @@ const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand */}
           <div className="space-y-6">
-            <img
-              src="/White.png"
-              alt="Startup Ambassadors Tashkent"
-              className="h-10 object-contain"
-            />
+            <Link to="/">
+              <img
+                src="/White.png"
+                alt="Startup Ambassadors Tashkent"
+                className="h-10 object-contain"
+              />
+            </Link>
             <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
               Toshkent shahar yoshlarining startup va innovatsion g'oyalarini
               rivojlantirish uchun tuzilgan yagona rasmiy platforma.
@@ -43,44 +40,68 @@ const Footer: React.FC = () => {
             <h4 className="text-white font-bold text-lg mb-6">Navigatsiya</h4>
             <ul className="space-y-4 text-gray-400 text-sm">
               <li>
-                <button
-                  onClick={() => handleNavClick("home", "/")}
+                <Link
+                  to="/"
+                  onClick={(e) => {
+                    if (location.pathname === "/") {
+                      e.preventDefault();
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }
+                  }}
                   className="hover:text-orange-500 transition-colors"
                 >
                   Asosiy
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick("about", "/#about")}
+                <Link
+                  to="/#about"
+                  onClick={(e) => {
+                    if (location.pathname === "/") {
+                      e.preventDefault();
+                      handleScroll("about");
+                    }
+                  }}
                   className="hover:text-orange-500 transition-colors"
                 >
                   Biz haqimizda
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick("ambassadors", "/#ambassadors")}
+                <Link
+                  to="/#ambassadors"
+                  onClick={(e) => {
+                    if (location.pathname === "/") {
+                      e.preventDefault();
+                      handleScroll("ambassadors");
+                    }
+                  }}
                   className="hover:text-orange-500 transition-colors"
                 >
                   Ambassadorlar
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => handleNavClick("events", "/#events")}
+                <Link
+                  to="/#events"
+                  onClick={(e) => {
+                    if (location.pathname === "/") {
+                      e.preventDefault();
+                      handleScroll("events");
+                    }
+                  }}
                   className="hover:text-orange-500 transition-colors"
                 >
                   Tadbirlar
-                </button>
+                </Link>
               </li>
               <li>
-                <button
-                  onClick={() => navigate("/request")}
+                <Link
+                  to="/request"
                   className="hover:text-orange-500 transition-colors"
                 >
                   Jamoa kerak
-                </button>
+                </Link>
               </li>
             </ul>
           </div>

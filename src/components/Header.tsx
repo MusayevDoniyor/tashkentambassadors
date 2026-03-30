@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { smoothScrollTo } from "../lib/utils";
 
@@ -19,29 +19,6 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     { id: "ambassadors", label: "Ambassadorlar", path: "/#ambassadors" },
     { id: "events", label: "Tadbirlar", path: "/#events" },
   ];
-
-  const handleNavClick = (id: string, path: string) => {
-    setActiveTab(id);
-    setIsMenuOpen(false);
-
-    if (id === "home" && location.pathname === "/") {
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      navigate("/");
-      return;
-    }
-
-    if (location.pathname === "/") {
-      smoothScrollTo(id);
-      navigate(path);
-    } else {
-      navigate(path);
-    }
-  };
-
-  const handleRequestClick = () => {
-    setIsMenuOpen(false);
-    navigate("/request");
-  };
 
   useEffect(() => {
     const currentPath = location.pathname;
@@ -68,23 +45,37 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
       <nav className="max-w-7xl mx-auto bg-white border border-gray-100 h-20 md:h-22 flex items-center shadow-xl rounded-tl-[3rem] rounded-br-[3rem] rounded-tr-[0.5rem] rounded-bl-[0.5rem] relative overflow-hidden">
         <div className="w-full px-6 md:px-10 flex justify-between items-center relative z-10">
           {/* Logo */}
-          <div
+          <Link
+            to="/"
             className="flex items-center cursor-pointer group"
-            onClick={() => handleNavClick("home", "/")}
+            onClick={(e) => {
+              if (location.pathname === "/") {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+                setActiveTab("home");
+              }
+            }}
           >
             <img
               src="/Black.png"
               alt="Logo"
               className="h-8 md:h-10 object-contain transition-transform group-hover:scale-105"
             />
-          </div>
+          </Link>
 
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-6 lg:space-x-10">
             {navItems.map((item) => (
-              <button
+              <Link
                 key={item.id}
-                onClick={() => handleNavClick(item.id, item.path)}
+                to={item.path}
+                onClick={(e) => {
+                  if (item.path.startsWith("/#") && location.pathname === "/") {
+                    e.preventDefault();
+                    smoothScrollTo(item.id);
+                    setActiveTab(item.id);
+                  }
+                }}
                 className={`text-sm font-bold transition-all px-4 py-2 rounded-xl relative group ${
                   activeTab === item.id && !isOnRequestPage
                     ? "text-orange-600 bg-orange-50/50"
@@ -95,11 +86,11 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                 {activeTab === item.id && !isOnRequestPage && (
                   <span className="absolute bottom-1 left-4 right-4 h-0.5 bg-orange-600 rounded-full"></span>
                 )}
-              </button>
+              </Link>
             ))}
             {/* Jamoa kerak - special link */}
-            <button
-              onClick={handleRequestClick}
+            <Link
+              to="/request"
               className={`text-sm font-bold transition-all relative py-2 px-3 rounded-xl ${
                 isOnRequestPage
                   ? "text-white bg-orange-600"
@@ -107,7 +98,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               }`}
             >
               Jamoa kerak
-            </button>
+            </Link>
           </div>
 
           {/* Action Button */}
@@ -145,9 +136,17 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
       >
         <div className="flex flex-col p-6 space-y-3">
           {navItems.map((item) => (
-            <button
+            <Link
               key={item.id}
-              onClick={() => handleNavClick(item.id, item.path)}
+              to={item.path}
+              onClick={(e) => {
+                setIsMenuOpen(false);
+                if (item.path.startsWith("/#") && location.pathname === "/") {
+                  e.preventDefault();
+                  smoothScrollTo(item.id);
+                  setActiveTab(item.id);
+                }
+              }}
               className={`text-sm font-black uppercase tracking-widest text-left py-2.5 px-4 rounded-xl transition-colors ${
                 activeTab === item.id && !isOnRequestPage
                   ? "text-orange-600 bg-orange-50"
@@ -155,10 +154,11 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
               }`}
             >
               {item.label}
-            </button>
+            </Link>
           ))}
-          <button
-            onClick={handleRequestClick}
+          <Link
+            to="/request"
+            onClick={() => setIsMenuOpen(false)}
             className={`text-sm font-black uppercase tracking-widest text-left py-2.5 px-4 rounded-xl transition-colors ${
               isOnRequestPage
                 ? "text-white bg-orange-600"
@@ -166,7 +166,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             }`}
           >
             Jamoa kerak
-          </button>
+          </Link>
           <a
             href="https://t.me/ambassadorsadmin"
             target="_blank"
