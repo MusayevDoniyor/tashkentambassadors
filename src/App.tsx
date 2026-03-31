@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Suspense, lazy } from "react";
 import { Routes, Route, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import SEO from "./components/SEO";
@@ -7,11 +7,23 @@ import Hero from "./components/Hero";
 import About from "./components/About";
 import TashkentMap from "./components/TashkentMap";
 import Events from "./components/Events";
-import TeamRequest from "./components/TeamRequest";
-import JobListings from "./components/JobListings";
 import Footer from "./components/Footer";
 import NotFound from "./components/NotFound";
 import { ArrowUp } from "lucide-react";
+
+// Lazy load heavy components
+const TeamRequest = lazy(() => import("./components/TeamRequest"));
+const JobListings = lazy(() => import("./components/JobListings"));
+
+// Loading spinner component
+const PageLoader = () => (
+  <div className="flex flex-col items-center justify-center py-32 space-y-4">
+    <div className="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+    <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest animate-pulse">
+      Sahifa yuklanmoqda...
+    </span>
+  </div>
+);
 
 const gridStyle = {
   backgroundImage: `
@@ -108,7 +120,7 @@ const App: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-white relative font-sans overflow-x-hidden">
-      <SEO 
+      <SEO
         title="Startup Ambassadors Tashkent | Toshkent Startup Ekotizimi"
         description="Toshkent startup ekotizimini rivojlantirish bo'yicha Yoshlar ishlari agentligi va Yoshlar Ventures tomonidan qo'llab-quvvatlanuvchi rasmiy platforma."
         canonical="https://www.startuptashkent.uz/"
@@ -121,7 +133,7 @@ const App: React.FC = () => {
               "@type": "Organization",
               "name": "Startup Ambassadors Tashkent",
               "url": "https://www.startuptashkent.uz/",
-              "logo": "https://www.startuptashkent.uz/AVA.jpg",
+              "logo": "https://www.startuptashkent.uz/AVA.png",
               "description": "Toshkent startup ekotizimini rivojlantirish bo'yicha Yoshlar ishlari agentligi va Yoshlar Ventures tomonidan qo'llab-quvvatlanuvchi rasmiy platforma."
             }
           `}
@@ -138,17 +150,21 @@ const App: React.FC = () => {
             <Route
               path="/request"
               element={
-                <section className="py-16 md:py-28 relative">
-                  <TeamRequest />
-                </section>
+                <Suspense fallback={<PageLoader />}>
+                  <section className="py-16 md:py-28 relative">
+                    <TeamRequest />
+                  </section>
+                </Suspense>
               }
             />
             <Route
               path="/elonlar"
               element={
-                <section className="py-16 md:py-28 relative">
-                  <JobListings />
-                </section>
+                <Suspense fallback={<PageLoader />}>
+                  <section className="py-16 md:py-28 relative">
+                    <JobListings />
+                  </section>
+                </Suspense>
               }
             />
             <Route path="*" element={<NotFound />} />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { ArrowUpRight, BookOpen, X, Calendar, ArrowRight } from "lucide-react";
 import { supabase } from "../lib/supabase";
+import SEO from "./SEO";
 
 interface BlogPost {
   id: string;
@@ -114,6 +115,13 @@ const BlogDetail: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-[#FBFCFE] flex flex-col relative">
+      <SEO
+        title={`${post.title} | Blog | Startup Ambassadors`}
+        description={post.excerpt}
+        image={post.image || "/AVA.png"}
+        canonical={`https://www.startuptashkent.uz/blog/${slug}`}
+      />
+
       {/* Detailed View Header / Breadcrumbs - Fixed Z-Index and Sticky */}
       <div className="bg-white/80 backdrop-blur-md border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-12 z-40 shadow-sm rounded-2xl mx-4 lg:mx-8 my-4 transition-all duration-300">
         <div className="flex items-center space-x-4">
@@ -128,11 +136,17 @@ const BlogDetail: React.FC = () => {
             <span>Orqaga</span>
           </button>
           <div className="hidden md:flex items-center space-x-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-            <Link to="/" className="hover:text-gray-900 transition-colors">
+            <Link
+              to="/"
+              className="hover:text-gray-900 transition-colors pointer-events-auto"
+            >
               Asosiy
             </Link>
             <span>/</span>
-            <Link to="/#blog" className="hover:text-gray-900 transition-colors">
+            <Link
+              to="/#blog"
+              className="hover:text-gray-900 transition-colors pointer-events-auto"
+            >
               Blog
             </Link>
             <span>/</span>

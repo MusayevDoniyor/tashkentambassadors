@@ -46,7 +46,8 @@ const About: React.FC = () => {
           <div className="relative rounded-[2.5rem] overflow-hidden shadow-2xl border-8 border-white group aspect-square sm:aspect-[4/5] lg:aspect-auto lg:h-[550px]">
             <img
               src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=1000"
-              alt="Startup Jamoa"
+              alt="Tashkent Startup Ambassadors jamoasi hamkorlikda ishlamoqda"
+              loading="lazy"
               className="absolute inset-0 w-full h-full object-cover transition-all duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent"></div>

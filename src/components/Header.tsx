@@ -58,7 +58,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
           >
             <img
               src="/Black.png"
-              alt="Logo"
+              alt="Startup Ambassadors Tashkent Logo"
               className="h-8 md:h-10 object-contain transition-transform group-hover:scale-105"
             />
           </Link>

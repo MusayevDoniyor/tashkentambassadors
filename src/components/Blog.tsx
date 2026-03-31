@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { ArrowUpRight, BookOpen, Calendar, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import SEO from "./SEO";
 
 interface BlogPost {
   id: string;
@@ -56,14 +57,24 @@ const Blog: React.FC = () => {
 
   const featuredPost = filteredPosts[0];
   const otherPosts = filteredPosts.slice(1);
-  return (
-    <div className="py-20 text-center font-black text-orange-600">
-      BLOG YUKLANMOQDA...
-    </div>
-  );
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-32 space-y-4">
+        <div className="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
+        <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest animate-pulse">
+          Blog yuklanmoqda...
+        </span>
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SEO
+        title="Startup Blog | Toshkent Startup Ekotizimi"
+        description="Toshkent startup ekotizimidagi eng so'nggi yangiliklar, foydali maqolalar va intervyular. Biz bilan birga rivojlaning."
+        canonical="https://www.startuptashkent.uz/blog"
+      />
       {/* Featured Header Section */}
       <div className="flex flex-col md:flex-row items-center justify-between mb-12 gap-4">
         <div className="flex items-center space-x-2 text-sm font-bold text-gray-400">

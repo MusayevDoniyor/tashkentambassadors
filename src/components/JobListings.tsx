@@ -82,7 +82,7 @@ const JobListings: React.FC = () => {
       <SEO
         title="Startup E'lonlar | Toshkent Startup Ekotizimi"
         description="Toshkentdagi startup loyihalarga qo'shiling. O'z mutaxassisligingiz bo'yicha e'lonlarni toping va qiziqarli loyihalarga a'zo bo'ling."
-        canonical="https://startuptashkent.uz/elonlar"
+        canonical="https://www.startuptashkent.uz/elonlar"
       />
       {/* Header Section */}
       <div className="text-center mb-16 py-10 relative overflow-hidden rounded-[3rem] bg-gradient-to-br from-orange-50/50 to-white border-2 border-orange-50">

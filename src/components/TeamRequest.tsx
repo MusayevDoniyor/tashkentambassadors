@@ -206,7 +206,7 @@ const TeamRequest: React.FC = () => {
   if (isSubmitted) {
     return (
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SEO 
+        <SEO
           title="Yuborildi | Toshkent Startup Ekotizimi"
           description="E'loningiz muvaffaqiyatli yuborildi."
         />
@@ -267,10 +267,10 @@ const TeamRequest: React.FC = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <SEO 
+      <SEO
         title="Jamoa Kerak | Toshkent Startup Ekotizimi"
         description="Toshkent startup ekotizimida o'z loyihangiz uchun kerakli mutaxassislarni toping. Startupingizga yangi talantlarni jalb qiling."
-        canonical="https://startuptashkent.uz/request"
+        canonical="https://www.startuptashkent.uz/request"
       />
       <div className="text-center mb-16">
         <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-orange-100">
