@@ -183,8 +183,9 @@ const Events: React.FC = () => {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 space-y-6">
         <div className="max-w-2xl">
-          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 uppercase tracking-tighter">
-            Kelayotgan <span className="text-orange-600">Tadbirlar</span> 🗓
+          <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 uppercase tracking-tighter flex items-center gap-3">
+            Kelayotgan <span className="text-orange-600">Tadbirlar</span>
+            <Calendar className="w-8 h-8 md:w-10 md:h-10 text-orange-500" />
           </h2>
           <p className="text-gray-600 text-lg font-medium leading-relaxed">
             Master-klasslar, uchrashuvlar va pitch-daylarda ishtirok etib,

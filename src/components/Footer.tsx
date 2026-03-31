@@ -162,21 +162,6 @@ const Footer: React.FC = () => {
           </p>
         </div>
       </div>
-
-      {/* Floating Chat Button */}
-      {/* <a
-        href="https://t.me/ambassadorsadmin"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fixed bottom-8 right-8 z-[100] bg-white rounded-full p-1 shadow-2xl flex items-center space-x-3 group"
-      >
-        <div className="bg-orange-600 rounded-full p-3 text-white transition-colors group-hover:bg-orange-700">
-          <MessageCircle size={20} />
-        </div>
-        <span className="pr-5 font-black text-gray-900 text-xs uppercase tracking-tight hidden sm:block">
-          Bog'lanish
-        </span>
-      </a> */}
     </footer>
   );
 };
