@@ -159,6 +159,46 @@
       .stories-random-cell.active {
         background-color: rgba(255, 255, 255, 0.08);
       }
+
+      /* ─── Custom Scrollbar ─── */
+
+      /* Width & height */
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+
+      /* Track */
+      ::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      /* Corner where horizontal and vertical meet */
+      ::-webkit-scrollbar-corner {
+        background: transparent;
+      }
+
+      /* Thumb */
+      ::-webkit-scrollbar-thumb {
+        background: linear-gradient(180deg, #f97316 0%, #ea580c 100%);
+        border-radius: 999px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        transition: background 0.2s ease;
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(180deg, #fb923c 0%, #f97316 100%);
+      }
+
+      ::-webkit-scrollbar-thumb:active {
+        background: #c2410c;
+      }
+
+      /* Firefox */
+      * {
+        scrollbar-width: thin;
+        scrollbar-color: #ea580c transparent;
+      }
     </style>
 
     <script type="importmap">
