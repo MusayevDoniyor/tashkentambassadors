@@ -25,7 +25,7 @@ const DISTRICT_OPTIONS = [
   { value: "Chilonzor", label: "Chilonzor" },
   { value: "Sergeli", label: "Sergeli" },
   { value: "Bektemir", label: "Bektemir" },
-  { value: "Yangihayot", label: "Yangihayot" }
+  { value: "Yangihayot", label: "Yangihayot" },
 ];
 
 interface Event {
@@ -411,7 +411,9 @@ const Events: React.FC = () => {
                     </label>
                     <CustomSelect
                       value={regData.district}
-                      onChange={(val) => setRegData({ ...regData, district: val })}
+                      onChange={(val) =>
+                        setRegData({ ...regData, district: val })
+                      }
                       options={DISTRICT_OPTIONS}
                       placeholder="Tumanni tanlang"
                       className="w-full"

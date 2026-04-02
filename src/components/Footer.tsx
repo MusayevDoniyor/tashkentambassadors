@@ -1,4 +1,4 @@
-import { Send, Instagram, ExternalLink, MessageCircle } from "lucide-react";
+import { Send, Instagram, ExternalLink, MessageCircle, Linkedin } from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Footer: React.FC = () => {
@@ -132,6 +132,17 @@ const Footer: React.FC = () => {
                 >
                   <Instagram size={18} />
                   <span>Instagram</span>
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://www.linkedin.com/company/startup-ambassadors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-3 hover:text-orange-500 transition-colors"
+                >
+                  <Linkedin size={18} />
+                  <span>LinkedIn</span>
                 </a>
               </li>
             </ul>

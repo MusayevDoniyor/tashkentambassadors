@@ -32,7 +32,7 @@ const DISTRICTS = [
   "Yangihayot",
 ];
 
-const districtOptions = DISTRICTS.map(d => ({ value: d, label: d }));
+const districtOptions = DISTRICTS.map((d) => ({ value: d, label: d }));
 
 const Ambassadors: React.FC = () => {
   const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
