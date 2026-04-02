@@ -88,7 +88,7 @@ const HomePage: React.FC = () => (
 const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [showScrollTop, setShowScrollTop] = useState(false);
-  const location = useLocation();
+  const [drawerOpen, setDrawerOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -96,6 +96,18 @@ const App: React.FC = () => {
     };
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  // Track when any drawer opens (body overflow hidden)
+  useEffect(() => {
+    const observer = new MutationObserver(() => {
+      setDrawerOpen(document.body.style.overflow === "hidden");
+    });
+    observer.observe(document.body, {
+      attributes: true,
+      attributeFilter: ["style"],
+    });
+    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -177,7 +189,7 @@ const App: React.FC = () => {
       <button
         onClick={scrollToTop}
         className={`fixed bottom-12 right-8 z-50 p-4 rounded-2xl bg-orange-600 text-white shadow-2xl transition-all duration-300 transform active:scale-95 ${
-          showScrollTop
+          showScrollTop && !drawerOpen
             ? "translate-y-0 opacity-100 pointer-events-auto"
             : "translate-y-10 opacity-0 pointer-events-none"
         } hover:bg-orange-700 hover:-translate-y-1`}

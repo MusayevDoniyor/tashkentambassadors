@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { supabase } from "../lib/supabase";
 import { MapPin, Send, Shield, X, Phone, Linkedin } from "lucide-react";
+import { lockBodyScroll, unlockBodyScroll } from "../lib/scrollLock";
 
 interface Ambassador {
   id: string;
@@ -111,6 +112,7 @@ const matchesDistrict = (
 
 const TashkentMap: React.FC = () => {
   const [selectedDistrict, setSelectedDistrict] = useState<string | null>(null);
+  const [drawerVisible, setDrawerVisible] = useState(false);
   const [ambassadors, setAmbassadors] = useState<Ambassador[]>([]);
   const [ambassadorCount, setAmbassadorCount] = useState(22);
   const mapContainerRef = useRef<HTMLDivElement>(null);
@@ -126,31 +128,19 @@ const TashkentMap: React.FC = () => {
     fetchData();
   }, []);
 
-  // Close on outside click
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (
-        mapContainerRef.current &&
-        !mapContainerRef.current.contains(e.target as Node)
-      ) {
-        setSelectedDistrict(null);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const openDrawer = (districtName: string) => {
+    setSelectedDistrict(districtName);
+    setTimeout(() => setDrawerVisible(true), 10);
+    lockBodyScroll();
+  };
 
-  // Prevent background scroll when modal is open
-  useEffect(() => {
-    if (selectedDistrict) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [selectedDistrict]);
+  const closeDrawer = () => {
+    setDrawerVisible(false);
+    unlockBodyScroll();
+    setTimeout(() => setSelectedDistrict(null), 350);
+  };
+
+
 
   const getOfficialAmbassador = (districtName: string): Ambassador | null => {
     const districtAmbs = ambassadors.filter((a) =>
@@ -219,7 +209,7 @@ const TashkentMap: React.FC = () => {
                     transformBox: "fill-box",
                   }}
                   onClick={() =>
-                    setSelectedDistrict(isSelected ? null : district.name)
+                    isSelected ? closeDrawer() : openDrawer(district.name)
                   }
                 />
               );
@@ -227,134 +217,336 @@ const TashkentMap: React.FC = () => {
           </svg>
         </div>
 
-        {/* District Info Modal */}
+        {/* District Info Drawer */}
         {selectedDistrict && (
-          <div className="fixed inset-0 z-[150] flex items-center justify-center p-4 sm:p-6">
+          <>
             {/* Backdrop */}
             <div
-              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
-              onClick={() => setSelectedDistrict(null)}
+              onClick={closeDrawer}
+              style={{
+                position: "fixed",
+                inset: 0,
+                background: "rgba(0,0,0,0.55)",
+                backdropFilter: "blur(6px)",
+                zIndex: 9998,
+                opacity: drawerVisible ? 1 : 0,
+                transition: "opacity 0.35s ease",
+              }}
             />
 
-            {officialAmbassador ? (
-              <div className="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 animate-in zoom-in-95 duration-300">
-                {/* Close */}
-                <button
-                  onClick={() => setSelectedDistrict(null)}
-                  className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-black/30 backdrop-blur-sm flex items-center justify-center text-white hover:bg-orange-600 transition-all hover:rotate-90 duration-300"
-                >
-                  <X size={16} />
-                </button>
-
-                {/* Hero image */}
-                <div className="relative h-72 w-full overflow-hidden bg-white">
-                  {officialAmbassador.image ? (
-                    <img
-                      src={officialAmbassador.image}
-                      alt={officialAmbassador.name}
-                      loading="lazy"
-                      className="w-full h-full object-contain"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-gradient-to-br from-orange-400 via-orange-500 to-red-500 flex items-center justify-center text-white font-black text-8xl uppercase">
-                      {officialAmbassador.name.charAt(0)}
-                    </div>
-                  )}
-                  {/* Gradient overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
-
-                  {/* Name over image */}
-                  <div className="absolute bottom-5 left-5 right-5">
-                    <h3 className="text-2xl font-black text-white uppercase tracking-tighter leading-tight">
-                      {officialAmbassador.name}
-                    </h3>
-                    <div className="flex items-center gap-1.5 mt-1 text-orange-300">
-                      <MapPin size={12} />
-                      <span className="text-[10px] font-bold uppercase tracking-widest">
-                        {selectedDistrict} tumani
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Body */}
-                <div className="p-5 space-y-4">
-                  {/* Phone */}
-                  {officialAmbassador.phone && (
-                    <a
-                      href={`tel:${officialAmbassador.phone}`}
-                      className="flex items-center gap-4 p-4 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-100 group hover:border-orange-300 transition-all"
-                    >
-                      <div className="w-10 h-10 rounded-xl bg-orange-600 flex items-center justify-center text-white shadow-md shadow-orange-200 group-hover:scale-110 transition-transform">
-                        <Phone size={18} />
-                      </div>
-                      <div>
-                        <p className="text-[9px] font-black text-orange-400 uppercase tracking-widest">
-                          Telefon
-                        </p>
-                        <p className="text-sm font-black text-gray-900 tracking-tight">
-                          {officialAmbassador.phone}
-                        </p>
-                      </div>
-                    </a>
-                  )}
-
-                  {/* Social links */}
-                  <div className="flex gap-2.5">
-                    {officialAmbassador.telegram && (
-                      <a
-                        href={`https://t.me/${officialAmbassador.telegram.replace("@", "")}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#26A5E4] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-md shadow-blue-100"
-                      >
-                        <Send size={14} />
-                        Telegram
-                      </a>
-                    )}
-                    {officialAmbassador.linkedin && (
-                      <a
-                        href={officialAmbassador.linkedin}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex-1 flex items-center justify-center gap-2 py-3 bg-[#0077B5] text-white rounded-xl font-black text-[10px] uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all shadow-md shadow-blue-100"
-                      >
-                        <Linkedin size={14} />
-                        LinkedIn
-                      </a>
-                    )}
-                  </div>
-                </div>
-              </div>
-            ) : (
-              /* No ambassador card */
-              <div className="relative w-full max-w-sm bg-white rounded-[2rem] shadow-2xl overflow-hidden border border-white/20 animate-in zoom-in-95 duration-300">
-                <button
-                  onClick={() => setSelectedDistrict(null)}
-                  className="absolute top-4 right-4 z-30 w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-orange-600 hover:text-white transition-all hover:rotate-90 duration-300"
-                >
-                  <X size={16} />
-                </button>
-                <div className="p-12 text-center flex flex-col items-center justify-center">
-                  <div className="w-20 h-20 bg-orange-50 rounded-3xl flex items-center justify-center text-orange-300 mb-6 border-2 border-dashed border-orange-200">
-                    <MapPin size={36} />
-                  </div>
-                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">
-                    {selectedDistrict} Tumani
-                  </h3>
-                  <p className="text-gray-400 font-medium text-sm max-w-[220px] leading-relaxed mb-8">
-                    Bu tumanga hozircha rasmiy ambassador biriktirilmagan.
-                  </p>
-                  <button
-                    onClick={() => setSelectedDistrict(null)}
-                    className="px-8 py-3 bg-gray-900 text-white rounded-xl font-black text-[10px] uppercase tracking-[0.2em] hover:scale-105 active:scale-95 transition-all"
+            {/* Side Panel */}
+            <div
+              style={{
+                position: "fixed",
+                top: 0,
+                right: 0,
+                bottom: 0,
+                width: "min(460px, 100vw)",
+                zIndex: 9999,
+                background: "#ffffff",
+                boxShadow: "-20px 0 80px rgba(0,0,0,0.15)",
+                transform: drawerVisible ? "translateX(0)" : "translateX(100%)",
+                transition: "transform 0.35s cubic-bezier(0.32, 0, 0.67, 0)",
+                display: "flex",
+                flexDirection: "column",
+                overflowY: "auto",
+              }}
+            >
+              {officialAmbassador ? (
+                <>
+                  {/* Gradient Header */}
+                  <div
+                    style={{
+                      background: "linear-gradient(135deg, #ea580c 0%, #f97316 50%, #fb923c 100%)",
+                      padding: "48px 32px 80px",
+                      position: "relative",
+                      overflow: "hidden",
+                    }}
                   >
-                    Yopish
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
+                    <div style={{ position: "absolute", top: -40, right: -40, width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,0.08)" }} />
+                    <div style={{ position: "absolute", bottom: -20, left: -30, width: 140, height: 140, borderRadius: "50%", background: "rgba(255,255,255,0.06)" }} />
+
+                    {/* Close */}
+                    <button
+                      onClick={closeDrawer}
+                      style={{
+                        position: "absolute", top: 20, right: 20,
+                        width: 40, height: 40, borderRadius: "50%",
+                        background: "rgba(255,255,255,0.2)", border: "none",
+                        cursor: "pointer", display: "flex", alignItems: "center",
+                        justifyContent: "center", color: "#fff", transition: "background 0.2s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.35)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.2)")}
+                    >
+                      <X size={20} />
+                    </button>
+
+                    {/* District badge */}
+                    <div style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      background: "rgba(255,255,255,0.2)", color: "#fff",
+                      borderRadius: 999, padding: "4px 14px",
+                      fontSize: 10, fontWeight: 900, letterSpacing: "0.15em",
+                      textTransform: "uppercase", marginBottom: 16,
+                    }}>
+                      <MapPin size={12} />
+                      {selectedDistrict} TUMANI
+                    </div>
+
+                    <h2 style={{
+                      color: "#fff", fontSize: 28, fontWeight: 900,
+                      letterSpacing: "-0.03em", textTransform: "uppercase",
+                      margin: 0, lineHeight: 1.1,
+                    }}>
+                      {officialAmbassador.name}
+                    </h2>
+                    <p style={{ color: "rgba(255,255,255,0.75)", fontSize: 12, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", marginTop: 6 }}>
+                      {officialAmbassador.role || "Rasmiy Ambassador"}
+                    </p>
+                  </div>
+
+                  {/* Avatar overlapping header */}
+                  <div style={{ display: "flex", justifyContent: "center", marginTop: -56, position: "relative", zIndex: 10 }}>
+                    {officialAmbassador.image ? (
+                      <img
+                        src={officialAmbassador.image}
+                        alt={officialAmbassador.name}
+                        style={{
+                          width: 112, height: 112, borderRadius: "50%",
+                          objectFit: "cover", border: "6px solid #fff",
+                          boxShadow: "0 12px 40px rgba(234,88,12,0.3)",
+                        }}
+                      />
+                    ) : (
+                      <div style={{
+                        width: 112, height: 112, borderRadius: "50%",
+                        background: "linear-gradient(135deg, #f97316, #ea580c)",
+                        border: "6px solid #fff",
+                        boxShadow: "0 12px 40px rgba(234,88,12,0.3)",
+                        display: "flex", alignItems: "center", justifyContent: "center",
+                        fontSize: 44, fontWeight: 900, color: "#fff", textTransform: "uppercase",
+                      }}>
+                        {officialAmbassador.name.charAt(0)}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Content body */}
+                  <div style={{ padding: "24px 32px 40px", flex: 1 }}>
+                    {/* Info chips */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: 10, justifyContent: "center", marginBottom: 28 }}>
+                      <div style={{
+                        display: "inline-flex", alignItems: "center", gap: 6,
+                        background: "#fff7ed", color: "#ea580c",
+                        borderRadius: 999, padding: "6px 16px",
+                        fontSize: 11, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase",
+                      }}>
+                        <MapPin size={13} />
+                        {selectedDistrict} tumani
+                      </div>
+                      <div style={{
+                        display: "inline-flex", alignItems: "center", gap: 6,
+                        background: "#f0fdf4", color: "#16a34a",
+                        borderRadius: 999, padding: "6px 16px",
+                        fontSize: 11, fontWeight: 800, letterSpacing: "0.1em", textTransform: "uppercase",
+                      }}>
+                        <Shield size={13} />
+                        Rasmiy Ambassador
+                      </div>
+                    </div>
+
+                    {/* Divider */}
+                    <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #f1f5f9, transparent)", marginBottom: 24 }} />
+
+                    {/* Contact section label */}
+                    <p style={{ color: "#94a3b8", fontSize: 9, fontWeight: 800, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
+                      Aloqa
+                    </p>
+
+                    <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+                      {/* Phone */}
+                      {officialAmbassador.phone && (
+                        <a
+                          href={`tel:${officialAmbassador.phone}`}
+                          style={{
+                            display: "flex", alignItems: "center", gap: 14,
+                            padding: "14px 20px", borderRadius: 16,
+                            background: "linear-gradient(135deg, #ea580c15, #ea580c08)",
+                            border: "1.5px solid #ea580c25",
+                            textDecoration: "none", color: "#ea580c",
+                            fontWeight: 800, fontSize: 13, transition: "all 0.2s",
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = "#ea580c"; e.currentTarget.style.color = "#fff"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "linear-gradient(135deg, #ea580c15, #ea580c08)"; e.currentTarget.style.color = "#ea580c"; }}
+                        >
+                          <div style={{ width: 36, height: 36, borderRadius: 10, background: "#ea580c20", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <Phone size={16} />
+                          </div>
+                          <div>
+                            <p style={{ margin: 0, fontSize: 10, fontWeight: 700, opacity: 0.6, letterSpacing: "0.1em", textTransform: "uppercase" }}>Telefon</p>
+                            <p style={{ margin: 0, fontSize: 14, fontWeight: 900 }}>{officialAmbassador.phone}</p>
+                          </div>
+                        </a>
+                      )}
+
+                      {/* Telegram */}
+                      {officialAmbassador.telegram && (
+                        <a
+                          href={`https://t.me/${officialAmbassador.telegram.replace("@", "")}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: "flex", alignItems: "center", gap: 14,
+                            padding: "14px 20px", borderRadius: 16,
+                            background: "linear-gradient(135deg, #0088cc15, #0088cc08)",
+                            border: "1.5px solid #0088cc25",
+                            textDecoration: "none", color: "#0088cc",
+                            fontWeight: 800, fontSize: 13, transition: "all 0.2s",
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = "#0088cc"; e.currentTarget.style.color = "#fff"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "linear-gradient(135deg, #0088cc15, #0088cc08)"; e.currentTarget.style.color = "#0088cc"; }}
+                        >
+                          <div style={{ width: 36, height: 36, borderRadius: 10, background: "#0088cc20", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <Send size={16} />
+                          </div>
+                          <div>
+                            <p style={{ margin: 0, fontSize: 10, fontWeight: 700, opacity: 0.6, letterSpacing: "0.1em", textTransform: "uppercase" }}>Telegram</p>
+                            <p style={{ margin: 0, fontSize: 14, fontWeight: 900 }}>@{officialAmbassador.telegram.replace("@", "")}</p>
+                          </div>
+                        </a>
+                      )}
+
+                      {/* LinkedIn */}
+                      {officialAmbassador.linkedin && (
+                        <a
+                          href={officialAmbassador.linkedin.startsWith("http") ? officialAmbassador.linkedin : `https://linkedin.com/in/${officialAmbassador.linkedin}`}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{
+                            display: "flex", alignItems: "center", gap: 14,
+                            padding: "14px 20px", borderRadius: 16,
+                            background: "linear-gradient(135deg, #0077b515, #0077b508)",
+                            border: "1.5px solid #0077b525",
+                            textDecoration: "none", color: "#0077b5",
+                            fontWeight: 800, fontSize: 13, transition: "all 0.2s",
+                          }}
+                          onMouseEnter={(e) => { e.currentTarget.style.background = "#0077b5"; e.currentTarget.style.color = "#fff"; }}
+                          onMouseLeave={(e) => { e.currentTarget.style.background = "linear-gradient(135deg, #0077b515, #0077b508)"; e.currentTarget.style.color = "#0077b5"; }}
+                        >
+                          <div style={{ width: 36, height: 36, borderRadius: 10, background: "#0077b520", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                            <Linkedin size={16} />
+                          </div>
+                          <div>
+                            <p style={{ margin: 0, fontSize: 10, fontWeight: 700, opacity: 0.6, letterSpacing: "0.1em", textTransform: "uppercase" }}>LinkedIn</p>
+                            <p style={{ margin: 0, fontSize: 14, fontWeight: 900 }}>Profil ko'rish</p>
+                          </div>
+                        </a>
+                      )}
+
+                      {!officialAmbassador.phone && !officialAmbassador.telegram && !officialAmbassador.linkedin && (
+                        <div style={{
+                          padding: "20px", borderRadius: 16,
+                          background: "#f8fafc", border: "1.5px dashed #e2e8f0",
+                          textAlign: "center", color: "#94a3b8",
+                          fontSize: 12, fontWeight: 700,
+                        }}>
+                          Aloqa ma'lumotlari mavjud emas
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </>
+              ) : (
+                /* No ambassador */
+                <>
+                  {/* Minimal Header */}
+                  <div
+                    style={{
+                      background: "linear-gradient(135deg, #1e293b 0%, #334155 100%)",
+                      padding: "48px 32px 80px",
+                      position: "relative",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <div style={{ position: "absolute", top: -40, right: -40, width: 200, height: 200, borderRadius: "50%", background: "rgba(255,255,255,0.04)" }} />
+
+                    <button
+                      onClick={closeDrawer}
+                      style={{
+                        position: "absolute", top: 20, right: 20,
+                        width: 40, height: 40, borderRadius: "50%",
+                        background: "rgba(255,255,255,0.15)", border: "none",
+                        cursor: "pointer", display: "flex", alignItems: "center",
+                        justifyContent: "center", color: "#fff", transition: "background 0.2s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.25)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.15)")}
+                    >
+                      <X size={20} />
+                    </button>
+
+                    <div style={{
+                      display: "inline-flex", alignItems: "center", gap: 6,
+                      background: "rgba(255,255,255,0.12)", color: "rgba(255,255,255,0.8)",
+                      borderRadius: 999, padding: "4px 14px",
+                      fontSize: 10, fontWeight: 900, letterSpacing: "0.15em",
+                      textTransform: "uppercase", marginBottom: 16,
+                    }}>
+                      <MapPin size={12} />
+                      {selectedDistrict} TUMANI
+                    </div>
+
+                    <h2 style={{ color: "#fff", fontSize: 26, fontWeight: 900, letterSpacing: "-0.03em", textTransform: "uppercase", margin: 0 }}>
+                      {selectedDistrict}
+                    </h2>
+                  </div>
+
+                  {/* Empty state icon */}
+                  <div style={{ display: "flex", justifyContent: "center", marginTop: -40, position: "relative", zIndex: 10 }}>
+                    <div style={{
+                      width: 80, height: 80, borderRadius: "50%",
+                      background: "#fff", border: "5px solid #fff",
+                      boxShadow: "0 8px 30px rgba(0,0,0,0.12)",
+                      display: "flex", alignItems: "center", justifyContent: "center",
+                      color: "#cbd5e1",
+                    }}>
+                      <MapPin size={32} />
+                    </div>
+                  </div>
+
+                  <div style={{ padding: "24px 32px 40px", textAlign: "center" }}>
+                    <h3 style={{ fontSize: 18, fontWeight: 900, color: "#0f172a", textTransform: "uppercase", letterSpacing: "-0.03em", marginBottom: 10 }}>
+                      Ambassador yo'q
+                    </h3>
+                    <p style={{ color: "#94a3b8", fontSize: 14, fontWeight: 600, lineHeight: 1.6, marginBottom: 32 }}>
+                      Bu tumanga hozircha rasmiy ambassador biriktirilmagan.
+                    </p>
+                    <button
+                      onClick={closeDrawer}
+                      style={{
+                        padding: "12px 32px",
+                        background: "#0f172a",
+                        color: "#fff",
+                        borderRadius: 12,
+                        border: "none",
+                        fontWeight: 900,
+                        fontSize: 10,
+                        letterSpacing: "0.2em",
+                        textTransform: "uppercase",
+                        cursor: "pointer",
+                        transition: "all 0.2s",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.04)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                    >
+                      Yopish
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+          </>
         )}
       </div>
 
@@ -369,7 +561,7 @@ const TashkentMap: React.FC = () => {
             <button
               key={d.id}
               onClick={() =>
-                setSelectedDistrict(selectedDistrict === d.name ? null : d.name)
+                selectedDistrict === d.name ? closeDrawer() : openDrawer(d.name)
               }
               className={`px-4 py-2.5 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all active:scale-95 shadow-sm border ${
                 selectedDistrict === d.name
