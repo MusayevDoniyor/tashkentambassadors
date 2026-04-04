@@ -81,12 +81,12 @@ const About: React.FC = () => {
             KLUBIMIZ <span className="text-orange-600">HAQIDA</span>
             <Megaphone className="w-8 h-8 md:w-10 md:h-10 text-orange-500 -rotate-12" />
           </h2>
-          <p className="text-base sm:text-lg text-gray-600 mb-8 md:mb-10 leading-relaxed font-medium">
+          <p className="text-base sm:text-lg text-gray-600 mb-8 md:mb-10 leading-relaxed font-bold">
             Klubimiz Toshkent shahrida startap g‘oyalarni shakllantirish,
             rivojlantirish va ularni <strong>Yoshlar Ventures</strong>’ga taqdim
             etish yo‘nalishida faoliyat yuritadi.
           </p>
-          <p className="text-base sm:text-lg text-gray-600 mb-8 md:mb-10 leading-relaxed font-medium">
+          <p className="text-base sm:text-lg text-gray-600 mb-8 md:mb-10 leading-relaxed font-bold">
             Bizning club <strong>Yoshlar ishlari agentligi</strong> hamda{" "}
             <strong>Yoshlar Ventures</strong> tomonidan qo'llab-quvvatlanib, har
             bir startupga kerakli jamoani topishda yaqindan ko'maklashadi.
@@ -120,7 +120,7 @@ const About: React.FC = () => {
         <h3 className="text-3xl md:text-5xl font-black text-gray-900 mb-6 uppercase tracking-tighter italic">
           NIMA UCHUN <span className="text-orange-600">BIZ?</span>
         </h3>
-        <p className="text-gray-500 font-medium max-w-xl mx-auto">
+        <p className="text-gray-600 font-bold max-w-xl mx-auto">
           Startup ekotizimida o'sish uchun kerak bo'lgan asosiy bilim, tajriba
           va yuqori darajadagi jamoani taqdim etamiz
         </p>
@@ -138,7 +138,7 @@ const About: React.FC = () => {
             <h4 className="text-xl md:text-2xl font-black text-gray-900 mb-4 tracking-tight leading-none uppercase">
               {item.title}
             </h4>
-            <p className="text-gray-500 text-xs md:text-sm leading-relaxed font-medium mb-6">
+            <p className="text-gray-500 text-xs md:text-sm leading-relaxed font-bold mb-6">
               {item.description}
             </p>
             <div className="mt-auto h-1 w-0 group-hover:w-full bg-orange-600 transition-all duration-300 rounded-full"></div>

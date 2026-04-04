@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
                 className="h-10 object-contain"
               />
             </Link>
-            <p className="text-gray-400 text-sm leading-relaxed max-w-xs">
+            <p className="text-gray-300 text-sm leading-relaxed max-w-xs font-bold">
               Toshkent shahar yoshlarining startup va innovatsion g'oyalarini
               rivojlantirish uchun tuzilgan yagona rasmiy platforma.
             </p>
@@ -38,7 +38,7 @@ const Footer: React.FC = () => {
           {/* Navigation */}
           <div>
             <h4 className="text-white font-bold text-lg mb-6">Navigatsiya</h4>
-            <ul className="space-y-4 text-gray-400 text-sm">
+            <ul className="space-y-4 text-gray-300 text-sm font-bold">
               <li>
                 <Link
                   to="/"

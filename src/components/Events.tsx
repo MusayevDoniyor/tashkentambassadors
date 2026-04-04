@@ -187,7 +187,7 @@ const Events: React.FC = () => {
             Kelayotgan <span className="text-orange-600">Tadbirlar</span>
             <Calendar className="w-8 h-8 md:w-10 md:h-10 text-orange-500" />
           </h2>
-          <p className="text-gray-600 text-lg font-medium leading-relaxed">
+          <p className="text-gray-700 text-lg font-bold leading-relaxed">
             Master-klasslar, uchrashuvlar va pitch-daylarda ishtirok etib,
             tajribangizni oshiring. Barcha e'lonlar bizning kanalda!
           </p>
@@ -280,8 +280,8 @@ const Events: React.FC = () => {
                   <h3 className="text-2xl font-black text-gray-900 mb-4 leading-tight group-hover:text-orange-600 transition-colors">
                     {event.title}
                   </h3>
-                  <div className="flex items-center space-x-2 text-gray-500 text-sm mb-4 font-medium">
-                    <MapPin size={16} className="text-orange-300" />
+                  <div className="flex items-center space-x-2 text-gray-700 text-sm mb-4 font-bold">
+                    <MapPin size={16} className="text-orange-400" />
                     <span>{event.location}</span>
                   </div>
 
@@ -330,7 +330,7 @@ const Events: React.FC = () => {
             <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">
               Tadbirlar topilmadi
             </h3>
-            <p className="text-gray-400 font-medium text-sm text-center max-w-sm px-6">
+            <p className="text-gray-500 font-bold text-sm text-center max-w-sm px-6">
               Hozircha ushbu turdagi kelgusi tadbirlar rejalashtirilmagan.
               Yangiliklarni kuzatib boring!
             </p>

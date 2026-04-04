@@ -163,7 +163,7 @@ const TashkentMap: React.FC = () => {
         <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-4 uppercase tracking-tighter">
           TOSHKENT <span className="text-orange-600">HUDUDLARI</span>
         </h2>
-        <p className="text-gray-600 max-w-2xl mx-auto font-medium text-lg px-4">
+        <p className="text-gray-700 max-w-2xl mx-auto font-bold text-lg px-4">
           Qaysi tumanga qaysi ambassador biriktirilgan — tuman ustiga bosing
         </p>
       </div>

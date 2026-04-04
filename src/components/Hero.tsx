@@ -8,13 +8,6 @@ const Hero: React.FC = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center max-w-4xl mx-auto">
-          <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-700 px-4 py-1.5 md:px-5 md:py-2 rounded-full text-[10px] md:text-sm font-bold mb-6 md:mb-10 border border-orange-100">
-            <Sparkles size={14} className="md:w-4 md:h-4" />
-            <span className="uppercase tracking-wide">
-              Toshkent Startup Ambassadors
-            </span>
-          </div>
-
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-black tracking-tighter text-gray-900 mb-6 md:mb-8 leading-[1.1] md:leading-[0.9]">
             STARTUP <span className="text-orange-600">AMBASSADORS</span>{" "}
             <br className="hidden sm:block" />
@@ -24,7 +17,7 @@ const Hero: React.FC = () => {
             </span>
           </h1>
 
-          <p className="text-base md:text-xl text-gray-600 mb-8 md:mb-12 leading-relaxed max-w-2xl mx-auto font-medium px-4">
+          <p className="text-base md:text-xl text-gray-600 mb-8 md:mb-12 leading-relaxed max-w-2xl mx-auto font-bold px-4">
             Startupingiz uchun jamoa toping. Bilimingizni oshiring va
             Toshkentning eng nufuzli startup ekotizimi a'zosiga aylaning.
           </p>

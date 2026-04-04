@@ -94,7 +94,7 @@ const JobListings: React.FC = () => {
         <h1 className="text-5xl md:text-8xl font-black text-gray-900 mb-6 uppercase tracking-tighter leading-none">
           STARTUP <span className="text-orange-600">E'LONLAR</span>
         </h1>
-        <p className="text-gray-500 font-medium max-w-2xl mx-auto text-lg md:text-xl leading-relaxed px-6">
+        <p className="text-gray-600 font-bold max-w-2xl mx-auto text-lg md:text-xl leading-relaxed px-6">
           Eng qiziqarli loyihalarni toping va jamoaga qo'shiling. O'z
           mutaxassisligingiz bo'yicha e'lonlarni filtrlang.
         </p>
@@ -157,7 +157,7 @@ const JobListings: React.FC = () => {
             <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter mb-2">
               Hech narsa topilmadi
             </h3>
-            <p className="text-gray-400 font-medium mb-8 max-w-xs mx-auto text-sm">
+            <p className="text-gray-500 font-bold mb-8 max-w-xs mx-auto text-sm">
               Qidiruv kriteriyalarini o'zgartirib ko'ring yoki barcha e'lonlarni
               ko'ring.
             </p>
@@ -243,7 +243,7 @@ const JobListings: React.FC = () => {
           <h3 className="text-3xl md:text-5xl font-black text-white uppercase tracking-tighter mb-4 relative z-10">
             O'zingizni startupingiz bormi?
           </h3>
-          <p className="text-gray-400 font-medium mb-10 text-lg relative z-10 max-w-xl mx-auto">
+          <p className="text-gray-300 font-bold mb-10 text-lg relative z-10 max-w-xl mx-auto">
             Jamoangizga yangi talantlarni qo'shing. E'lon berish mutlaqo bepul!
           </p>
           <a
