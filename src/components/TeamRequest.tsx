@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import SEO from "./SEO";
-import { supabase } from "../lib/supabase";
+import { apiClient } from "../lib/apiClient";
 import {
   Rocket,
   Send,
@@ -85,12 +85,11 @@ const TeamRequest: React.FC = () => {
 
   const fetchJobListings = async () => {
     try {
-      const { data } = await supabase
-        .from("job_listings")
-        .select("*")
-        .eq("status", "APPROVED")
-        .order("created_at", { ascending: false });
-      if (data) setJobListings(data);
+      const data = await apiClient.get<JobListing[]>("job-listings");
+      if (data) {
+        const approved = data.filter((l) => l.status === "APPROVED");
+        setJobListings(approved);
+      }
     } catch (err) {
       console.error("Error fetching job listings:", err);
     } finally {
@@ -104,24 +103,19 @@ const TeamRequest: React.FC = () => {
 
     setLogoUploading(true);
     try {
-      const fileExt = file.name.split(".").pop();
-      const fileName = `${Math.random()}.${fileExt}`;
-      const filePath = `startups/${fileName}`;
+      const formData = new FormData();
+      formData.append("file", file);
 
-      const { error: uploadError } = await supabase.storage
-        .from("images")
-        .upload(filePath, file);
-
-      if (uploadError) throw uploadError;
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from("images").getPublicUrl(filePath);
+      const { data } = await apiClient.post<{ url: string }>("/upload", formData);
+      
+      const publicUrl = data.url.startsWith("http")
+        ? data.url
+        : `${import.meta.env.VITE_API_URL || "http://localhost:5000"}${data.url.startsWith("/") ? "" : "/"}${data.url}`;
 
       setFormData((prev) => ({ ...prev, logo: publicUrl }));
     } catch (error: any) {
       console.error("Logo upload error:", error);
-      alert(`Logo yuklashda xatolik: ${error.message || "Noma'lum xatolik"}`);
+      alert(`Logo yuklashda xatolik: ${error.response?.data?.message || error.message || "Noma'lum xatolik"}`);
     } finally {
       setLogoUploading(false);
     }
@@ -147,22 +141,19 @@ const TeamRequest: React.FC = () => {
     );
 
     try {
-      const { error } = await supabase.from("job_listings").insert([
-        {
-          startup_name: formData.startup_name,
-          founder_name: formData.founder_name,
-          phone: formData.phone,
-          email: formData.email || null,
-          telegram: formData.telegram || null,
-          description: formData.description,
-          roles_needed: finalRoles,
-          message: formData.message || null,
-          status: "PENDING",
-          logo: formData.logo || null,
-        },
-      ]);
+      await apiClient.post("job-listings", {
+        startup_name: formData.startup_name,
+        founder_name: formData.founder_name,
+        phone: formData.phone,
+        email: formData.email || null,
+        telegram: formData.telegram || null,
+        description: formData.description,
+        roles_needed: finalRoles,
+        message: formData.message || null,
+        status: "PENDING",
+        logo: formData.logo || null,
+      });
 
-      if (error) throw error;
       setIsSubmitted(true);
     } catch (err) {
       console.error("Error submitting request:", err);

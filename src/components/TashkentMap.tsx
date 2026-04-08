@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { supabase } from "../lib/supabase";
+import { apiClient } from "../lib/apiClient";
 import { MapPin, Send, Shield, X, Phone, Linkedin } from "lucide-react";
 import { lockBodyScroll, unlockBodyScroll } from "../lib/scrollLock";
 
@@ -119,10 +119,14 @@ const TashkentMap: React.FC = () => {
 
   useEffect(() => {
     const fetchData = async () => {
-      const { data } = await supabase.from("ambassadors").select("*");
-      if (data) {
-        setAmbassadors(data);
-        if (data.length) setAmbassadorCount(data.length);
+      try {
+        const data = await apiClient.get<Ambassador[]>("ambassadors");
+        if (data) {
+          setAmbassadors(data);
+          if (data.length) setAmbassadorCount(data.length);
+        }
+      } catch (err) {
+        console.error("Error fetching ambassadors:", err);
       }
     };
     fetchData();

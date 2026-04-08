@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { Menu, X, ArrowRight } from "lucide-react";
 import { smoothScrollTo } from "../lib/utils";
 
@@ -10,7 +10,6 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const navigate = useNavigate();
   const location = useLocation();
 
   const navItems = [
@@ -24,9 +23,7 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
     const currentPath = location.pathname;
     const currentHash = location.hash;
 
-    if (currentPath === "/request") {
-      setActiveTab("");
-    } else if (currentPath === "/") {
+    if (currentPath === "/") {
       if (!currentHash) {
         setActiveTab("home");
       } else {
@@ -35,6 +32,8 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
         );
         if (matchedItem) setActiveTab(matchedItem.id);
       }
+    } else if (currentPath === "/request") {
+      setActiveTab("");
     }
   }, [location, setActiveTab]);
 
@@ -88,12 +87,12 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                 )}
               </Link>
             ))}
-            {/* Jamoa kerak - special link */}
+            
             <Link
               to="/request"
               className={`text-sm font-bold transition-all relative py-2 px-3 rounded-xl ${
                 isOnRequestPage
-                  ? "text-white bg-orange-600"
+                  ? "text-white bg-orange-600 shadow-lg shadow-orange-200"
                   : "text-orange-600 bg-orange-50 hover:bg-orange-100"
               }`}
             >

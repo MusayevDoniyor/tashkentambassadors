@@ -1,20 +1,12 @@
 import React, { useState, useEffect } from "react";
 import SEO from "./SEO";
-import { supabase } from "../lib/supabase";
+import { apiClient } from "../lib/apiClient";
 import {
   Rocket,
-  Send,
-  Phone,
-  Mail,
   Search,
   X,
-  Clock,
-  ChevronDown,
-  ChevronUp,
   ChevronLeft,
   ChevronRight,
-  ExternalLink,
-  ArrowRight,
   Plus,
 } from "lucide-react";
 
@@ -38,13 +30,17 @@ const JobListings: React.FC = () => {
 
   useEffect(() => {
     const fetchListings = async () => {
-      const { data } = await supabase
-        .from("job_listings")
-        .select("*")
-        .eq("status", "APPROVED")
-        .order("created_at", { ascending: false });
-      if (data) setListings(data);
-      setLoading(false);
+      try {
+        const data = await apiClient.get<JobListing[]>("job-listings");
+        if (data) {
+          const approved = data.filter((l) => l.status === "APPROVED");
+          setListings(approved);
+        }
+      } catch (err) {
+        console.error("Error fetching listings:", err);
+      } finally {
+        setLoading(false);
+      }
     };
     fetchListings();
   }, []);
@@ -144,7 +140,7 @@ const JobListings: React.FC = () => {
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24 space-y-4">
-            <div className="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full"></div>
+            <div className="w-12 h-12 border-4 border-orange-600 border-t-transparent rounded-full animate-spin"></div>
             <span className="text-[10px] font-black text-orange-600 uppercase tracking-widest">
               Yuklanmoqda...
             </span>

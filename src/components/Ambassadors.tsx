@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { MapPin, Send, Search, X, Users, Star, Crown } from "lucide-react";
-import { supabase } from "../lib/supabase";
+import { MapPin, Send, Search, X, Users, Star, Crown, Shield } from "lucide-react";
+import { apiClient } from "../lib/apiClient";
 import { CustomSelect } from "./ui/CustomSelect";
 import { lockBodyScroll, unlockBodyScroll } from "../lib/scrollLock";
 
@@ -8,13 +8,11 @@ interface Ambassador {
   id: string;
   name: string;
   district: string;
-  role: string;
-  team: string;
   image: string | null;
   telegram: string | null;
   linkedin: string | null;
-  phone: string | null;
   is_leader: boolean;
+  is_district_ambassador: boolean;
 }
 
 const DISTRICTS = [
@@ -46,12 +44,7 @@ const Ambassadors: React.FC = () => {
   useEffect(() => {
     const fetchAmbassadors = async () => {
       try {
-        const { data, error } = await supabase
-          .from("ambassadors")
-          .select("*")
-          .order("is_leader", { ascending: false })
-          .order("name", { ascending: true });
-        if (error) throw error;
+        const data = await apiClient.get<Ambassador[]>("ambassadors");
         setAmbassadors(data || []);
       } catch (err) {
         console.error("Error fetching ambassadors:", err);
@@ -64,11 +57,8 @@ const Ambassadors: React.FC = () => {
 
   const filteredAmbassadors = useMemo(() => {
     return ambassadors.filter((a) => {
-      const matchesSearch =
-        a.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        (a.team && a.team.toLowerCase().includes(searchQuery.toLowerCase()));
-      const matchesDistrict =
-        selectedDistrict === "Barchasi" || a.district === selectedDistrict;
+      const matchesSearch = a.name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesDistrict = selectedDistrict === "Barchasi" || a.district === selectedDistrict;
       return matchesSearch && matchesDistrict;
     });
   }, [searchQuery, selectedDistrict, ambassadors]);
@@ -103,9 +93,9 @@ const Ambassadors: React.FC = () => {
           <h2 className="text-4xl md:text-6xl font-black text-gray-900 mb-6 uppercase tracking-tighter">
             TASHKENT STARTUP <span className="text-orange-600">TEAM</span>
           </h2>
-          <p className="text-gray-600 max-w-2xl mx-auto font-medium text-lg px-4">
-            Toshkent startup ekotizimini rivojlantirishga mas'ul bo'lgan
-            professional jamoa
+          <p className="text-gray-600 max-w-2xl mx-auto font-medium text-lg px-4 leading-relaxed">
+            Toshkent startup ekotizimini rivojlantirishga mas'ul bo'lgan 
+            professional va g'ayratli jamoa
           </p>
         </div>
 
@@ -115,7 +105,7 @@ const Ambassadors: React.FC = () => {
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-orange-300 w-5 h-5" />
             <input
               type="text"
-              placeholder="Ism yoki jamoa bo'yicha qidiruv..."
+              placeholder="Ism bo'yicha qidiruv..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-white border-2 border-orange-50 rounded-2xl py-4 pl-14 pr-12 text-sm font-bold focus:outline-none focus:border-orange-500 shadow-sm transition-all"
@@ -130,7 +120,7 @@ const Ambassadors: React.FC = () => {
             )}
           </div>
 
-          <div className="w-full md:w-[200px]">
+          <div className="w-full md:w-[250px]">
             <CustomSelect
               value={selectedDistrict}
               onChange={setSelectedDistrict}
@@ -170,11 +160,16 @@ const Ambassadors: React.FC = () => {
                   </div>
                 )}
 
-                <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-white rounded-2xl shadow-lg flex items-center justify-center z-20 group-hover:bg-gray-900 group-hover:text-white transition-colors duration-300">
-                  <Users
-                    size={20}
-                    className="text-orange-600 group-hover:text-white"
-                  />
+                {amb.is_district_ambassador && (
+                  <div className="absolute -top-2 -right-2 bg-emerald-600 text-white p-2 rounded-2xl shadow-xl z-20">
+                    <Shield size={16} fill="currentColor" />
+                  </div>
+                )}
+
+                <div className="absolute -bottom-2 right-1/2 translate-x-1/2 bg-white px-4 py-1.5 rounded-full shadow-lg border border-orange-50 z-20 group-hover:bg-gray-900 group-hover:text-white transition-colors duration-300">
+                   <p className="text-[9px] font-black uppercase tracking-widest text-orange-600 group-hover:text-white">
+                    {amb.district}
+                   </p>
                 </div>
               </div>
 
@@ -186,14 +181,14 @@ const Ambassadors: React.FC = () => {
                   <span
                     className={`text-[10px] font-black uppercase tracking-widest flex items-center ${amb.is_leader ? "text-orange-600" : "text-gray-400"}`}
                   >
-                    {amb.is_leader && <Crown size={12} className="mr-1" />}
-                    {amb.team && amb.team !== "Jamoasiz (Asosiy tarkib)"
-                      ? amb.team
-                      : "Ambassador"}
+                    {amb.is_leader ? (
+                      <><Crown size={12} className="mr-1" /> Team Leader</>
+                    ) : amb.is_district_ambassador ? (
+                      <><Shield size={12} className="mr-1 text-emerald-600" /> Tuman Ambasadori</>
+                    ) : (
+                      "Startup Ambasador"
+                    )}
                   </span>
-                  <p className="text-gray-400 text-[10px] font-bold uppercase tracking-widest">
-                    {amb.district} tumani
-                  </p>
                 </div>
 
                 <div className="flex items-center justify-center pt-2">
@@ -294,34 +289,53 @@ const Ambassadors: React.FC = () => {
                   color: "#fff",
                   transition: "background 0.2s",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.35)")}
-                onMouseLeave={(e) => (e.currentTarget.style.background = "rgba(255,255,255,0.2)")}
               >
                 <X size={20} />
               </button>
 
-              {/* Leader badge */}
-              {selectedAmbassador.is_leader && (
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    background: "rgba(255,255,255,0.2)",
-                    color: "#fff",
-                    borderRadius: 999,
-                    padding: "4px 14px",
-                    fontSize: 10,
-                    fontWeight: 900,
-                    letterSpacing: "0.15em",
-                    textTransform: "uppercase",
-                    marginBottom: 16,
-                  }}
-                >
-                  <Star size={12} fill="currentColor" />
-                  JAMOA LIDERI
-                </div>
-              )}
+              {/* Badges */}
+              <div style={{ display: "flex", gap: 8, marginBottom: 16 }}>
+                {selectedAmbassador.is_leader && (
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      background: "rgba(255,255,255,0.2)",
+                      color: "#fff",
+                      borderRadius: 999,
+                      padding: "4px 14px",
+                      fontSize: 10,
+                      fontWeight: 900,
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    <Star size={12} fill="currentColor" />
+                    TEAM LEADER
+                  </div>
+                )}
+                {selectedAmbassador.is_district_ambassador && (
+                  <div
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 6,
+                      background: "rgba(16,185,129,0.3)",
+                      color: "#fff",
+                      borderRadius: 999,
+                      padding: "4px 14px",
+                      fontSize: 10,
+                      fontWeight: 900,
+                      letterSpacing: "0.15em",
+                      textTransform: "uppercase",
+                    }}
+                  >
+                    <Shield size={12} fill="currentColor" />
+                    TUMAN AMBASADORI
+                  </div>
+                )}
+              </div>
 
               <h2
                 style={{
@@ -336,20 +350,6 @@ const Ambassadors: React.FC = () => {
               >
                 {selectedAmbassador.name}
               </h2>
-              <p
-                style={{
-                  color: "rgba(255,255,255,0.75)",
-                  fontSize: 12,
-                  fontWeight: 700,
-                  letterSpacing: "0.12em",
-                  textTransform: "uppercase",
-                  marginTop: 6,
-                }}
-              >
-                {selectedAmbassador.team && selectedAmbassador.team !== "Jamoasiz (Asosiy tarkib)"
-                  ? selectedAmbassador.team
-                  : "Startup Ambassador"}
-              </p>
             </div>
 
             {/* Avatar overlapping header */}
@@ -412,43 +412,13 @@ const Ambassadors: React.FC = () => {
                   <MapPin size={13} />
                   {selectedAmbassador.district} tumani
                 </div>
-
-                <div
-                  style={{
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: 6,
-                    background: "#f8fafc",
-                    color: "#475569",
-                    borderRadius: 999,
-                    padding: "6px 16px",
-                    fontSize: 11,
-                    fontWeight: 800,
-                    letterSpacing: "0.1em",
-                    textTransform: "uppercase",
-                  }}
-                >
-                  <Users size={13} />
-                  {selectedAmbassador.role || "Ambassador"}
-                </div>
               </div>
-
-              {/* Divider */}
-              <div style={{ height: 1, background: "linear-gradient(90deg, transparent, #f1f5f9, transparent)", marginBottom: 28 }} />
 
               {/* Stats grid */}
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, marginBottom: 32 }}>
                 {[
-                  { label: "Tuman", value: selectedAmbassador.district },
-                  { label: "Lavozim", value: selectedAmbassador.is_leader ? "Lider" : "A'zo" },
-                  {
-                    label: "Jamoa",
-                    value:
-                      selectedAmbassador.team && selectedAmbassador.team !== "Jamoasiz (Asosiy tarkib)"
-                        ? selectedAmbassador.team
-                        : "Asosiy tarkib",
-                  },
-                  { label: "Yo'nalish", value: selectedAmbassador.role || "Startup" },
+                  { label: "Hudud", value: selectedAmbassador.district },
+                  { label: "Maqom", value: selectedAmbassador.is_leader ? "Lider" : selectedAmbassador.is_district_ambassador ? "Tuman Vakili" : "Ambasador" },
                 ].map(({ label, value }) => (
                   <div
                     key={label}
@@ -469,7 +439,7 @@ const Ambassadors: React.FC = () => {
 
               {/* Social Links */}
               <p style={{ color: "#94a3b8", fontSize: 9, fontWeight: 800, letterSpacing: "0.15em", textTransform: "uppercase", marginBottom: 14 }}>
-                Aloqa
+                Aloqa kanallari
               </p>
               <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
                 {selectedAmbassador.telegram && (
@@ -477,6 +447,7 @@ const Ambassadors: React.FC = () => {
                     href={`https://t.me/${selectedAmbassador.telegram.replace("@", "")}`}
                     target="_blank"
                     rel="noopener noreferrer"
+                    className="social-link-btn"
                     style={{
                       display: "flex",
                       alignItems: "center",
@@ -489,18 +460,9 @@ const Ambassadors: React.FC = () => {
                       color: "#0088cc",
                       fontWeight: 800,
                       fontSize: 13,
-                      transition: "all 0.2s",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#0088cc";
-                      e.currentTarget.style.color = "#fff";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "linear-gradient(135deg, #0088cc15, #0088cc08)";
-                      e.currentTarget.style.color = "#0088cc";
                     }}
                   >
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: "#0088cc20", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, background: "#0088cc20", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <Send size={16} />
                     </div>
                     <div>
@@ -512,11 +474,7 @@ const Ambassadors: React.FC = () => {
 
                 {selectedAmbassador.linkedin && (
                   <a
-                    href={
-                      selectedAmbassador.linkedin.startsWith("http")
-                        ? selectedAmbassador.linkedin
-                        : `https://linkedin.com/in/${selectedAmbassador.linkedin}`
-                    }
+                    href={selectedAmbassador.linkedin.startsWith("http") ? selectedAmbassador.linkedin : `https://linkedin.com/in/${selectedAmbassador.linkedin}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     style={{
@@ -531,18 +489,9 @@ const Ambassadors: React.FC = () => {
                       color: "#0077b5",
                       fontWeight: 800,
                       fontSize: 13,
-                      transition: "all 0.2s",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.background = "#0077b5";
-                      e.currentTarget.style.color = "#fff";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.background = "linear-gradient(135deg, #0077b515, #0077b508)";
-                      e.currentTarget.style.color = "#0077b5";
                     }}
                   >
-                    <div style={{ width: 36, height: 36, borderRadius: 10, background: "#0077b520", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                    <div style={{ width: 36, height: 36, borderRadius: 10, background: "#0077b520", display: "flex", alignItems: "center", justifyContent: "center" }}>
                       <svg width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6zM2 9h4v12H2z" />
                         <circle cx="4" cy="4" r="2" />
@@ -553,23 +502,6 @@ const Ambassadors: React.FC = () => {
                       <p style={{ margin: 0, fontSize: 14, fontWeight: 900 }}>Profil ko'rish</p>
                     </div>
                   </a>
-                )}
-
-                {!selectedAmbassador.telegram && !selectedAmbassador.linkedin && (
-                  <div
-                    style={{
-                      padding: "20px",
-                      borderRadius: 16,
-                      background: "#f8fafc",
-                      border: "1.5px dashed #e2e8f0",
-                      textAlign: "center",
-                      color: "#94a3b8",
-                      fontSize: 12,
-                      fontWeight: 700,
-                    }}
-                  >
-                    Aloqa ma'lumotlari mavjud emas
-                  </div>
                 )}
               </div>
             </div>

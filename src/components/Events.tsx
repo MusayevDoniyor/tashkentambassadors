@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { supabase } from "../lib/supabase";
+import { apiClient } from "../lib/apiClient";
 import {
   Calendar,
   Clock,
@@ -34,6 +34,7 @@ interface Event {
   date: string;
   time: string;
   location: string;
+  location_url: string | null;
   type: string;
   image: string | null;
   capacity: number | null;
@@ -47,6 +48,7 @@ const eventTypes = [
   "Workshop",
   "Meetup",
   "Pitch Day",
+  "Musobaqalar",
 ];
 
 const Events: React.FC = () => {
@@ -79,16 +81,12 @@ const Events: React.FC = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const { data, error } = await supabase
-          .from("events")
-          .select("*")
-          .order("date", { ascending: true });
-        if (error) throw error;
-
-        const upcomingEvents = (data || []).filter(
-          (event) => !isEventPast(event.date),
+        const data = await apiClient.get<Event[]>("events");
+        // Sort by date descending (newest first)
+        const sorted = (data || []).sort((a, b) => 
+          new Date(b.date).getTime() - new Date(a.date).getTime()
         );
-        setEvents(upcomingEvents);
+        setEvents(sorted);
       } catch (err) {
         console.error("Error fetching events:", err);
       } finally {
@@ -130,28 +128,12 @@ const Events: React.FC = () => {
 
     setRegStatus("submitting");
     try {
-      const { data: existingReg, error: checkError } = await supabase
-        .from("registrations")
-        .select("id")
-        .eq("event_id", selectedEvent.id)
-        .eq("phone", regData.phone);
-
-      if (checkError) throw checkError;
-
-      if (existingReg && existingReg.length > 0) {
-        setRegStatus("idle");
-        alert("Siz ushbu tadbir uchun allaqachon ro'yxatdan o'tgansiz!");
-        return;
-      }
-
-      const { error: regError } = await supabase.from("registrations").insert([
-        {
-          event_id: selectedEvent.id,
-          ...regData,
-        },
-      ]);
-
-      if (regError) throw regError;
+      // Check for existing registration if needed, or just let backend handle it
+      // For now, simple post
+      await apiClient.post("registrations", {
+        event_id: selectedEvent.id,
+        ...regData,
+      });
 
       setRegStatus("success");
       setEvents((prev) =>
@@ -184,12 +166,12 @@ const Events: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 space-y-6">
         <div className="max-w-2xl">
           <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 uppercase tracking-tighter flex items-center gap-3">
-            Kelayotgan <span className="text-orange-600">Tadbirlar</span>
+            Toshkent <span className="text-orange-600">Ambasadorlari</span> Tadbirlari
             <Calendar className="w-8 h-8 md:w-10 md:h-10 text-orange-500" />
           </h2>
           <p className="text-gray-700 text-lg font-bold leading-relaxed">
-            Master-klasslar, uchrashuvlar va pitch-daylarda ishtirok etib,
-            tajribangizni oshiring. Barcha e'lonlar bizning kanalda!
+            Biz tomonimizdan o'tkazilgan va rejalashtirilgan barcha master-klasslar, 
+            pitch-daylar va qiziqarli uchrashuvlar.
           </p>
         </div>
         <a
@@ -250,15 +232,26 @@ const Events: React.FC = () => {
                       className="absolute inset-0 w-full h-full object-cover transition-all duration-300 group-hover:scale-105"
                     />
                   ) : (
-                    <div className="absolute inset-0 bg-gradient-to-br from-orange-400 to-orange-600 opacity-90"></div>
+                    <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black opacity-95">
+                      <div className="absolute inset-0 opacity-20 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+                    </div>
                   )}
-                  <div className="relative z-10 flex flex-col items-center text-white">
-                    <Calendar size={48} className="mb-2 opacity-50" />
-                    <span className="text-[10px] font-black uppercase tracking-[0.2em]">
+                  <div className="relative z-10 flex flex-col items-center text-white text-center px-4">
+                    <div className="w-16 h-16 bg-white/10 backdrop-blur-md rounded-2xl flex items-center justify-center mb-3 border border-white/20">
+                      <Calendar size={32} className="text-orange-500" />
+                    </div>
+                    <span className="text-[10px] font-black uppercase tracking-[0.3em] bg-orange-600 px-3 py-1 rounded-full">
                       {event.type}
                     </span>
                   </div>
-                  {isFull && (
+                  {isEventPast(event.date) && (
+                    <div className="absolute inset-0 bg-gray-900/40 backdrop-blur-[1px] z-20 flex items-center justify-center">
+                      <span className="bg-white/90 text-gray-900 px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest border-2 border-white">
+                        Tugatilgan
+                      </span>
+                    </div>
+                  )}
+                  {isFull && !isEventPast(event.date) && (
                     <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] z-20 flex items-center justify-center">
                       <span className="bg-red-500 text-white px-4 py-2 rounded-xl font-black text-[10px] uppercase tracking-widest">
                         Joy qolmadi
@@ -282,7 +275,18 @@ const Events: React.FC = () => {
                   </h3>
                   <div className="flex items-center space-x-2 text-gray-700 text-sm mb-4 font-bold">
                     <MapPin size={16} className="text-orange-400" />
-                    <span>{event.location}</span>
+                    {event.location_url ? (
+                      <a 
+                        href={event.location_url} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="text-orange-600 hover:underline transition-all"
+                      >
+                        {event.location}
+                      </a>
+                    ) : (
+                      <span>{event.location}</span>
+                    )}
                   </div>
 
                   {event.capacity && (
@@ -294,7 +298,11 @@ const Events: React.FC = () => {
                     </div>
                   )}
 
-                  {event.registration_link ? (
+                  {isEventPast(event.date) ? (
+                    <div className="mt-auto block text-center py-4 rounded-2xl font-black uppercase tracking-widest text-xs bg-gray-50 text-gray-400 border border-gray-100 cursor-default">
+                      Tadbir yakunlangan
+                    </div>
+                  ) : event.registration_link ? (
                     <a
                       href={event.registration_link}
                       target="_blank"
