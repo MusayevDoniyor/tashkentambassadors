@@ -106,7 +106,7 @@ const TeamRequest: React.FC = () => {
       const formData = new FormData();
       formData.append("file", file);
 
-      const { data } = await apiClient.post<{ url: string }>("/upload", formData);
+      const data = await apiClient.post<{ url: string }>("/upload", formData);
       
       const publicUrl = data.url.startsWith("http")
         ? data.url
@@ -263,6 +263,7 @@ const TeamRequest: React.FC = () => {
         description="Toshkent startup ekotizimida o'z loyihangiz uchun kerakli mutaxassislarni toping. Startupingizga yangi talantlarni jalb qiling."
         canonical="https://www.startuptashkent.uz/request"
       />
+      
       <div className="text-center mb-16">
         <div className="inline-flex items-center space-x-2 bg-orange-50 text-orange-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-widest mb-6 border border-orange-100">
           <Rocket size={14} />
@@ -277,393 +278,44 @@ const TeamRequest: React.FC = () => {
         </p>
       </div>
 
-      {/* Progress Indicator */}
-      <div className="max-w-3xl mx-auto mb-16 px-4">
-        <div className="relative flex items-center justify-between">
-          <div className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 w-full bg-gray-100 -z-10"></div>
-          <div
-            className="absolute left-0 top-1/2 -translate-y-1/2 h-0.5 bg-orange-600 transition-all duration-500 -z-10"
-            style={{ width: `${((step - 1) / 3) * 100}%` }}
-          ></div>
-
-          {[1, 2, 3, 4].map((s) => (
-            <div
-              key={s}
-              className={`w-10 h-10 rounded-2xl flex items-center justify-center font-black text-sm transition-all duration-300 ${
-                step >= s
-                  ? "bg-orange-600 text-white shadow-lg shadow-orange-200"
-                  : "bg-white text-gray-300 border-2 border-gray-100"
-              }`}
-            >
-              {s}
-            </div>
-          ))}
-        </div>
-        <div className="flex justify-between mt-4">
-          {["Startup", "Mutaxassis", "Aloqa", "Tekshirish"].map((label, i) => (
-            <span
-              key={i}
-              className={`text-[9px] font-black uppercase tracking-widest ${
-                step >= i + 1 ? "text-orange-600" : "text-gray-300"
-              }`}
-            >
-              {label}
-            </span>
-          ))}
-        </div>
-      </div>
-
-      <div className="max-w-3xl mx-auto mb-20 bg-white/40 backdrop-blur-xl border-2 border-orange-50 p-8 md:p-12 rounded-[3rem] shadow-xl relative overflow-hidden">
-        {/* Decorative elements */}
+      <div className="max-w-3xl mx-auto mb-20 bg-white/40 backdrop-blur-xl border-2 border-orange-50 p-8 md:p-12 rounded-[3rem] shadow-xl relative overflow-hidden text-center">
         <div className="absolute top-0 right-0 w-32 h-32 bg-orange-100/20 rounded-full blur-3xl -mr-16 -mt-16"></div>
         <div className="absolute bottom-0 left-0 w-40 h-40 bg-orange-50/30 rounded-full blur-3xl -ml-20 -mb-20"></div>
-
-        <div>
-          {step === 1 && (
-            <div className="space-y-8">
-              <div className="flex flex-col items-center mb-8">
-                <div className="relative group cursor-pointer">
-                  <div className="w-24 h-24 rounded-3xl bg-white border-2 border-dashed border-orange-100 flex items-center justify-center text-gray-400 overflow-hidden hover:border-orange-500 transition-all shadow-sm">
-                    {logoUploading ? (
-                      <Loader2 className="animate-spin text-orange-600" />
-                    ) : formData.logo ? (
-                      <img
-                        src={formData.logo}
-                        className="w-full h-full object-cover"
-                        alt="Startup logo"
-                      />
-                    ) : (
-                      <ImageIcon size={32} />
-                    )}
-                  </div>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="absolute inset-0 opacity-0 cursor-pointer"
-                    onChange={handleLogoUpload}
-                  />
-                  <div className="absolute -bottom-2 -right-2 bg-white p-2 rounded-xl shadow-lg border border-orange-50 text-orange-600">
-                    <Plus size={14} />
-                  </div>
-                </div>
-                <p className="text-[9px] font-black uppercase text-gray-400 mt-3 tracking-widest">
-                  Startup Logosi (Ixtiyoriy)
-                </p>
-              </div>
-
-              <div className="space-y-6">
-                <div className="flex items-center space-x-3 mb-2">
-                  <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
-                    <Briefcase size={20} />
-                  </div>
-                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">
-                    Startup Haqida
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                      Startup nomi *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.startup_name}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          startup_name: e.target.value,
-                        })
-                      }
-                      placeholder="TechVenture"
-                      className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                      Ismingiz *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.founder_name}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          founder_name: e.target.value,
-                        })
-                      }
-                      placeholder="Ismingizni kiriting"
-                      className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                    Startup tavsifi *
-                  </label>
-                  <textarea
-                    required
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                    placeholder="Startupingiz qanday muammo hal qiladi? Qisqacha yozing..."
-                    rows={4}
-                    className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {step === 2 && (
-            <div className="space-y-8">
-              <div className="space-y-6">
-                <div className="flex items-center space-x-3 mb-2">
-                  <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
-                    <Users size={20} />
-                  </div>
-                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">
-                    Mutaxassislar
-                  </h3>
-                </div>
-                <p className="text-gray-500 text-sm font-medium">
-                  Sizga kim kerak? (Bir nechta tanlash mumkin)
-                </p>
-
-                <div className="flex flex-wrap gap-3">
-                  {ROLES_NEEDED.map((role) => (
-                    <button
-                      key={role}
-                      type="button"
-                      onClick={() => handleRoleToggle(role)}
-                      className={`px-5 py-2.5 rounded-2xl text-[10px] font-black uppercase tracking-widest transition-all ${
-                        formData.roles_needed.includes(role)
-                          ? "bg-orange-600 text-white shadow-lg shadow-orange-100"
-                          : "bg-white text-gray-500 border-2 border-gray-50 hover:border-orange-200"
-                      }`}
-                    >
-                      {role}
-                    </button>
-                  ))}
-                </div>
-
-                {formData.roles_needed.includes("Boshqa") && (
-                  <div className="pt-4">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest mb-2 block">
-                      Kasb nomini yozing *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={formData.other_role}
-                      onChange={(e) =>
-                        setFormData({ ...formData, other_role: e.target.value })
-                      }
-                      placeholder="Masalan: AI Engineer"
-                      className="w-full bg-white border-2 border-orange-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
-                    />
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {step === 3 && (
-            <div className="space-y-8">
-              <div className="space-y-6">
-                <div className="flex items-center space-x-3 mb-2">
-                  <div className="p-2 bg-orange-100 text-orange-600 rounded-xl">
-                    <Mail size={20} />
-                  </div>
-                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">
-                    Bog'lanish
-                  </h3>
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                      Telefon raqami *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      value={formData.phone}
-                      onChange={(e) =>
-                        setFormData({ ...formData, phone: e.target.value })
-                      }
-                      placeholder="+998 90 000 00 00"
-                      className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                      Telegram (Username)
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.telegram}
-                      onChange={(e) =>
-                        setFormData({ ...formData, telegram: e.target.value })
-                      }
-                      placeholder="@username"
-                      className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                    Email (Ixtiyoriy)
-                  </label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) =>
-                      setFormData({ ...formData, email: e.target.value })
-                    }
-                    placeholder="email@example.com"
-                    className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-gray-500 uppercase tracking-widest">
-                    Qo'shimcha xabar
-                  </label>
-                  <textarea
-                    value={formData.message}
-                    onChange={(e) =>
-                      setFormData({ ...formData, message: e.target.value })
-                    }
-                    placeholder="Talablar, maosh yoki boshqa tafsilotlar..."
-                    rows={3}
-                    className="w-full bg-white border-2 border-gray-100 rounded-2xl py-4 px-6 text-sm font-bold focus:outline-none focus:border-orange-500 transition-all shadow-sm resize-none"
-                  />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {step === 4 && (
-            <div className="space-y-8">
-              <div className="space-y-6 text-left">
-                <div className="flex items-center space-x-3 mb-2">
-                  <div className="p-2 bg-green-100 text-green-600 rounded-xl">
-                    <CheckCircle size={20} />
-                  </div>
-                  <h3 className="text-xl font-black text-gray-900 uppercase tracking-tighter">
-                    Tekshirish
-                  </h3>
-                </div>
-
-                <div className="bg-orange-50/50 rounded-3xl p-6 border border-orange-100 space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <span className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">
-                        Startup
-                      </span>
-                      <p className="text-sm font-black text-gray-900 uppercase">
-                        {formData.startup_name}
-                      </p>
-                    </div>
-                    <div>
-                      <span className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">
-                        Asoschi
-                      </span>
-                      <p className="text-sm font-bold text-gray-700">
-                        {formData.founder_name}
-                      </p>
-                    </div>
-                  </div>
-
-                  <div>
-                    <span className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">
-                      Kerakli Rollar
-                    </span>
-                    <div className="flex flex-wrap gap-2">
-                      {formData.roles_needed.map((r, i) => (
-                        <span
-                          key={i}
-                          className="px-2 py-0.5 bg-white text-orange-600 text-[9px] font-black uppercase tracking-widest rounded-lg border border-orange-200"
-                        >
-                          {r === "Boshqa" ? formData.other_role : r}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <span className="text-[8px] font-black text-gray-400 uppercase tracking-[0.2em] block mb-1">
-                      Aloqa
-                    </span>
-                    <p className="text-xs font-bold text-gray-600">
-                      {formData.phone}{" "}
-                      {formData.telegram && `• ${formData.telegram}`}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100 flex items-start space-x-3">
-                  <AlertCircle
-                    size={18}
-                    className="text-amber-600 shrink-0 mt-0.5"
-                  />
-                  <p className="text-[10px] text-amber-700 font-medium leading-relaxed uppercase tracking-wider italic">
-                    E'lon yuborilgandan so'ng admin tomonidan tekshiriladi va 24
-                    soat ichida e'lon qilinadi.
-                  </p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Navigation Buttons */}
-        <div className="flex items-center justify-between mt-12 pt-8 border-t border-gray-50">
-          <button
-            onClick={prevStep}
-            className={`flex items-center space-x-2 text-[10px] font-black uppercase tracking-widest transition-all ${
-              step === 1
-                ? "opacity-0 pointer-events-none"
-                : "text-gray-400 hover:text-gray-900"
-            }`}
+        
+        <div className="relative z-10">
+          <div className="w-20 h-20 rounded-3xl bg-orange-100 flex items-center justify-center text-orange-600 mx-auto mb-8 shadow-inner shadow-orange-200/50">
+            <Send size={40} />
+          </div>
+          <h3 className="text-2xl md:text-4xl font-black text-gray-900 mb-6 uppercase tracking-tighter">
+            BOT ORQALI <span className="text-orange-600">TOPSHIRING!</span>
+          </h3>
+          <p className="text-gray-600 font-medium text-lg mb-10 leading-relaxed">
+            Startup topshirish va jamoa yig'ish platformasi endi to'liq 
+            Telegram botimizga o'tkazildi. Hoziroq botga o'ting va loyihangizni e'lon qiling!
+          </p>
+          <a
+            href="https://t.me/startuptashkent_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center space-x-3 bg-orange-600 text-white px-10 py-5 rounded-2xl font-black uppercase tracking-widest text-sm hover:bg-orange-700 transition-all shadow-2xl shadow-orange-200 active:scale-95"
           >
-            <span>Qaytish</span>
-          </button>
-
-          <button
-            disabled={!isStepValid() || isSubmitting}
-            onClick={() => (step === 4 ? handleSubmit() : nextStep())}
-            className={`flex items-center space-x-3 px-10 py-4 rounded-2xl font-black uppercase tracking-widest text-xs transition-all shadow-xl disabled:opacity-50 disabled:cursor-not-allowed ${
-              step === 4
-                ? "bg-green-600 text-white shadow-green-100 hover:bg-green-700"
-                : "bg-orange-600 text-white shadow-orange-100 hover:bg-orange-700"
-            }`}
-          >
-            <span>
-              {step === 4
-                ? isSubmitting
-                  ? "Yuborilmoqda..."
-                  : "Yakunlash"
-                : "Davom Etish"}
-            </span>
-            {step === 4 ? (
-              <CheckCircle size={18} />
-            ) : (
-              <ChevronRight size={18} />
-            )}
-          </button>
+            <span>BOTGA O'TISH</span>
+            <ChevronRight size={20} />
+          </a>
+          
+          <div className="mt-12 p-6 bg-gray-50 rounded-3xl border border-gray-100 flex items-start space-x-3 text-left">
+            <AlertCircle size={20} className="text-orange-500 shrink-0 mt-0.5" />
+            <p className="text-xs text-gray-500 font-medium leading-relaxed uppercase tracking-wider">
+              Sayt orqali topshirish vaqtinchalik to'xtatildi. Barcha mavjud e'lonlar 
+              quyida ko'rsatilgan va ularni bot orqali ham boshqarishingiz mumkin.
+            </p>
+          </div>
         </div>
       </div>
 
       {/* Active Listings Preview */}
       {!loadingListings && jobListings.length > 0 && (
-        <div className="max-w-7xl mx-auto mb-20 px-4">
+        <div className="max-w-7xl mx-auto mb-20">
           <div className="flex items-center justify-between mb-10">
             <div>
               <h3 className="text-2xl font-black text-gray-900 uppercase tracking-tighter">
@@ -682,7 +334,7 @@ const TeamRequest: React.FC = () => {
             </a>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
             {jobListings.slice(0, 3).map((listing) => (
               <div
                 key={listing.id}

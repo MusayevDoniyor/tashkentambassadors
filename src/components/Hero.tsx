@@ -31,21 +31,15 @@ const Hero: React.FC = () => {
               <span>KLUBGA QO'SHILISH</span>
               <Send size={18} />
             </a>
-            <button
-              onClick={() => {
-                const element = document.getElementById("request");
-                if (element) {
-                  window.scrollTo({
-                    top: element.offsetTop - 80,
-                    behavior: "smooth",
-                  });
-                }
-              }}
+            <a
+              href="https://t.me/startuptashkent_bot"
+              target="_blank"
+              rel="noopener noreferrer"
               className="w-full sm:w-auto flex items-center justify-center space-x-2 bg-white text-gray-900 border-2 border-orange-100 px-8 py-4 md:px-10 md:py-5 rounded-2xl font-black text-base md:text-lg hover:border-orange-500 transition-all shadow-sm active:scale-95"
             >
               <span>JAMOA TOP</span>
               <ArrowRight size={18} />
-            </button>
+            </a>
           </div>
         </div>
       </div>

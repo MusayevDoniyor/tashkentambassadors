@@ -243,11 +243,13 @@ const JobListings: React.FC = () => {
             Jamoangizga yangi talantlarni qo'shing. E'lon berish mutlaqo bepul!
           </p>
           <a
-            href="/request"
+            href="https://t.me/startuptashkent_bot"
+            target="_blank"
+            rel="noopener noreferrer"
             className="inline-flex items-center space-x-3 bg-white text-gray-900 px-10 py-5 rounded-[2rem] font-black uppercase tracking-widest text-xs hover:bg-orange-600 hover:text-white transition-all shadow-2xl relative z-10"
           >
             <Plus size={18} />
-            <span>Hozir e'lon berish</span>
+            <span>Bot orqali e'lon berish</span>
           </a>
         </div>
       )}

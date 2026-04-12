@@ -1,4 +1,10 @@
-import { Send, Instagram, ExternalLink, MessageCircle, Linkedin } from "lucide-react";
+import {
+  Send,
+  Instagram,
+  ExternalLink,
+  MessageCircle,
+  Linkedin,
+} from "lucide-react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 
 const Footer: React.FC = () => {
@@ -97,11 +103,21 @@ const Footer: React.FC = () => {
               </li>
               <li>
                 <Link
-                  to="/request"
+                  to="/elonlar"
                   className="hover:text-orange-500 transition-colors"
                 >
-                  Jamoa kerak
+                  Startuplar
                 </Link>
+              </li>
+              <li>
+                <a
+                  href="https://t.me/startuptashkent_bot"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-orange-500 transition-colors"
+                >
+                  Topshirish (Bot)
+                </a>
               </li>
             </ul>
           </div>

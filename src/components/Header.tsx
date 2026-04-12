@@ -87,17 +87,26 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
                 )}
               </Link>
             ))}
-            
+
             <Link
-              to="/request"
+              to="/elonlar"
               className={`text-sm font-bold transition-all relative py-2 px-3 rounded-xl ${
-                isOnRequestPage
-                  ? "text-white bg-orange-600 shadow-lg shadow-orange-200"
-                  : "text-orange-600 bg-orange-50 hover:bg-orange-100"
+                location.pathname === "/elonlar"
+                  ? "text-orange-600 bg-orange-50/50"
+                  : "text-gray-600 hover:text-orange-600 hover:bg-gray-50"
               }`}
             >
-              Jamoa kerak
+              Startuplar
             </Link>
+
+            <a
+              href="https://t.me/startuptashkent_bot"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-bold transition-all relative py-2 px-3 rounded-xl text-white bg-orange-600 hover:bg-orange-700 shadow-lg shadow-orange-200"
+            >
+              Topshirish
+            </a>
           </div>
 
           {/* Action Button */}
@@ -156,16 +165,24 @@ const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
             </Link>
           ))}
           <Link
-            to="/request"
+            to="/elonlar"
             onClick={() => setIsMenuOpen(false)}
             className={`text-sm font-black uppercase tracking-widest text-left py-2.5 px-4 rounded-xl transition-colors ${
-              isOnRequestPage
-                ? "text-white bg-orange-600"
-                : "text-orange-600 bg-orange-50"
+              location.pathname === "/elonlar"
+                ? "text-orange-600 bg-orange-50"
+                : "text-gray-700 hover:bg-gray-50"
             }`}
           >
-            Jamoa kerak
+            Startuplar
           </Link>
+          <a
+            href="https://t.me/startuptashkent_bot"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-sm font-black uppercase tracking-widest text-left py-2.5 px-4 rounded-xl transition-colors text-white bg-orange-600 shadow-sm"
+          >
+            Topshirish
+          </a>
           <a
             href="https://t.me/ambassadorsadmin"
             target="_blank"
